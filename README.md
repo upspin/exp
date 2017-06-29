@@ -1,4 +1,5 @@
-# Experimental components
+# Upspin `exp` repository
 
-This directory contains components that are experimental or
-under development.
+This repository contains components that are experimental or under development.
+
+See the [master repository](https://github.com/upspin/upspin#readme) for more information.

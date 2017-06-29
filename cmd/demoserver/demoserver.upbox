@@ -6,6 +6,6 @@ users:
 servers:
   - name: keyserver
   - name: demoserver
-    importpath: upspin.io/exp/cmd/demoserver
+    importpath: exp.upspin.io/cmd/demoserver
 
 domain: example.com

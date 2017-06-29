@@ -12,7 +12,7 @@
 // combined Upspin DirServer and StoreServer that serves dynamic content.
 //
 // See also: https://en.wikipedia.org/wiki/Schrödinger's_cat
-package main
+package main // import "exp.upspin.io/cmd/demoserver"
 
 import (
 	"fmt"

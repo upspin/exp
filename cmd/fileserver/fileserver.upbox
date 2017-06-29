@@ -6,7 +6,7 @@ users:
 servers:
   - name: keyserver
   - name: fileserver
-    importpath: upspin.io/exp/cmd/fileserver
+    importpath: exp.upspin.io/cmd/fileserver
     flags:
       root: /tmp
 

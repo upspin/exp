@@ -6,7 +6,7 @@ users:
 servers:
   - name: keyserver
   - name: issueserver
-    importpath: upspin.io/exp/cmd/issueserver
+    importpath: exp.upspin.io/cmd/issueserver
     flags:
      watch-github: upspin/upspin
 

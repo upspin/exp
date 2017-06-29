@@ -11,7 +11,7 @@
 // or roundings are silently ignored.
 // This package is experimental and is NOT an official upspin.Client
 // implementation. Its definition may change or break without warning.
-package gobind // import "upspin.io/exp/client/gobind"
+package gobind // import "exp.upspin.io/client/gobind"
 
 // To regenerate the .aar archive for Android Java, run:
 //	go generate

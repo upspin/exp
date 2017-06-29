@@ -9,7 +9,7 @@ servers:
   - name: storeserver
   - name: dirserver
   - name: camserver
-    importpath: upspin.io/exp/cmd/camserver
+    importpath: exp.upspin.io/cmd/camserver
     flags:
       readers: user@example.com
 

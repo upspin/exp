@@ -12,7 +12,7 @@
 //   $ upbox -schema=issueserver.upbox
 // If all goes well, upbox will leave you in an 'upspin shell' session as
 // issueserver@example.com. Type 'ls' to look around.
-package main
+package main // import "exp.upspin.io/cmd/issueserver"
 
 import (
 	"bytes"

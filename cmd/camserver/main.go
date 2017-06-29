@@ -5,7 +5,7 @@
 // Command camserver is an Upspin Directory and Store server that serves JPEG
 // images read from a webcam. It requires an ffmpeg binary be present in PATH.
 // It only works with the built in camera on MacOS machines, for now.
-package main
+package main // import "exp.upspin.io/cmd/camserver"
 
 import (
 	"flag"

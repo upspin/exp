@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1c995a1a_34ec988f",
+        "filename": "cmd/browser/static/script.js",
+        "patchSetId": 17
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 5389
+      },
+      "writtenOn": "2017-07-14T00:23:43Z",
+      "side": 1,
+      "message": "fair enough, but I think I\u0027ll keep it this way just for the top level functions.",
+      "parentUuid": "363d0c3c_fdc3cc8f",
+      "range": {
+        "startLine": 6,
+        "startChar": 9,
+        "endLine": 6,
+        "endChar": 24
+      },
+      "revId": "5313be8d371499877092263d12e2cbeab360811d",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "722af818_12a7f2a1",
         "filename": "cmd/browser/static/script.js",
         "patchSetId": 17
@@ -45,6 +69,30 @@
       "revId": "5313be8d371499877092263d12e2cbeab360811d",
       "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f5928d36_d2c0e04a",
+        "filename": "cmd/browser/static/script.js",
+        "patchSetId": 17
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 5389
+      },
+      "writtenOn": "2017-07-14T00:23:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "722af818_12a7f2a1",
+      "range": {
+        "startLine": 8,
+        "startChar": 12,
+        "endLine": 8,
+        "endChar": 0
+      },
+      "revId": "5313be8d371499877092263d12e2cbeab360811d",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "79eeaaaa_11e6af3b",
+        "filename": "cmd/browser/static/script.js",
+        "patchSetId": 17
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 5389
+      },
+      "writtenOn": "2017-07-14T00:23:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a41da4ba_a28451a3",
+      "range": {
+        "startLine": 19,
+        "startChar": 31,
+        "endLine": 19,
+        "endChar": 0
+      },
+      "revId": "5313be8d371499877092263d12e2cbeab360811d",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e3544471_bfdb3043",
         "filename": "cmd/browser/static/script.js",
         "patchSetId": 17
@@ -91,6 +163,30 @@
       "revId": "5313be8d371499877092263d12e2cbeab360811d",
       "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d190287b_fb14b5db",
+        "filename": "cmd/browser/static/script.js",
+        "patchSetId": 17
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 5389
+      },
+      "writtenOn": "2017-07-14T00:23:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e3544471_bfdb3043",
+      "range": {
+        "startLine": 23,
+        "startChar": 2,
+        "endLine": 23,
+        "endChar": 13
+      },
+      "revId": "5313be8d371499877092263d12e2cbeab360811d",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "5c363ea2_8b43bb7a",
+        "filename": "cmd/browser/static/script.js",
+        "patchSetId": 17
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 5389
+      },
+      "writtenOn": "2017-07-14T00:23:43Z",
+      "side": 1,
+      "message": "no, a directory can\u0027t be a link, but either can be incomplete.",
+      "parentUuid": "87bfa0d0_8819edd8",
+      "range": {
+        "startLine": 40,
+        "startChar": 12,
+        "endLine": 40,
+        "endChar": 0
+      },
+      "revId": "5313be8d371499877092263d12e2cbeab360811d",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0a10e9dd_077aa55c",
         "filename": "cmd/browser/static/script.js",
         "patchSetId": 17
@@ -137,6 +257,30 @@
       "revId": "5313be8d371499877092263d12e2cbeab360811d",
       "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1dd04127_3700a4b7",
+        "filename": "cmd/browser/static/script.js",
+        "patchSetId": 17
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 5389
+      },
+      "writtenOn": "2017-07-14T00:23:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0a10e9dd_077aa55c",
+      "range": {
+        "startLine": 134,
+        "startChar": 23,
+        "endLine": 134,
+        "endChar": 0
+      },
+      "revId": "5313be8d371499877092263d12e2cbeab360811d",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": false
     }
   ]
 }

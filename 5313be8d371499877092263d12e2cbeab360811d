@@ -120,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "8ad141d5_5d752a99",
+        "filename": "cmd/browser/static/script.js",
+        "patchSetId": 17
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 5389
+      },
+      "writtenOn": "2017-07-14T00:39:09Z",
+      "side": 1,
+      "message": "I think I caught them all now.\ngofmt has spoiled me.",
+      "parentUuid": "bbc17dad_d6e8f56c",
+      "range": {
+        "startLine": 8,
+        "startChar": 12,
+        "endLine": 8,
+        "endChar": 0
+      },
+      "revId": "5313be8d371499877092263d12e2cbeab360811d",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a41da4ba_a28451a3",
         "filename": "cmd/browser/static/script.js",
         "patchSetId": 17

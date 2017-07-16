@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8629766f_cf082fbd",
+        "filename": "cmd/browser/copy.go",
+        "patchSetId": 22
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-07-16T23:15:01Z",
+      "side": 1,
+      "message": "the verb is recur. something that recurs is recursive.",
+      "revId": "691a7f9f2e4826bf4671ce69681dee14cb6bdc2a",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1f0b1bf1_1ec56344",
+        "filename": "cmd/browser/copy.go",
+        "patchSetId": 22
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-07-16T23:15:01Z",
+      "side": 1,
+      "message": "not sure what to do about partially copied trees. maybe just a comment for now.",
+      "revId": "691a7f9f2e4826bf4671ce69681dee14cb6bdc2a",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3556c160_f482ab8a",
+        "filename": "cmd/browser/main.go",
+        "patchSetId": 22
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-07-16T23:15:01Z",
+      "side": 1,
+      "message": "why do you tag this one but not the first? be consistent.\ni\u0027d drop the tags everywhere, myself. the definition is right above.\nbut be consistent whichever you choose.",
+      "revId": "691a7f9f2e4826bf4671ce69681dee14cb6bdc2a",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    }
+  ]
+}

@@ -38,7 +38,7 @@
 			<div class="navbar-header">
 				<img class="navbar-brand" src="augie.png">
 			</div>
-			<p class="navbar-text up-username"></p>
+			<p class="navbar-text" id="headerUsername"></p>
 		</div>
 		<div class="row up-browser-parent">
 		</div>
@@ -116,6 +116,116 @@
 			</tr>
 		</table>
 	</div>
+</div>
+
+<!-- signup modal -->
+
+<div class="modal fade up-signup" tabindex="-1" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Sign up an Upspin user</h4>
+      </div>
+      <div class="modal-body">
+		<p>
+		To use Upspin you must register a user name and public key with
+		the central key server.
+		</p>
+		<p>
+		Your username is just an email
+		address you own. It is how the Upspin system and its users will
+		identify you and your files. Note that your chosen username
+		will become a matter of public record in our
+		<a href="https://key.upspin.io/log" target="_blank">key server log</a>.
+		</p>
+		<div class="form-group">
+			<label for="signupUserName">User Name</label>
+			<input type="email" class="form-control" id="signupUserName" placeholder="Email address">
+		</div>
+		<p>
+		If you know the names of the Directory and Store servers you
+		will use, you may nominate them here. If not, don't worry;
+		you can set them later.
+		</p>
+		<div class="form-group">
+			<label for="singupInputDirServer">Directory Server</label>
+			<input type="text" class="form-control" id="signupDirServer" placeholder="Host name">
+		</div>
+		<div class="form-group">
+			<label for="singupInputDirServer">Store Server</label>
+			<input type="text" class="form-control" id="signupStoreServer" placeholder="Host name">
+		</div>
+		<div class="panel panel-danger up-error">
+			<div class="panel-heading">Error</div>
+			<div class="panel-body up-error-msg"></div>
+		</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Sign up</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- secretseed modal -->
+
+<div class="modal fade up-secretseed" tabindex="-1" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Write down your secret key</h4>
+      </div>
+      <div class="modal-body">
+		<p>
+		An Upspin key pair was generated for you and stored in this directory:
+		</p>
+		<pre id="secretseedKeyDir"></pre>
+		<p>
+		This key pair provides access to your Upspin identity and data.
+		If you lose the keys you can re-create them using this "secret seed":
+		</p>
+		<pre id="secretseedSecretSeed"></pre>
+		<p>
+		<b>Write this down and store it in a secure, private place.
+		Do not share your secret key or this string with anyone.</b>
+		</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger">OK, I wrote it down</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- verify modal -->
+
+<div class="modal fade up-verify" tabindex="-1" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Verify your email address</h4>
+      </div>
+      <div class="modal-body">
+		<p>
+		The Upspin key server has sent an email to
+		<b class="up-username"></b>
+		to verify your ownership of that address. 
+		</p>
+		<p>
+		To complete the sign up process, find that email, click the
+		verification link, and then click the 'Proceed' button.
+		</p>
+		<div class="panel panel-danger up-error">
+			<div class="panel-heading">Error</div>
+			<div class="panel-body up-error-msg"></div>
+		</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default up-resend">Re-send verification email</button>
+        <button type="button" class="btn btn-primary up-proceed">Proceed</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- inspector modal -->

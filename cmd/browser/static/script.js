@@ -59,6 +59,86 @@ function Inspect(entry) {
 	el.find(".up-entry-writer").text(entry.Writer);
 }
 
+// Startup manages the signup process etc.
+function Startup(hello, doneCallback) {
+	var signupEl = $("body > .up-signup");
+	signupEl.find("button").click(function() {
+		// TODO: validate input
+		signupEl.find("button").prop("disabled", true);
+		doHello({
+			step: "signup",
+			username: $("#signupUserName").val(),
+			dirserver: $("#signupDirServer").val(),
+			storeserver: $("#signupStoreServer").val()
+		});
+	});
+
+	var secretseedEl = $("body > .up-secretseed");
+	secretseedEl.find("button").click(function() {
+		secretseedEl.find("button").prop("disabled", true);
+		doHello();
+	});
+
+	var verifyEl = $("body > .up-verify");
+	verifyEl.find("button.up-resend").click(function() {
+		verifyEl.find("button").prop("disabled", true);
+		doHello({step: "register"});
+	});
+	verifyEl.find("button.up-proceed").click(function() {
+		verifyEl.find("button").prop("disabled", true);
+		doHello();
+	});
+
+	var lastStep = "";
+	var lastEl;
+	function success(resp) {
+		if (!resp.Startup) {
+			doneCallback(resp);
+			return;
+		}
+		var data = resp.Startup;
+
+		if (lastEl && data.Step != lastStep) {
+			lastEl.modal("hide");
+		}
+
+		switch (data.Step) {
+		case "signup":
+			lastEl = signupEl;
+			break
+		case "secretseed":
+			$("#secretseedKeyDir").text(data.KeyDir);
+			$("#secretseedSecretSeed").text(data.SecretSeed);
+			lastEl = secretseedEl;
+			break
+		case "verify":
+			verifyEl.find(".up-username").text(data.UserName);
+			lastEl = verifyEl;
+			break
+		}
+		lastStep = data.Step;
+		lastEl.find("button").prop("disabled", false);
+		lastEl.find(".up-error").hide();
+		lastEl.modal("show");
+	}
+	function error(err) {
+		console.log("Startup error", err);
+		if (lastEl) {
+			lastEl.find(".up-error").show().find(".up-error-msg").text(err);
+			lastEl.find("button").prop("disabled", false);
+		}
+	}
+	function doHello(data) {
+		if (lastEl) {
+			lastEl.find("button").prop("disabled", true);
+			lastEl.find(".up-error").hide();
+		}
+		hello(data, success, error);
+	}
+
+	doHello();
+}
+
 // Confirm displays a modal that prompts the user to confirm the copy or delete
 // of the given paths. If action is "copy", dest should be the copy destination.
 // The callback argument is a niladic function that performs the action.
@@ -398,41 +478,48 @@ function Page() {
 		});
 	}
 
-	var browser1, browser2;
-	var parentEl = $(".up-browser-parent");
-	var methods = {
-		rm: rm,
-		copy: copy,
-		list: list,
-		mkdir: mkdir,
+	function hello(data, success, error) {
+		$.ajax("/_upspin", {
+			method: "POST",
+			data: $.extend({method: "hello"}, data),
+			dataType: "json",
+			success: function(data) {
+				if (data.Error) {
+					error(data.Error);
+					return;
+				}
+				success(data);
+			},
+			error: error
+		});
 	}
-	browser1 = new Browser(parentEl, $.extend({
-		copyDestination: function() { return browser2.path },
-		refreshDestination: function() { browser2.refresh(); }
-	}, methods));
-	browser2 = new Browser(parentEl, $.extend({
-		copyDestination: function() { return browser1.path },
-		refreshDestination: function() { browser1.refresh(); }
-	}, methods));
 
-	// Fetch user name and request token and initialize browsers.
-	$.ajax("/_upspin", {
-		method: "POST",
-		data: {
-			method: "whoami"
-		},
-		dataType: "json",
-		success: function(data) {
-			page.username = data.UserName;
-			page.token = data.Token;
-
-			$(".up-username").text(page.username);
-			browser1.navigate(page.username);
-			browser2.navigate("augie@upspin.io");
-		},
-		error: function(err) {
-			browser1.reportError(err);
+	function startBrowsers() {
+		var browser1, browser2;
+		var parentEl = $(".up-browser-parent");
+		var methods = {
+			rm: rm,
+			copy: copy,
+			list: list,
+			mkdir: mkdir,
 		}
+		browser1 = new Browser(parentEl, $.extend({
+			copyDestination: function() { return browser2.path },
+			refreshDestination: function() { browser2.refresh(); }
+		}, methods));
+		browser2 = new Browser(parentEl, $.extend({
+			copyDestination: function() { return browser1.path },
+			refreshDestination: function() { browser1.refresh(); }
+		}, methods));
+		browser1.navigate(page.username);
+		browser2.navigate("augie@upspin.io");
+	}
+
+	Startup(hello, function(data) {
+		page.username = data.UserName;
+		page.token = data.Token;
+		$("#headerUsername").text(page.username);
+		startBrowsers();
 	});
 }
 

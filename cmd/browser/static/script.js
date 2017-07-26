@@ -311,6 +311,99 @@ function Browser(parentEl, page) {
 	return browser;
 }
 
+// Startup manages the signup process and fetches the name of the logged-in
+// user and the XSRF token for making subsequent requests.
+function Startup(xhr, doneCallback) {
+	var signupEl = $("body > .up-signup");
+	signupEl.find("button").click(function() {
+		// TODO: validate input before sending it to the server.
+		signupEl.find("button").prop("disabled", true);
+		action({
+			action: "signup",
+			username: $("#signupUserName").val(),
+			dirserver: $("#signupDirServer").val(),
+			storeserver: $("#signupStoreServer").val()
+		});
+	});
+
+	var secretseedEl = $("body > .up-secretseed");
+	secretseedEl.find("button").click(function() {
+		secretseedEl.find("button").prop("disabled", true);
+		action();
+	});
+
+	var verifyEl = $("body > .up-verify");
+	verifyEl.find("button.up-resend").click(function() {
+		verifyEl.find("button").prop("disabled", true);
+		action({action: "register"});
+	});
+	verifyEl.find("button.up-proceed").click(function() {
+		verifyEl.find("button").prop("disabled", true);
+		action();
+	});
+
+	var lastStep = "";
+	var lastEl;
+	function success(resp) {
+		if (!resp.Startup) {
+			// The startup process is complete.
+			if (lastEl) {
+				lastEl.modal("hide");
+			}
+			doneCallback(resp);
+			return;
+		}
+		var data = resp.Startup;
+
+		// If we've moved onto another step, hide the previous one.
+		if (lastEl && data.Step != lastStep) {
+			lastEl.modal("hide");
+		}
+
+		// Set lastEl and lastStep and do step-specific setup.
+		switch (data.Step) {
+		case "signup":
+			lastEl = signupEl;
+			break
+		case "secretseed":
+			$("#secretseedKeyDir").text(data.KeyDir);
+			$("#secretseedSecretSeed").text(data.SecretSeed);
+			lastEl = secretseedEl;
+			break
+		case "verify":
+			verifyEl.find(".up-username").text(data.UserName);
+			lastEl = verifyEl;
+			break
+		}
+		lastStep = data.Step;
+
+		// Re-enable buttons, hide old errors, show the dialog.
+		lastEl.find("button").prop("disabled", false);
+		lastEl.find(".up-error").hide();
+		lastEl.modal("show");
+	}
+	function error(err) {
+		if (lastEl) {
+			// Show the error, re-enable buttons.
+			lastEl.find(".up-error").show().find(".up-error-msg").text(err);
+			lastEl.find("button").prop("disabled", false);
+		} else {
+			alert(err)
+			// TODO(adg): display the initial error in a more friendly way.
+		}
+	}
+	function action(data) {
+		if (lastEl) {
+			// Disable buttons, hide old errors.
+			lastEl.find("button").prop("disabled", true);
+			lastEl.find(".up-error").hide();
+		}
+		xhr(data, success, error);
+	}
+
+	action(); // Kick things off.
+}
+
 function Page() {
 	var page = {
 		username: "",
@@ -398,41 +491,51 @@ function Page() {
 		});
 	}
 
-	var browser1, browser2;
-	var parentEl = $(".up-browser-parent");
-	var methods = {
-		rm: rm,
-		copy: copy,
-		list: list,
-		mkdir: mkdir,
+	function startup(data, success, error) {
+		$.ajax("/_upspin", {
+			method: "POST",
+			data: $.extend({method: "startup"}, data),
+			dataType: "json",
+			success: function(data) {
+				if (data.Error) {
+					error(data.Error);
+					return;
+				}
+				success(data);
+			},
+			error: error
+		});
 	}
-	browser1 = new Browser(parentEl, $.extend({
-		copyDestination: function() { return browser2.path },
-		refreshDestination: function() { browser2.refresh(); }
-	}, methods));
-	browser2 = new Browser(parentEl, $.extend({
-		copyDestination: function() { return browser1.path },
-		refreshDestination: function() { browser1.refresh(); }
-	}, methods));
 
-	// Fetch user name and request token and initialize browsers.
-	$.ajax("/_upspin", {
-		method: "POST",
-		data: {
-			method: "whoami"
-		},
-		dataType: "json",
-		success: function(data) {
-			page.username = data.UserName;
-			page.token = data.Token;
-
-			$(".up-username").text(page.username);
-			browser1.navigate(page.username);
-			browser2.navigate("augie@upspin.io");
-		},
-		error: function(err) {
-			browser1.reportError(err);
+	function startBrowsers() {
+		var browser1, browser2;
+		var parentEl = $(".up-browser-parent");
+		var methods = {
+			rm: rm,
+			copy: copy,
+			list: list,
+			mkdir: mkdir,
 		}
+		browser1 = new Browser(parentEl, $.extend({
+			copyDestination: function() { return browser2.path },
+			refreshDestination: function() { browser2.refresh(); }
+		}, methods));
+		browser2 = new Browser(parentEl, $.extend({
+			copyDestination: function() { return browser1.path },
+			refreshDestination: function() { browser1.refresh(); }
+		}, methods));
+		browser1.navigate(page.username);
+		browser2.navigate("augie@upspin.io");
+	}
+
+	// Begin the Startup sequence.
+	Startup(startup, function(data) {
+		// When startup is complete note the user name and token and
+		// launch the browsers.
+		page.username = data.UserName;
+		page.token = data.Token;
+		$("#headerUsername").text(page.username);
+		startBrowsers();
 	});
 }
 

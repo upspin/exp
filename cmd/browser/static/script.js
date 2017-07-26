@@ -59,6 +59,23 @@ function Inspect(entry) {
 	el.find(".up-entry-writer").text(entry.Writer);
 }
 
+function Signup(hello) {
+	var el = $("body > .up-signup");
+
+	function update(data) {
+		el.modal("show");
+		console.log("signup.update", data);
+	}
+	function done() {
+		el.modal("hide");
+		console.log("signup.done");
+	}
+	return {
+		update: update,
+		done: done,
+	}
+}
+
 // Confirm displays a modal that prompts the user to confirm the copy or delete
 // of the given paths. If action is "copy", dest should be the copy destination.
 // The callback argument is a niladic function that performs the action.
@@ -398,42 +415,57 @@ function Page() {
 		});
 	}
 
-	var browser1, browser2;
-	var parentEl = $(".up-browser-parent");
-	var methods = {
-		rm: rm,
-		copy: copy,
-		list: list,
-		mkdir: mkdir,
+	function startBrowsers() {
+		var browser1, browser2;
+		var parentEl = $(".up-browser-parent");
+		var methods = {
+			rm: rm,
+			copy: copy,
+			list: list,
+			mkdir: mkdir,
+		}
+		browser1 = new Browser(parentEl, $.extend({
+			copyDestination: function() { return browser2.path },
+			refreshDestination: function() { browser2.refresh(); }
+		}, methods));
+		browser2 = new Browser(parentEl, $.extend({
+			copyDestination: function() { return browser1.path },
+			refreshDestination: function() { browser1.refresh(); }
+		}, methods));
 	}
-	browser1 = new Browser(parentEl, $.extend({
-		copyDestination: function() { return browser2.path },
-		refreshDestination: function() { browser2.refresh(); }
-	}, methods));
-	browser2 = new Browser(parentEl, $.extend({
-		copyDestination: function() { return browser1.path },
-		refreshDestination: function() { browser1.refresh(); }
-	}, methods));
+
+	var signup = Signup(hello);
+
+	function hello(data) {
+		$.ajax("/_upspin", {
+			method: "POST",
+			data: $.extend({method: "hello"}, data),
+			dataType: "json",
+			success: function(data) {
+				var s = data.Signup;
+				if (s !== null) {
+					signup.update(s);
+					return;
+				}
+				signup.done();
+
+				page.username = data.UserName;
+				page.token = data.Token;
+				$(".up-username").text(page.username);
+
+				startBrowsers();
+				browser1.navigate(page.username);
+				browser2.navigate("augie@upspin.io");
+			},
+			error: function(err) {
+				// TODO(adg): better error report.
+				console.log(err)
+			}
+		});
+	}
 
 	// Fetch user name and request token and initialize browsers.
-	$.ajax("/_upspin", {
-		method: "POST",
-		data: {
-			method: "whoami"
-		},
-		dataType: "json",
-		success: function(data) {
-			page.username = data.UserName;
-			page.token = data.Token;
-
-			$(".up-username").text(page.username);
-			browser1.navigate(page.username);
-			browser2.navigate("augie@upspin.io");
-		},
-		error: function(err) {
-			browser1.reportError(err);
-		}
-	});
+	hello();
 }
 
 // Start everything.

@@ -26,12 +26,10 @@ import (
 	"net/http"
 	"path"
 	"strings"
+	"sync"
 
 	"golang.org/x/net/xsrftoken"
 
-	"upspin.io/client"
-	"upspin.io/cmd/cacheserver/cacheutil"
-	"upspin.io/config"
 	"upspin.io/errors"
 	"upspin.io/flags"
 	"upspin.io/upspin"
@@ -49,13 +47,7 @@ func main() {
 		log.Fatalf("cannot listen on non-loopback address %q", *httpAddr)
 	}
 
-	cfg, err := config.FromFile(flags.Config)
-	if err != nil {
-		log.Fatal(err)
-	}
-	cacheutil.Start(cfg)
-
-	s, err := newServer(cfg)
+	s, err := newServer()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -68,13 +60,15 @@ func main() {
 // server implements an http.Handler that performs various Upspin operations
 // using a config. It is the back end for the JavaScript Upspin browser.
 type server struct {
-	cfg     upspin.Config
-	cli     upspin.Client
 	xsrfKey string       // Random secret key for generating XSRF tokens.
 	static  http.Handler // Handler for serving static content (HTML, JS, etc).
+
+	mu  sync.Mutex
+	cfg upspin.Config // Non-nil if signup flow has been completed.
+	cli upspin.Client
 }
 
-func newServer(cfg upspin.Config) (http.Handler, error) {
+func newServer() (http.Handler, error) {
 	key, err := generateKey()
 	if err != nil {
 		return nil, err
@@ -86,8 +80,6 @@ func newServer(cfg upspin.Config) (http.Handler, error) {
 	}
 
 	return &server{
-		cfg:     cfg,
-		cli:     client.New(cfg),
 		xsrfKey: key,
 		static:  http.FileServer(http.Dir(pkg.Dir)),
 	}, nil
@@ -130,21 +122,42 @@ func (s *server) serveAPI(w http.ResponseWriter, r *http.Request) {
 	}
 	method := r.FormValue("method")
 
-	// Require a valid XSRF token for any requests except "whoami".
-	if method != "whoami" && !xsrftoken.Valid(r.FormValue("token"), s.xsrfKey, string(s.cfg.UserName()), "") {
-		http.Error(w, "invalid request token", http.StatusForbidden)
+	s.mu.Lock()
+	hasConfig := s.cfg != nil
+	s.mu.Unlock()
+
+	// Don't permit accesses of non-signup methods if there is no config
+	// nor client; those methods need them.
+	if method != "startup" && !hasConfig {
+		http.Error(w, "no config", http.StatusBadRequest)
+		return
+	}
+
+	// Require a valid XSRF token for any requests except "startup".
+	if method != "startup" && !xsrftoken.Valid(r.FormValue("token"), s.xsrfKey, "magic", "") {
+		http.Error(w, "invalid xsrf token", http.StatusForbidden)
 		return
 	}
 
 	var resp interface{}
 	switch method {
-	case "whoami":
-		user := string(s.cfg.UserName())
-		token := xsrftoken.Generate(s.xsrfKey, user, "")
+	case "startup":
+		sResp, cfg, err := s.startup(r)
+		var errString string
+		if err != nil {
+			errString = err.Error()
+		}
+		var user string
+		if cfg != nil {
+			user = string(cfg.UserName())
+		}
+		token := xsrftoken.Generate(s.xsrfKey, "magic", "")
 		resp = struct {
+			Startup  *startupResponse
 			UserName string
 			Token    string
-		}{user, token}
+			Error    string
+		}{sResp, user, token, errString}
 	case "list":
 		path := upspin.PathName(r.FormValue("path"))
 		des, err := s.cli.Glob(upspin.AllFilesGlob(path))

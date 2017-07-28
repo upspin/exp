@@ -1,0 +1,208 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "24894229_e8671c9e",
+        "filename": "cmd/browser/main.go",
+        "patchSetId": 6
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-07-28T03:37:40Z",
+      "side": 1,
+      "message": "if what is set?",
+      "revId": "4191c906e6bd67fb60511ce6d082521078fadcf8",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8f0035bb_86ea448f",
+        "filename": "cmd/browser/main.go",
+        "patchSetId": 6
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-07-28T03:37:40Z",
+      "side": 1,
+      "message": "now it seems there should be a method for this",
+      "revId": "4191c906e6bd67fb60511ce6d082521078fadcf8",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "74e95cdd_4e92dfd7",
+        "filename": "cmd/browser/startup.go",
+        "patchSetId": 6
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-07-28T03:37:40Z",
+      "side": 1,
+      "message": "incomplete",
+      "revId": "4191c906e6bd67fb60511ce6d082521078fadcf8",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ce724fef_980a4e92",
+        "filename": "cmd/browser/startup.go",
+        "patchSetId": 6
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-07-28T03:37:40Z",
+      "side": 1,
+      "message": "put the name in the error message",
+      "revId": "4191c906e6bd67fb60511ce6d082521078fadcf8",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "14a1e183_63523b69",
+        "filename": "cmd/browser/startup.go",
+        "patchSetId": 6
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-07-28T03:37:40Z",
+      "side": 1,
+      "message": "s/$/./",
+      "revId": "4191c906e6bd67fb60511ce6d082521078fadcf8",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a4a0884e_026034f0",
+        "filename": "cmd/browser/startup.go",
+        "patchSetId": 6
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-07-28T03:37:40Z",
+      "side": 1,
+      "message": "s/key //",
+      "revId": "4191c906e6bd67fb60511ce6d082521078fadcf8",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1146e508_3589d577",
+        "filename": "cmd/browser/static/index.html",
+        "patchSetId": 6
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-07-28T03:37:40Z",
+      "side": 1,
+      "message": "copyright?",
+      "revId": "4191c906e6bd67fb60511ce6d082521078fadcf8",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d321e97d_c37ac4f7",
+        "filename": "cmd/browser/static/index.html",
+        "patchSetId": 6
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-07-28T03:37:40Z",
+      "side": 1,
+      "message": "i\u0027d say user name but it may be too late to establish that convention.\nmeanwhile, maybe a link to something like the intro or the FAQ entry for email addresses?\n\"See XXX for more information about Upspin user names.\" at the end of this block?",
+      "revId": "4191c906e6bd67fb60511ce6d082521078fadcf8",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9a6dfeeb_66d134f0",
+        "filename": "cmd/browser/static/index.html",
+        "patchSetId": 6
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-07-28T03:37:40Z",
+      "side": 1,
+      "message": "this directory on your local machine",
+      "revId": "4191c906e6bd67fb60511ce6d082521078fadcf8",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a27d2fa9_225a27d1",
+        "filename": "cmd/browser/static/index.html",
+        "patchSetId": 6
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-07-28T03:37:40Z",
+      "side": 1,
+      "message": "again, See XXX for more",
+      "revId": "4191c906e6bd67fb60511ce6d082521078fadcf8",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cbac043a_0df784a5",
+        "filename": "cmd/browser/static/index.html",
+        "patchSetId": 6
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-07-28T03:37:40Z",
+      "side": 1,
+      "message": "trailing space",
+      "revId": "4191c906e6bd67fb60511ce6d082521078fadcf8",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c72060f2_59eb7db9",
+        "filename": "cmd/browser/static/index.html",
+        "patchSetId": 6
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-07-28T03:37:40Z",
+      "side": 1,
+      "message": "signup\n\nit\u0027s an adjective here",
+      "revId": "4191c906e6bd67fb60511ce6d082521078fadcf8",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    }
+  ]
+}

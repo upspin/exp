@@ -30,7 +30,7 @@ import (
 
 const signupURL = "https://key.upspin.io/signup"
 
-// startupResponse is
+// startupResponse is a sent to the client in response to startup requests.
 type startupResponse struct {
 	// Step is the modal dialog that should be displayed to the user at
 	// this stage of the startup process.
@@ -103,7 +103,7 @@ func (s *server) startup(req *http.Request) (*startupResponse, upspin.Config, er
 		// Generate keys.
 		secretSeed, keyDir, err = keygen(userName)
 		if err != nil {
-			// Don't leave the config lying around
+			// Don't leave the config lying around.
 			os.Remove(flags.Config)
 			return nil, nil, err
 		}
@@ -128,9 +128,10 @@ func (s *server) startup(req *http.Request) (*startupResponse, upspin.Config, er
 	if action == "register" {
 		if err := signup.MakeRequest(signupURL, cfg); err != nil {
 			if keyDir != "" {
-				// We have just generated the key keys, so we should
-				// remove both the keys and the config, since they are
-				// bad. TODO(adg): really think about this carefully!
+				// We have just generated the keys, so we
+				// should remove both the keys and the config,
+				// since they are bad. TODO(adg): really think
+				// about this carefully!
 				os.RemoveAll(keyDir)
 				os.Remove(flags.Config)
 			}

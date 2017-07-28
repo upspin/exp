@@ -413,6 +413,19 @@ function Page() {
 		token: ""
 	};
 
+	// errorHandler returns an XHR error callback that invokes the given
+	// browser error callback with the human-readable error string.
+	function errorHandler(callback) {
+		return function(jqXHR, textStatus, errorThrown) {
+			console.log(textStatus, errorThrown);
+			if (errorThrown) {
+				callback(errorThrown);
+				return;
+			}
+			callback(textStatus);
+		}
+	}
+
 	function list(path, success, error) {
 		$.ajax("/_upspin", {
 			method: "POST",
@@ -429,7 +442,7 @@ function Page() {
 				}
 				success(data.Entries);
 			},
-			error: error
+			error: errorHandler(error)
 		});
 	}
 
@@ -449,7 +462,7 @@ function Page() {
 				}
 				success();
 			},
-			error: error
+			error: errorHandler(error)
 		});
 	}
 
@@ -470,7 +483,7 @@ function Page() {
 				}
 				success();
 			},
-			error: error
+			error: errorHandler(error)
 		});
 	}
 
@@ -490,7 +503,7 @@ function Page() {
 				}
 				success();
 			},
-			error: error
+			error: errorHandler(error)
 		});
 	}
 
@@ -506,7 +519,7 @@ function Page() {
 				}
 				success(data);
 			},
-			error: error
+			error: errorHandler(error)
 		});
 	}
 

@@ -63,9 +63,8 @@ type server struct {
 	xsrfKey string       // Random secret key for generating XSRF tokens.
 	static  http.Handler // Handler for serving static content (HTML, JS, etc).
 
-	// If set, signup flow has been completed.
 	mu  sync.Mutex
-	cfg upspin.Config
+	cfg upspin.Config // Non-nil if signup flow has been completed.
 	cli upspin.Client
 }
 

@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ddd63351_d12842f8",
+        "filename": "cmd/browser/main.go",
+        "patchSetId": 6
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 5389
+      },
+      "writtenOn": "2017-07-31T00:43:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "24894229_e8671c9e",
+      "revId": "4191c906e6bd67fb60511ce6d082521078fadcf8",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8f0035bb_86ea448f",
         "filename": "cmd/browser/main.go",
         "patchSetId": 6
@@ -30,6 +48,24 @@
       "writtenOn": "2017-07-28T03:37:40Z",
       "side": 1,
       "message": "now it seems there should be a method for this",
+      "revId": "4191c906e6bd67fb60511ce6d082521078fadcf8",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "566a112e_27fc0f4e",
+        "filename": "cmd/browser/main.go",
+        "patchSetId": 6
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 5389
+      },
+      "writtenOn": "2017-07-31T00:43:05Z",
+      "side": 1,
+      "message": "Really? There\u0027s only one place in which I would use it. Here.",
+      "parentUuid": "8f0035bb_86ea448f",
       "revId": "4191c906e6bd67fb60511ce6d082521078fadcf8",
       "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
       "unresolved": true
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "30cf6526_74bd24ef",
+        "filename": "cmd/browser/startup.go",
+        "patchSetId": 6
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 5389
+      },
+      "writtenOn": "2017-07-31T00:43:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "74e95cdd_4e92dfd7",
+      "revId": "4191c906e6bd67fb60511ce6d082521078fadcf8",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ce724fef_980a4e92",
         "filename": "cmd/browser/startup.go",
         "patchSetId": 6
@@ -64,6 +118,24 @@
       "writtenOn": "2017-07-28T03:37:40Z",
       "side": 1,
       "message": "put the name in the error message",
+      "revId": "4191c906e6bd67fb60511ce6d082521078fadcf8",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3dafa52e_9c895e7a",
+        "filename": "cmd/browser/startup.go",
+        "patchSetId": 6
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 5389
+      },
+      "writtenOn": "2017-07-31T00:43:05Z",
+      "side": 1,
+      "message": "This error is displayed to the user directly, and the username is on their screen (they just submitted the form).\n\nI\u0027d like to figure out a better way of reporting GUI-friendly errors rather than hard-coding them here, but I\u0027m not sure at the moment.\n\nI should add a TODO?",
+      "parentUuid": "ce724fef_980a4e92",
       "revId": "4191c906e6bd67fb60511ce6d082521078fadcf8",
       "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
       "unresolved": true
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "2ea8e947_98dc3090",
+        "filename": "cmd/browser/startup.go",
+        "patchSetId": 6
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 5389
+      },
+      "writtenOn": "2017-07-31T00:43:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "14a1e183_63523b69",
+      "revId": "4191c906e6bd67fb60511ce6d082521078fadcf8",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a4a0884e_026034f0",
         "filename": "cmd/browser/startup.go",
         "patchSetId": 6
@@ -104,6 +194,24 @@
     },
     {
       "key": {
+        "uuid": "7d7da550_d38b9d52",
+        "filename": "cmd/browser/startup.go",
+        "patchSetId": 6
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 5389
+      },
+      "writtenOn": "2017-07-31T00:43:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a4a0884e_026034f0",
+      "revId": "4191c906e6bd67fb60511ce6d082521078fadcf8",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1146e508_3589d577",
         "filename": "cmd/browser/static/index.html",
         "patchSetId": 6
@@ -118,6 +226,24 @@
       "revId": "4191c906e6bd67fb60511ce6d082521078fadcf8",
       "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "767712ca_7b3019bf",
+        "filename": "cmd/browser/static/index.html",
+        "patchSetId": 6
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 5389
+      },
+      "writtenOn": "2017-07-31T00:43:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1146e508_3589d577",
+      "revId": "4191c906e6bd67fb60511ce6d082521078fadcf8",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": false
     },
     {
       "key": {
@@ -155,6 +281,24 @@
     },
     {
       "key": {
+        "uuid": "4d519c29_6b987ee1",
+        "filename": "cmd/browser/static/index.html",
+        "patchSetId": 6
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 5389
+      },
+      "writtenOn": "2017-07-31T00:43:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9a6dfeeb_66d134f0",
+      "revId": "4191c906e6bd67fb60511ce6d082521078fadcf8",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a27d2fa9_225a27d1",
         "filename": "cmd/browser/static/index.html",
         "patchSetId": 6
@@ -189,6 +333,24 @@
     },
     {
       "key": {
+        "uuid": "3a9b48cf_eb7b5de5",
+        "filename": "cmd/browser/static/index.html",
+        "patchSetId": 6
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 5389
+      },
+      "writtenOn": "2017-07-31T00:43:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cbac043a_0df784a5",
+      "revId": "4191c906e6bd67fb60511ce6d082521078fadcf8",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c72060f2_59eb7db9",
         "filename": "cmd/browser/static/index.html",
         "patchSetId": 6
@@ -203,6 +365,24 @@
       "revId": "4191c906e6bd67fb60511ce6d082521078fadcf8",
       "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7cdceee4_61114399",
+        "filename": "cmd/browser/static/index.html",
+        "patchSetId": 6
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 5389
+      },
+      "writtenOn": "2017-07-31T00:43:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c72060f2_59eb7db9",
+      "revId": "4191c906e6bd67fb60511ce6d082521078fadcf8",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": false
     }
   ]
 }

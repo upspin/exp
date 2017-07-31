@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3dd7900f_9b53476d",
+        "filename": "cmd/browser/static/index.html",
+        "patchSetId": 7
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-07-31T01:12:43Z",
+      "side": 1,
+      "message": "Your user name is just an email address you own during signup.\n(After signup, you can delete it if you want; see \u003cmaybe the faq question\u003e?).",
+      "revId": "fd212530387a27da06958c750a585383bf79b0a7",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dbc07843_1820f246",
+        "filename": "cmd/browser/static/index.html",
+        "patchSetId": 7
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-07-31T01:12:43Z",
+      "side": 1,
+      "message": "that\u0027s not where i\u0027d go with this, but OK.",
+      "revId": "fd212530387a27da06958c750a585383bf79b0a7",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    }
+  ]
+}

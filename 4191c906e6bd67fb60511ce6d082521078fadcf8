@@ -72,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "b6cd5569_b99277d6",
+        "filename": "cmd/browser/main.go",
+        "patchSetId": 6
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-07-31T01:12:43Z",
+      "side": 1,
+      "message": "I see two, and neither is locally obvious.",
+      "parentUuid": "566a112e_27fc0f4e",
+      "revId": "4191c906e6bd67fb60511ce6d082521078fadcf8",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "74e95cdd_4e92dfd7",
         "filename": "cmd/browser/startup.go",
         "patchSetId": 6
@@ -136,6 +154,24 @@
       "side": 1,
       "message": "This error is displayed to the user directly, and the username is on their screen (they just submitted the form).\n\nI\u0027d like to figure out a better way of reporting GUI-friendly errors rather than hard-coding them here, but I\u0027m not sure at the moment.\n\nI should add a TODO?",
       "parentUuid": "ce724fef_980a4e92",
+      "revId": "4191c906e6bd67fb60511ce6d082521078fadcf8",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1e038dac_c76a2c3c",
+        "filename": "cmd/browser/startup.go",
+        "patchSetId": 6
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-07-31T01:12:43Z",
+      "side": 1,
+      "message": "then at least s/The given/That/, but really, it should be\n\"ann@example.com\" is already registered.\n\nthe thing is, you look at the error message, not the input that generated it. let\u0027s say you made a typo. (not likely an issue here, but i\u0027m making a larger point.) you won\u0027t see the typo because it\u0027s not shown, whereas if it said\n\n\"ann@example.coom\" is not a valid user name\n\nthat\u0027s more helpful than\n\nThat is not a valid user name.",
+      "parentUuid": "3dafa52e_9c895e7a",
       "revId": "4191c906e6bd67fb60511ce6d082521078fadcf8",
       "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
       "unresolved": true

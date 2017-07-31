@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "949ad43c_d6dbb8dc",
+        "filename": "cmd/browser/static/index.html",
+        "patchSetId": 7
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 5389
+      },
+      "writtenOn": "2017-07-31T23:03:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3dd7900f_9b53476d",
+      "revId": "fd212530387a27da06958c750a585383bf79b0a7",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dbc07843_1820f246",
         "filename": "cmd/browser/static/index.html",
         "patchSetId": 7
@@ -30,6 +48,24 @@
       "writtenOn": "2017-07-31T01:12:43Z",
       "side": 1,
       "message": "that\u0027s not where i\u0027d go with this, but OK.",
+      "revId": "fd212530387a27da06958c750a585383bf79b0a7",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "20aa3174_44f69db3",
+        "filename": "cmd/browser/static/index.html",
+        "patchSetId": 7
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 5389
+      },
+      "writtenOn": "2017-07-31T23:03:48Z",
+      "side": 1,
+      "message": "It\u0027s what the \u0027upspin signup\u0027 docs say.\nMaybe we could strike this here, though.",
+      "parentUuid": "dbc07843_1820f246",
       "revId": "fd212530387a27da06958c750a585383bf79b0a7",
       "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
       "unresolved": true

@@ -90,6 +90,24 @@
     },
     {
       "key": {
+        "uuid": "73cc3678_c2ae1db3",
+        "filename": "cmd/browser/main.go",
+        "patchSetId": 6
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 5389
+      },
+      "writtenOn": "2017-07-31T23:03:48Z",
+      "side": 1,
+      "message": "They\u0027re different, though. We should talk about this in person.",
+      "parentUuid": "b6cd5569_b99277d6",
+      "revId": "4191c906e6bd67fb60511ce6d082521078fadcf8",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "74e95cdd_4e92dfd7",
         "filename": "cmd/browser/startup.go",
         "patchSetId": 6
@@ -175,6 +193,24 @@
       "revId": "4191c906e6bd67fb60511ce6d082521078fadcf8",
       "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2069e2d5_cf868082",
+        "filename": "cmd/browser/startup.go",
+        "patchSetId": 6
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 5389
+      },
+      "writtenOn": "2017-07-31T23:03:48Z",
+      "side": 1,
+      "message": "Great suggestions, thanks. Done.",
+      "parentUuid": "1e038dac_c76a2c3c",
+      "revId": "4191c906e6bd67fb60511ce6d082521078fadcf8",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": false
     },
     {
       "key": {
@@ -346,6 +382,24 @@
       "writtenOn": "2017-07-28T03:37:40Z",
       "side": 1,
       "message": "again, See XXX for more",
+      "revId": "4191c906e6bd67fb60511ce6d082521078fadcf8",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ff505f55_4b0642cf",
+        "filename": "cmd/browser/static/index.html",
+        "patchSetId": 6
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 5389
+      },
+      "writtenOn": "2017-07-31T23:03:48Z",
+      "side": 1,
+      "message": "What would you suggest?",
+      "parentUuid": "a27d2fa9_225a27d1",
       "revId": "4191c906e6bd67fb60511ce6d082521078fadcf8",
       "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
       "unresolved": true

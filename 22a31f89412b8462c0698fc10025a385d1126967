@@ -2,6 +2,57 @@
   "comments": [
     {
       "key": {
+        "uuid": "21c5cd0d_ad03928c",
+        "filename": "cmd/browser/startup.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-08-10T04:44:37Z",
+      "side": 1,
+      "message": "s/their/the/",
+      "revId": "22a31f89412b8462c0698fc10025a385d1126967",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d005ad1a_9f393f19",
+        "filename": "cmd/browser/startup.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-08-10T04:44:37Z",
+      "side": 1,
+      "message": "s/their/the/",
+      "revId": "22a31f89412b8462c0698fc10025a385d1126967",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c1696a11_8819a506",
+        "filename": "cmd/browser/static/index.html",
+        "patchSetId": 2
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-08-10T04:44:37Z",
+      "side": 1,
+      "message": "weird sentence.\n\ncan you arrange that if you provide only one address, it means both?",
+      "revId": "22a31f89412b8462c0698fc10025a385d1126967",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "214133e0_9c4dd297",
         "filename": "cmd/browser/static/script.js",
         "patchSetId": 2

@@ -10,10 +10,12 @@ import (
 	"bytes"
 	"fmt"
 	"io/ioutil"
+	"net"
 	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"reflect"
 	"strings"
 
 	"upspin.io/bind"
@@ -29,6 +31,15 @@ import (
 )
 
 const signupURL = "https://key.upspin.io/signup"
+
+// noneEndpoint is a sentinel Endpoint value that should be passed to
+// writeConfig when we wish to set the dirserver and/or storeserver
+// specifically to 'unassigned', to distinguish from the zero value.
+// The NetAddr "none" is not written to the config file.
+var noneEndpoint = upspin.Endpoint{
+	Transport: upspin.Unassigned,
+	NetAddr:   "none",
+}
 
 // startupResponse is sent to the client in response to startup requests.
 type startupResponse struct {
@@ -56,8 +67,11 @@ type startupResponse struct {
 //    - Register the user and keys with the key server (action "register").
 //  - Check that the config's user exists on the Key Server. If not:
 //    - Prompt the user to click the verification link in the email (Step: "verify").
-//  - Check that the user's root exists. If not:
-//    - Make the user's root.
+//  - Check that the user has endpoints defined in the config file. If not:
+//    - Prompt the user to choose dir/store endpoints, or none. (Step: "serverSelect")
+//      TODO(adg): GCP project creation
+//    - Update the user's endpoints in the keyserver record.
+//    - Rewrite the config file with the chosen endpoints.
 //
 // Only one of startup's return values should be non-nil. If a user is to be
 // presented with a given step, startup returns a non-nil startupResponse. If
@@ -76,15 +90,10 @@ func (s *server) startup(req *http.Request) (*startupResponse, upspin.Config, er
 	var secretSeed, keyDir string
 	if action == "signup" {
 		// The user clicked the "Sign up" button on the signup dialog.
-		var (
-			userName    = upspin.UserName(req.FormValue("username"))
-			dirServer   = upspin.NetAddr(req.FormValue("dirserver"))
-			storeServer = upspin.NetAddr(req.FormValue("storeserver"))
-		)
+		userName := upspin.UserName(req.FormValue("username"))
 		if err := valid.UserName(userName); err != nil {
 			return nil, nil, err
 		}
-		// TODO(adg): validate endpoints
 
 		// Check whether userName already exists on the KeyServer.
 		userCfg := config.SetUserName(config.New(), userName)
@@ -95,7 +104,7 @@ func (s *server) startup(req *http.Request) (*startupResponse, upspin.Config, er
 		}
 
 		// Write config file.
-		err := writeConfig(flags.Config, userName, dirServer, storeServer)
+		err := writeConfig(flags.Config, userName, upspin.Endpoint{}, upspin.Endpoint{}, false)
 		if err != nil {
 			return nil, nil, err
 		}
@@ -125,7 +134,8 @@ func (s *server) startup(req *http.Request) (*startupResponse, upspin.Config, er
 		return nil, nil, err
 	}
 
-	if action == "register" {
+	switch action {
+	case "register":
 		if err := signup.MakeRequest(signupURL, cfg); err != nil {
 			if keyDir != "" {
 				// We have just generated the keys, so we
@@ -148,6 +158,72 @@ func (s *server) startup(req *http.Request) (*startupResponse, upspin.Config, er
 			SecretSeed: secretSeed,
 			UserName:   cfg.UserName(),
 		}, nil, nil
+
+	case "specifyEndpoints":
+		dirHost := req.FormValue("dirServer")
+		dirEndpoint, err := hostnameToEndpoint(dirHost)
+		if err != nil {
+			return nil, nil, errors.Errorf("invalid hostname %q: %v", dirHost, err)
+		}
+		storeHost := req.FormValue("storeServer")
+		storeEndpoint, err := hostnameToEndpoint(storeHost)
+		if err != nil {
+			return nil, nil, errors.Errorf("invalid hostname %q: %v", storeHost, err)
+		}
+
+		dir, err := bind.DirServer(cfg, dirEndpoint)
+		if err != nil {
+			return nil, nil, errors.Errorf("could not find %q:\n%v", dirHost, err)
+		}
+		store, err := bind.StoreServer(cfg, storeEndpoint)
+		if err != nil {
+			return nil, nil, errors.Errorf("could not find %q:\n%v", storeHost, err)
+		}
+
+		// Check that the StoreServer is up.
+		_, _, _, err = store.Get("Upspin:notexist")
+		if err != nil && !errors.Match(errors.E(errors.NotExist), err) {
+			return nil, nil, errors.Errorf("error communicating with %q:\n%v", storeHost, err)
+		}
+		cfg = config.SetStoreEndpoint(cfg, storeEndpoint)
+
+		// Check that the DirServer is up, and create the user root.
+		makeRoot := false
+		root := upspin.PathName(cfg.UserName())
+		_, err = dir.Lookup(root)
+		if errors.Match(errors.E(errors.NotExist), err) {
+			makeRoot = true
+		} else if err != nil {
+			return nil, nil, errors.Errorf("error communicating with %q:\n%v", dirHost, err)
+		}
+		cfg = config.SetDirEndpoint(cfg, dirEndpoint)
+		if makeRoot {
+			_, err = client.New(cfg).MakeDirectory(root)
+			if err != nil {
+				return nil, nil, errors.Errorf("error creating Upspin root:\n%v", err)
+			}
+		}
+
+		// Put the updated user record to the key server.
+		if err := putUser(cfg); err != nil {
+			return nil, nil, errors.Errorf("error updating key server:\n%v", err)
+		}
+
+		// Write config file with updated endpoints.
+		err = writeConfig(flags.Config, cfg.UserName(), dirEndpoint, storeEndpoint, true)
+		if err != nil {
+			return nil, nil, err
+		}
+
+	case "specifyNoEndpoints":
+		cfg = config.SetDirEndpoint(cfg, noneEndpoint)
+		cfg = config.SetStoreEndpoint(cfg, noneEndpoint)
+
+		// Write config file with updated "none" endpoints.
+		err = writeConfig(flags.Config, cfg.UserName(), noneEndpoint, noneEndpoint, true)
+		if err != nil {
+			return nil, nil, err
+		}
 	}
 
 	// Is the user now registered with the KeyServer?
@@ -161,9 +237,14 @@ func (s *server) startup(req *http.Request) (*startupResponse, upspin.Config, er
 		}, nil, nil
 	}
 
-	// Make the user's root if it doesn't exist.
-	if err := makeRoot(cfg); err != nil {
+	// If the user has not specified an endpoint (including 'unassigned')
+	// in their config file, prompt them to select Upspin servers.
+	if ok, err := hasEndpoints(flags.Config); err != nil {
 		return nil, nil, err
+	} else if !ok && cfg.DirEndpoint() == (upspin.Endpoint{}) {
+		return &startupResponse{
+			Step: "serverSelect",
+		}, nil, nil
 	}
 
 	// We have a valid config. Set it in the server struct so that the
@@ -211,20 +292,21 @@ func keygen(user upspin.UserName) (seed, keyDir string, err error) {
 }
 
 // writeConfig writes an Upspin config to the nominated file containing the
-// provided user name and endpoint addresses. It will fail if file exists.
-func writeConfig(file string, user upspin.UserName, dir, store upspin.NetAddr) error {
-	if exists(file) {
+// provided user name and endpoints.
+// It will fail if file exists and allowOverwrite is false.
+func writeConfig(file string, user upspin.UserName, dir, store upspin.Endpoint, allowOverwrite bool) error {
+	if exists(file) && !allowOverwrite {
 		return errors.Errorf("cannot write %s: file already exists", file)
 	}
 	if err := os.MkdirAll(filepath.Dir(file), 0755); err != nil {
 		return err
 	}
 	cfg := fmt.Sprintf("username: %s\n", user)
-	if dir != "" {
-		cfg += fmt.Sprintf("dirserver: remote,%s\n", dir)
+	if dir != (upspin.Endpoint{}) {
+		cfg += fmt.Sprintf("dirserver: %s\n", dir)
 	}
-	if store != "" {
-		cfg += fmt.Sprintf("storeserver: remote,%s\n", store)
+	if store != (upspin.Endpoint{}) {
+		cfg += fmt.Sprintf("storeserver: %s\n", store)
 	}
 	cfg += "packing: ee\n"
 	cfg += "cache: yes\n" // TODO(adg): make this configurable?
@@ -249,31 +331,62 @@ func isRegistered(cfg upspin.Config) (bool, error) {
 	return true, nil
 }
 
-// makeRoot creates the root for the user in the given config on the DirServer
-// in the given config. If no DirServer endpoint is present in the config, or
-// if the root already exists, it does nothing.
-func makeRoot(cfg upspin.Config) error {
-	ep := cfg.DirEndpoint()
-	if ep.Transport != upspin.Remote {
-		return nil
+// putUser updates the key server with the user name, endpoints, and public key
+// in the given config.
+func putUser(cfg upspin.Config) error {
+	f := cfg.Factotum()
+	if f == nil {
+		return errors.E(cfg.UserName(), errors.Str("user has no keys"))
 	}
-	dir, err := bind.DirServer(cfg, cfg.DirEndpoint())
+	newU := upspin.User{
+		Name:      cfg.UserName(),
+		Dirs:      []upspin.Endpoint{cfg.DirEndpoint()},
+		Stores:    []upspin.Endpoint{cfg.StoreEndpoint()},
+		PublicKey: f.PublicKey(),
+	}
+
+	key, err := bind.KeyServer(cfg, cfg.KeyEndpoint())
 	if err != nil {
 		return err
 	}
-	p := upspin.PathName(cfg.UserName())
-	_, err = dir.Lookup(p)
-	if err == nil {
-		return nil
-	}
-	if !errors.Match(errors.E(errors.NotExist), err) {
+	usercache.ResetGlobal() // Avoid hitting the local user cache.
+	oldU, err := key.Lookup(cfg.UserName())
+	if err != nil {
 		return err
 	}
-	_, err = client.New(cfg).MakeDirectory(p)
-	return err
+	if reflect.DeepEqual(*oldU, newU) {
+		// Don't do anything if we're not changing anything.
+		return nil
+	}
+	return key.Put(&newU)
+}
+
+// hasEndpoints reports whether the given config file contains a dirserver
+// endpoint. It is only a rough test (it doesn't actually parse the YAML) and
+// should be used in concert with a check against the parsed config.
+func hasEndpoints(configFile string) (bool, error) {
+	b, err := ioutil.ReadFile(configFile)
+	if err != nil {
+		return false, err
+	}
+	return bytes.Contains(b, []byte("\ndirserver:")), nil
 }
 
 func exists(path string) bool {
 	_, err := os.Stat(path)
 	return err == nil
+}
+
+func hostnameToEndpoint(hostname string) (upspin.Endpoint, error) {
+	if !strings.Contains(hostname, ":") {
+		hostname += ":443"
+	}
+	host, port, err := net.SplitHostPort(hostname)
+	if err != nil {
+		return upspin.Endpoint{}, err
+	}
+	return upspin.Endpoint{
+		Transport: upspin.Remote,
+		NetAddr:   upspin.NetAddr(host + ":" + port),
+	}, nil
 }

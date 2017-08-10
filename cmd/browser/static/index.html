@@ -169,19 +169,6 @@ license that can be found in the LICENSE file.
 			<label for="signupUserName">User Name</label>
 			<input type="email" class="form-control" id="signupUserName" placeholder="Email address">
 		</div>
-		<p>
-		If you know the names of the Directory and Store servers you
-		will use, you may nominate them here. If not, don't worry;
-		you can set them later.
-		</p>
-		<div class="form-group">
-			<label for="singupInputDirServer">Directory Server</label>
-			<input type="text" class="form-control" id="signupDirServer" placeholder="Host name">
-		</div>
-		<div class="form-group">
-			<label for="singupInputDirServer">Store Server</label>
-			<input type="text" class="form-control" id="signupStoreServer" placeholder="Host name">
-		</div>
 		<div class="panel panel-danger up-error">
 			<div class="panel-heading">Error</div>
 			<div class="panel-body up-error-msg"></div>
@@ -255,6 +242,84 @@ license that can be found in the LICENSE file.
       <div class="modal-footer">
         <button type="button" class="btn btn-default up-resend">Re-send verification email</button>
         <button type="button" class="btn btn-primary up-proceed">Proceed</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- serverSelect modal -->
+
+<div class="modal fade up-serverSelect" tabindex="-1" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Configure your Upspin servers</h4>
+      </div>
+      <div class="modal-body">
+		<p>
+		To store data in Upspin you need directory and store servers.
+		You may nominate existing servers or deploy them yourself.
+		Alternately, if you just want to read Upspin data you can skip
+		this step.
+		</p>
+		<div class="radio">
+			<label>
+				<input type="radio" name="serverSelectRadio" id="serverSelectExisting" value="none">
+				I will use existing Upspin servers.
+			</label>
+		</div>
+		<div class="radio">
+			<label>
+				<input type="radio" name="serverSelectRadio" id="serverSelectGCP" value="none">
+				I will deploy new Upspin servers to the Google Cloud Platform.
+			</label>
+		</div>
+		<div class="radio">
+			<label>
+				<input type="radio" name="serverSelectRadio" id="serverSelectNone" value="none" checked>
+				Skip configuring my servers; I'll use Upspin in read-only mode for now.
+			</label>
+		</div>
+		<div class="panel panel-danger up-error">
+			<div class="panel-heading">Error</div>
+			<div class="panel-body up-error-msg"></div>
+		</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Continue</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- serverExisting modal -->
+
+<div class="modal fade up-serverExisting" tabindex="-1" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Specify your Upspin servers</h4>
+      </div>
+      <div class="modal-body">
+		<p>
+		Specify the host names of your Upspin directory and store servers.
+		Ask your Upspin server administrator if you don't know what this means.
+		</p>
+		<div class="form-group">
+			<label for="serverExistingInputDirServer">Directory Server</label>
+			<input type="text" class="form-control" id="serverExistingDirServer" placeholder="Host name">
+		</div>
+		<div class="form-group">
+			<label for="serverExistingInputDirServer">Store Server</label>
+			<input type="text" class="form-control" id="serverExistingStoreServer" placeholder="Host name">
+		</div>
+		<div class="panel panel-danger up-error">
+			<div class="panel-heading">Error</div>
+			<div class="panel-body up-error-msg"></div>
+		</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Continue</button>
       </div>
     </div>
   </div>

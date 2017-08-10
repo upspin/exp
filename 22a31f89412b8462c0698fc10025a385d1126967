@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "214133e0_9c4dd297",
+        "filename": "cmd/browser/static/script.js",
+        "patchSetId": 2
+      },
+      "lineNbr": 344,
+      "author": {
+        "id": 6085
+      },
+      "writtenOn": "2017-08-10T04:38:52Z",
+      "side": 1,
+      "message": "does this really work with JS?",
+      "range": {
+        "startLine": 344,
+        "startChar": 2,
+        "endLine": 344,
+        "endChar": 17
+      },
+      "revId": "22a31f89412b8462c0698fc10025a385d1126967",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c18c569c_35bf3e84",
+        "filename": "cmd/browser/static/script.js",
+        "patchSetId": 2
+      },
+      "lineNbr": 360,
+      "author": {
+        "id": 6085
+      },
+      "writtenOn": "2017-08-10T04:38:52Z",
+      "side": 1,
+      "message": "ditch trailing comma",
+      "range": {
+        "startLine": 360,
+        "startChar": 53,
+        "endLine": 360,
+        "endChar": 54
+      },
+      "revId": "22a31f89412b8462c0698fc10025a385d1126967",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    }
+  ]
+}

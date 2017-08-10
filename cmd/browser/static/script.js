@@ -320,34 +320,51 @@ function Startup(xhr, doneCallback) {
 	var signupEl = $("body > .up-signup");
 	signupEl.find("button").click(function() {
 		// TODO: validate input before sending it to the server.
-		signupEl.find("button").prop("disabled", true);
 		action({
 			action: "signup",
 			username: $("#signupUserName").val(),
-			dirserver: $("#signupDirServer").val(),
-			storeserver: $("#signupStoreServer").val()
 		});
 	});
 
 	var secretseedEl = $("body > .up-secretseed");
 	secretseedEl.find("button").click(function() {
-		secretseedEl.find("button").prop("disabled", true);
 		action();
 	});
 
 	var verifyEl = $("body > .up-verify");
 	verifyEl.find("button.up-resend").click(function() {
-		verifyEl.find("button").prop("disabled", true);
 		action({action: "register"});
 	});
 	verifyEl.find("button.up-proceed").click(function() {
-		verifyEl.find("button").prop("disabled", true);
 		action();
+	});
+
+	var serverSelectEl = $("body > .up-serverSelect");
+	serverSelectEl.find("button").click(function() {
+		switch (true) {
+		case $("#serverSelectExisting").is(":checked"):
+			show({Step: "serverExisting"});
+			break;
+		case $("#serverSelectGCP").is(":checked"):
+			break;
+		case $("#serverSelectNone").is(":checked"):
+			action({action: "specifyNoEndpoints"});
+			break;
+		}
+	});
+	var serverExistingEl = $("body > .up-serverExisting");
+	serverExistingEl.find("button").click(function() {
+		action({
+			action: "specifyEndpoints",
+			dirServer: $("#serverExistingDirServer").val(),
+			storeServer: $("#serverExistingStoreServer").val(),
+		});
 	});
 
 	var lastStep = "loading";
 	var lastEl = loadingEl;
 	function success(resp) {
+		console.log(resp);
 		if (!resp.Startup) {
 			// The startup process is complete.
 			if (lastEl) {
@@ -356,8 +373,9 @@ function Startup(xhr, doneCallback) {
 			doneCallback(resp);
 			return;
 		}
-		var data = resp.Startup;
-
+		show(resp.Startup);
+	}
+	function show(data) {
 		// If we've moved onto another step, hide the previous one.
 		if (lastEl && data.Step != lastStep) {
 			lastEl.modal("hide");
@@ -377,6 +395,12 @@ function Startup(xhr, doneCallback) {
 			verifyEl.find(".up-username").text(data.UserName);
 			lastEl = verifyEl;
 			break
+		case "serverSelect":
+			lastEl = serverSelectEl;
+			break
+		case "serverExisting":
+			lastEl = serverExistingEl;
+			break
 		}
 		lastStep = data.Step;
 
@@ -389,7 +413,7 @@ function Startup(xhr, doneCallback) {
 		if (lastEl) {
 			// Show the error, re-enable buttons.
 			lastEl.find(".up-error").show().find(".up-error-msg").text(err);
-			lastEl.find("button").prop("disabled", false);
+			lastEl.find("button, input").prop("disabled", false);
 		} else {
 			alert(err)
 			// TODO(adg): display the initial error in a more friendly way.
@@ -398,7 +422,7 @@ function Startup(xhr, doneCallback) {
 	function action(data) {
 		if (lastEl) {
 			// Disable buttons, hide old errors.
-			lastEl.find("button").prop("disabled", true);
+			lastEl.find("button, input").prop("disabled", true);
 			lastEl.find(".up-error").hide();
 		}
 		xhr(data, success, error);

@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "66eeac86_0a526f96",
+        "filename": "cmd/browser/static/script.js",
+        "patchSetId": 2
+      },
+      "lineNbr": 344,
+      "author": {
+        "id": 5389
+      },
+      "writtenOn": "2017-08-10T04:39:52Z",
+      "side": 1,
+      "message": "Sure, why not? It\u0027s just comparing values.",
+      "parentUuid": "214133e0_9c4dd297",
+      "range": {
+        "startLine": 344,
+        "startChar": 2,
+        "endLine": 344,
+        "endChar": 17
+      },
+      "revId": "22a31f89412b8462c0698fc10025a385d1126967",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c18c569c_35bf3e84",
         "filename": "cmd/browser/static/script.js",
         "patchSetId": 2
@@ -45,6 +69,30 @@
       "revId": "22a31f89412b8462c0698fc10025a385d1126967",
       "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c0236610_6b1e5922",
+        "filename": "cmd/browser/static/script.js",
+        "patchSetId": 2
+      },
+      "lineNbr": 360,
+      "author": {
+        "id": 5389
+      },
+      "writtenOn": "2017-08-10T04:39:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c18c569c_35bf3e84",
+      "range": {
+        "startLine": 360,
+        "startChar": 53,
+        "endLine": 360,
+        "endChar": 54
+      },
+      "revId": "22a31f89412b8462c0698fc10025a385d1126967",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": false
     }
   ]
 }

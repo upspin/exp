@@ -325,6 +325,77 @@ license that can be found in the LICENSE file.
   </div>
 </div>
 
+<!-- serverGCP modal -->
+
+<div class="modal fade up-serverGCP" tabindex="-1" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Create a Google Cloud Platform project</h4>
+      </div>
+      <div class="modal-body">
+		<p>
+		To deploy an Upsipn server to the Google Cloud Platform,
+		follow these steps:
+		</p>
+		<ol>
+			<li><a href="https://console.cloud.google.com/project" target="_blank">Create a project</a>
+				(a collection of services: virtual machines,
+				storage, and so on),
+			</li>
+			<li><a href="https://support.google.com/cloud/answer/6293499#enable-billing" target="_blank">Enable billing</a>
+				for the project,</li>
+			<li><a href="https://console.cloud.google.com/iam-admin/serviceaccounts/project" target="_blank">Create a Service Account</a>, with these properties:
+				<ul>
+					<li>Set the <b>Name</b> to <b>"Owner"</b>.</li>
+					<li>Set the <b>Role</b> to <b>"Project Owner"</b>.</li>
+					<li>Furnish a new <b>JSON Private Key</b>.</li>
+				</ul>
+			</li>
+			<li>Upload the private key file using the form below.</li>
+		</ol>
+		<div class="form-group">
+			<label for="serverGCPKeyFile">JSON Private Key file:</label>
+			<input type="file" id="serverGCPKeyFile">
+		</div>
+		<div class="panel panel-danger up-error">
+			<div class="panel-heading">Error</div>
+			<div class="panel-body up-error-msg"></div>
+		</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Continue</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade up-gcpDetails" tabindex="-1" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Specify Google Cloud Platform details</h4>
+      </div>
+      <div class="modal-body">
+		<p>
+		GCP particulars...
+		</p>
+		<div class="form-group">
+			<label for="gcpDetailsBucketName">Storage Bucket Name</label>
+			<input type="text" class="form-control" id="gcpDetailsBucketName" placeholder="Bucket name">
+		</div>
+		<div class="panel panel-danger up-error">
+			<div class="panel-heading">Error</div>
+			<div class="panel-body up-error-msg"></div>
+		</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Continue</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- inspector modal -->
 
 <div class="modal fade up-inspector" tabindex="-1" role="dialog">

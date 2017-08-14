@@ -54,6 +54,10 @@ type startupResponse struct {
 
 	// Step: "verify"
 	UserName upspin.UserName
+
+	// Step: "gcpDetails"
+	BucketName string
+	// TODO: region, zone
 }
 
 // startup populates s.cfg and s.cli by either loading the config file
@@ -224,6 +228,31 @@ func (s *server) startup(req *http.Request) (*startupResponse, upspin.Config, er
 		if err != nil {
 			return nil, nil, err
 		}
+
+	case "specifyGCP":
+		privateKeyData := req.FormValue("privateKeyData")
+
+		st, err := gcpStateFromPrivateKeyJSON([]byte(privateKeyData))
+		if err != nil {
+			return nil, nil, err
+		}
+		bucketName := st.ProjectID + "-upspin"
+		// TODO: check bucketName is available
+		return &startupResponse{
+			Step:       "gcpDetails",
+			BucketName: bucketName,
+		}, nil, nil
+
+	case "createGCP":
+		bucketName := req.FormValue("bucketName")
+
+		st, err := gcpStateFromFile()
+		if err != nil {
+			return nil, nil, err
+		}
+		if err := st.create(bucketName); err != nil {
+			return nil, nil, err
+		}
 	}
 
 	// Is the user now registered with the KeyServer?
@@ -242,6 +271,16 @@ func (s *server) startup(req *http.Request) (*startupResponse, upspin.Config, er
 	if ok, err := hasEndpoints(flags.Config); err != nil {
 		return nil, nil, err
 	} else if !ok && cfg.DirEndpoint() == (upspin.Endpoint{}) {
+		// Check if we're in the middle of deploying to GCP.
+		st, err := gcpStateFromFile()
+		if err != nil && !os.IsNotExist(err) {
+			return nil, nil, err
+		} else if err == nil {
+			// We're deploying to GCP.
+			// TODO.
+			_ = st
+			return nil, nil, errors.Str("buh")
+		}
 		return &startupResponse{
 			Step: "serverSelect",
 		}, nil, nil

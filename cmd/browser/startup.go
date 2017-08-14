@@ -27,6 +27,7 @@ import (
 	"upspin.io/key/usercache"
 	"upspin.io/serverutil/signup"
 	"upspin.io/upspin"
+	"upspin.io/user"
 	"upspin.io/valid"
 )
 
@@ -48,12 +49,24 @@ type startupResponse struct {
 	// It may be one of "startup", "secretseed", or "verify".
 	Step string
 
-	// Step: "secretseed"
+	// Step: "secretseed" and "serverSecretseed"
 	KeyDir     string
 	SecretSeed string
 
 	// Step: "verify"
 	UserName upspin.UserName
+
+	// Step: "gcpDetails"
+	BucketName string
+	// TODO: region, zone
+
+	// Step: "serverHostName"
+	IPAddr string
+
+	// Step: "serverUserName"
+	UserNamePrefix string // Includes trailing "+".
+	UserNameSuffix string // Suggested default.
+	UserNameDomain string // Includes leading "@".
 }
 
 // startup populates s.cfg and s.cli by either loading the config file
@@ -94,6 +107,13 @@ func (s *server) startup(req *http.Request) (*startupResponse, upspin.Config, er
 		if err := valid.UserName(userName); err != nil {
 			return nil, nil, err
 		}
+		_, suffix, _, err := user.Parse(userName)
+		if err != nil {
+			return nil, nil, err
+		}
+		if suffix != "" {
+			return nil, nil, errors.Errorf("Your primary user name must not contain a + symbol.")
+		}
 
 		// Check whether userName already exists on the KeyServer.
 		userCfg := config.SetUserName(config.New(), userName)
@@ -104,7 +124,7 @@ func (s *server) startup(req *http.Request) (*startupResponse, upspin.Config, er
 		}
 
 		// Write config file.
-		err := writeConfig(flags.Config, userName, upspin.Endpoint{}, upspin.Endpoint{}, false)
+		err = writeConfig(flags.Config, userName, upspin.Endpoint{}, upspin.Endpoint{}, false)
 		if err != nil {
 			return nil, nil, err
 		}
@@ -205,7 +225,7 @@ func (s *server) startup(req *http.Request) (*startupResponse, upspin.Config, er
 		}
 
 		// Put the updated user record to the key server.
-		if err := putUser(cfg); err != nil {
+		if err := putUser(cfg, nil); err != nil {
 			return nil, nil, errors.Errorf("error updating key server:\n%v", err)
 		}
 
@@ -224,6 +244,136 @@ func (s *server) startup(req *http.Request) (*startupResponse, upspin.Config, er
 		if err != nil {
 			return nil, nil, err
 		}
+
+	case "specifyGCP":
+		privateKeyData := req.FormValue("privateKeyData")
+
+		st, err := gcpStateFromPrivateKeyJSON([]byte(privateKeyData))
+		if err != nil {
+			return nil, nil, err
+		}
+		bucketName := st.ProjectID + "-upspin"
+		// TODO: check bucketName is available
+		return &startupResponse{
+			Step:       "gcpDetails",
+			BucketName: bucketName,
+		}, nil, nil
+
+	case "createGCP":
+		bucketName := req.FormValue("bucketName")
+
+		st, err := gcpStateFromFile()
+		if err != nil {
+			return nil, nil, err
+		}
+		if err := st.create(bucketName); err != nil {
+			return nil, nil, err
+		}
+
+		return &startupResponse{
+			Step:   "serverHostName",
+			IPAddr: st.Server.IPAddr,
+		}, nil, nil
+
+	case "configureServerHostName":
+		hostName := req.FormValue("hostName")
+
+		st, err := gcpStateFromFile()
+		if err != nil {
+			return nil, nil, err
+		}
+
+		// Set up a default host name if none provided.
+		if hostName == "" {
+			hostName, err = serviceHostName(cfg, st.Server.IPAddr)
+			if err != nil {
+				return nil, nil, err
+			}
+		}
+		// Check that the host name resolves to what we expect.
+		if err := hostResolvesTo(hostName, st.Server.IPAddr); err != nil {
+			return nil, nil, err
+		}
+		// Save the state.
+		st.Server.HostName = hostName
+		if err := st.save(); err != nil {
+			return nil, nil, err
+		}
+
+		user, suffix, domain, err := user.Parse(cfg.UserName())
+		if err != nil {
+			return nil, nil, err
+		}
+		if suffix != "" {
+			return nil, nil, errors.Errorf("user name %q should not contain a + symbol", user)
+		}
+		// Provide a reasonable default suffix, 'upspinserver'.
+		// If the user name already contains 'upspin' then suggest just
+		// 'server' to avoid stutter.
+		suffix = "upspinserver"
+		if strings.Contains(user, "upspin") {
+			suffix = "server"
+		}
+		return &startupResponse{
+			Step:           "serverUserName",
+			UserNamePrefix: user + "+",
+			UserNameSuffix: suffix,
+			UserNameDomain: "@" + domain,
+		}, nil, nil
+
+	case "configureServerUserName":
+		suffix := req.FormValue("userNameSuffix")
+
+		st, err := gcpStateFromFile()
+		if err != nil {
+			return nil, nil, err
+		}
+
+		user, _, domain, err := user.Parse(cfg.UserName())
+		if err != nil {
+			return nil, nil, err
+		}
+		serverUser := upspin.UserName(user + "+" + suffix + "@" + domain)
+
+		// Generate key.
+		seed, keyDir, err := keygen(serverUser)
+		if err != nil {
+			return nil, nil, err
+		}
+		// Write config file.
+		serverCfgFile := flags.Config + "." + suffix
+		serverEP := upspin.Endpoint{
+			Transport: upspin.Remote,
+			NetAddr:   upspin.NetAddr(st.Server.HostName) + ":443",
+		}
+		err = writeConfig(serverCfgFile, serverUser, serverEP, serverEP, false)
+		if err != nil {
+			os.RemoveAll(keyDir)
+			return nil, nil, err
+		}
+		// Read config file back.
+		serverCfg, err := config.FromFile(serverCfgFile)
+		if err != nil {
+			os.RemoveAll(keyDir)
+			os.Remove(serverCfgFile)
+			return nil, nil, err
+		}
+		if err := putUser(cfg, serverCfg); err != nil {
+			os.RemoveAll(keyDir)
+			os.Remove(serverCfgFile)
+			return nil, nil, err
+		}
+		// Save the state.
+		st.Server.UserName = serverUser
+		if err := st.save(); err != nil {
+			return nil, nil, err
+		}
+
+		return &startupResponse{
+			Step:       "serverSecretSeed",
+			SecretSeed: seed,
+			KeyDir:     keyDir,
+		}, nil, nil
 	}
 
 	// Is the user now registered with the KeyServer?
@@ -242,6 +392,16 @@ func (s *server) startup(req *http.Request) (*startupResponse, upspin.Config, er
 	if ok, err := hasEndpoints(flags.Config); err != nil {
 		return nil, nil, err
 	} else if !ok && cfg.DirEndpoint() == (upspin.Endpoint{}) {
+		// Check if we're in the middle of deploying to GCP.
+		st, err := gcpStateFromFile()
+		if err != nil && !os.IsNotExist(err) {
+			return nil, nil, err
+		} else if err == nil {
+			// We're deploying to GCP.
+			// TODO.
+			_ = st
+			return nil, nil, errors.Str("buh")
+		}
 		return &startupResponse{
 			Step: "serverSelect",
 		}, nil, nil
@@ -262,6 +422,7 @@ func (s *server) startup(req *http.Request) (*startupResponse, upspin.Config, er
 // keygen runs 'upspin keygen', placing keys in the default directory for the
 // given user. It returns the secret seed for the keys and the key directory.
 // If the default key directory already exists, keygen return an error.
+// TODO(adg): replace this with native Go code, instead of calling the upspin command.
 func keygen(user upspin.UserName) (seed, keyDir string, err error) {
 	keyDir, err = config.DefaultSecretsDir(user)
 	if err != nil {
@@ -331,17 +492,22 @@ func isRegistered(cfg upspin.Config) (bool, error) {
 	return true, nil
 }
 
-// putUser updates the key server with the user name, endpoints, and public key
-// in the given config.
-func putUser(cfg upspin.Config) error {
-	f := cfg.Factotum()
+// putUser updates the key server as the user in cfg with the user name,
+// endpoints, and public key in the userCfg. If userCfg is nil then cfg is used
+// in its place.
+func putUser(cfg, userCfg upspin.Config) error {
+	if userCfg == nil {
+		userCfg = cfg
+	}
+
+	f := userCfg.Factotum()
 	if f == nil {
-		return errors.E(cfg.UserName(), errors.Str("user has no keys"))
+		return errors.E(userCfg.UserName(), errors.Str("user has no keys"))
 	}
 	newU := upspin.User{
-		Name:      cfg.UserName(),
-		Dirs:      []upspin.Endpoint{cfg.DirEndpoint()},
-		Stores:    []upspin.Endpoint{cfg.StoreEndpoint()},
+		Name:      userCfg.UserName(),
+		Dirs:      []upspin.Endpoint{userCfg.DirEndpoint()},
+		Stores:    []upspin.Endpoint{userCfg.StoreEndpoint()},
 		PublicKey: f.PublicKey(),
 	}
 
@@ -350,7 +516,7 @@ func putUser(cfg upspin.Config) error {
 		return err
 	}
 	usercache.ResetGlobal() // Avoid hitting the local user cache.
-	oldU, err := key.Lookup(cfg.UserName())
+	oldU, err := key.Lookup(userCfg.UserName())
 	if err != nil {
 		return err
 	}
@@ -359,6 +525,41 @@ func putUser(cfg upspin.Config) error {
 		return nil
 	}
 	return key.Put(&newU)
+}
+
+func serviceHostName(cfg upspin.Config, ip string) (string, error) {
+	cli := client.New(cfg)
+	base := upspin.PathName("host@upspin.io/" + cfg.UserName())
+	_, err := cli.MakeDirectory(base + "/" + upspin.PathName(ip))
+	if err != nil {
+		return "", err
+	}
+	b, err := cli.Get(base)
+	if err != nil {
+		return "", err
+	}
+	p := bytes.SplitN(b, []byte("\n"), 2)
+	if len(p) != 2 {
+		return "", errors.Errorf("unexpected response from host@upspin.io:\n%s", b)
+	}
+	return string(bytes.TrimSpace(p[2])), nil
+}
+
+func hostResolvesTo(host, ip string) error {
+	// TODO(adg): different error messages when upspin.services in host.
+	ips, err := net.LookupIP(host)
+	if err != nil {
+		return errors.Errorf("Could not resolve %q:\n%s", host, err)
+	}
+	if len(ips) == 0 {
+		return errors.Errorf("The host %q does not resolve to any IP.\nIt should resolve to %q. Check your DNS settings.", host, ip)
+	}
+	for _, ipp := range ips {
+		if ipp.String() != ip {
+			return errors.Errorf("The host %q resolves to %q.\nIt should resolve to %q. Check your DNS settings.", host, ipp, ip)
+		}
+	}
+	return nil
 }
 
 // hasEndpoints reports whether the given config file contains a dirserver

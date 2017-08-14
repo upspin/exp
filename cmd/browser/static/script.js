@@ -346,6 +346,7 @@ function Startup(xhr, doneCallback) {
 			show({Step: "serverExisting"});
 			break;
 		case $("#serverSelectGCP").is(":checked"):
+			show({Step: "serverGCP"});
 			break;
 		case $("#serverSelectNone").is(":checked"):
 			action({action: "specifyNoEndpoints"});
@@ -359,6 +360,50 @@ function Startup(xhr, doneCallback) {
 			dirServer: $("#serverExistingDirServer").val(),
 			storeServer: $("#serverExistingStoreServer").val()
 		});
+	});
+	var serverGCPEl = $("body > .up-serverGCP");
+	serverGCPEl.find("button").click(function() {
+		var fileEl = $("#serverGCPKeyFile");
+		if (fileEl[0].files.length != 1) {
+			error("You must provide a JSON Private Key file.");
+			return;
+		}
+		var r = new FileReader();
+		r.onerror = function() {
+			error("An error occurred uploading the file.");
+		};
+		r.onload = function(state) {
+			action({
+				action: "specifyGCP",
+				privateKeyData: r.result
+			});
+		};
+		r.readAsText(fileEl[0].files[0]);
+	});
+	var gcpDetailsEl = $("body > .up-gcpDetails");
+	gcpDetailsEl.find("button").click(function() {
+		action({
+			action: "createGCP",
+			bucketName: $("#gcpDetailsBucketName").val()
+		});
+	});
+	var serverHostNameEl = $("body > .up-serverHostName");
+	serverHostNameEl.find("button").click(function() {
+		action({
+			action: "configureServerHostName",
+			hostName: $("#serverHostName").val()
+		});
+	});
+	var serverUserNameEl = $("body > .up-serverUserName");
+	serverUserNameEl.find("button").click(function() {
+		action({
+			action: "configureServerUser",
+			userNameSuffix: $("#serverUserNameSuffix").val()
+		});
+	});
+	var serverSecretseedEl = $("body > .up-serverSecretseed");
+	serverSecretseedEl.find("button").click(function() {
+		action({});
 	});
 
 	var lastStep = "loading";
@@ -384,27 +429,49 @@ function Startup(xhr, doneCallback) {
 		switch (data.Step) {
 		case "signup":
 			lastEl = signupEl;
-			break
+			break;
 		case "secretseed":
 			$("#secretseedKeyDir").text(data.KeyDir);
 			$("#secretseedSecretSeed").text(data.SecretSeed);
 			lastEl = secretseedEl;
-			break
+			break;
 		case "verify":
 			verifyEl.find(".up-username").text(data.UserName);
 			lastEl = verifyEl;
-			break
+			break;
 		case "serverSelect":
 			lastEl = serverSelectEl;
-			break
+			break;
 		case "serverExisting":
 			lastEl = serverExistingEl;
-			break
+			break;
+		case "serverGCP":
+			lastEl = serverGCPEl;
+			break;
+		case "gcpDetails":
+			$("#gcpDetailsBucketName").val(data.BucketName);
+			lastEl = gcpDetailsEl;
+			break;
+		case "serverHostName":
+			serverHostNameEl.find(".up-ipAddr").text(data.IPAddr);
+			lastEl = serverDetailsEl;
+			break;
+		case "serverUserName":
+			$("#serverUserNamePrefix").text(data.UserNamePrefix);
+			$("#serverUserNameSuffix").val(data.UserNameSuffix);
+			$("#serverUserNameDomain").text(data.UserNameDomain);
+			lastEl = serverUserNameEl;
+			break;
+		case "serverSecretseed":
+			$("#serverSecretseedKeyDir").text(data.KeyDir);
+			$("#serverSecretseedSecretSeed").text(data.SecretSeed);
+			lastEl = serverSecretseedEl;
+			break;
 		}
 		lastStep = data.Step;
 
 		// Re-enable buttons, hide old errors, show the dialog.
-		lastEl.find("button").prop("disabled", false);
+		lastEl.find("button, input").prop("disabled", false);
 		lastEl.find(".up-error").hide();
 		lastEl.modal("show");
 	}

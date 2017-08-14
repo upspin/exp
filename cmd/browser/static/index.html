@@ -325,6 +325,45 @@ license that can be found in the LICENSE file.
   </div>
 </div>
 
+<!-- serverGCP modal -->
+
+<div class="modal fade up-serverGCP" tabindex="-1" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Deploy to Google Cloud Platform</h4>
+      </div>
+      <div class="modal-body">
+		<p>
+		To deploy to Google Cloud Platform you need to log in to the
+		<a href="https://console.cloud.google.com/project" target="_blank">Google Cloud Console</a>
+		with your Google Account to create a project and 
+		<a href="https://support.google.com/cloud/answer/6293499#enable-billing" target="_blank">enable billing</a>
+		for that project.
+		</p>
+		<div class="form-group">
+			<label for="serverGCPProjectID">Project ID</label>
+			<input type="text" class="form-control" id="serverGCPProjectID" placeholder="Project ID">
+		</div>
+		</p>
+		Your project holds a collection of services (virtual machines,
+		storage, and the like) that support your Upspin server.
+		After clicking "Continue" you will be presented with a popup
+		window that will ask you to give this setup program acces to
+		make changes to your project.
+		</p>
+		<div class="panel panel-danger up-error">
+			<div class="panel-heading">Error</div>
+			<div class="panel-body up-error-msg"></div>
+		</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Continue</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- inspector modal -->
 
 <div class="modal fade up-inspector" tabindex="-1" role="dialog">

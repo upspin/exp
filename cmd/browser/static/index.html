@@ -325,6 +325,232 @@ license that can be found in the LICENSE file.
   </div>
 </div>
 
+<!-- serverGCP modal -->
+
+<div class="modal fade up-serverGCP" tabindex="-1" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Create a Google Cloud Platform project</h4>
+      </div>
+      <div class="modal-body">
+		<p>
+		To deploy an Upsipn server to the Google Cloud Platform,
+		follow these steps:
+		</p>
+		<ol>
+			<li><a href="https://console.cloud.google.com/project" target="_blank">Create a project</a>
+				(a collection of services: virtual machines,
+				storage, and so on),
+			</li>
+			<li><a href="https://support.google.com/cloud/answer/6293499#enable-billing" target="_blank">Enable billing</a>
+				for the project,</li>
+			<li><a href="https://console.cloud.google.com/iam-admin/serviceaccounts/project" target="_blank">Create a Service Account</a>, with these properties:
+				<ul>
+					<li>Set the <b>Name</b> to <b>"Owner"</b>.</li>
+					<li>Set the <b>Role</b> to <b>"Project Owner"</b>.</li>
+					<li>Furnish a new <b>JSON Private Key</b>.</li>
+				</ul>
+			</li>
+			<li>Upload the private key file using the form below.</li>
+		</ol>
+		<div class="form-group">
+			<label for="serverGCPKeyFile">JSON Private Key file:</label>
+			<input type="file" id="serverGCPKeyFile">
+		</div>
+		<div class="panel panel-danger up-error">
+			<div class="panel-heading">Error</div>
+			<div class="panel-body up-error-msg"></div>
+		</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Continue</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- gcpDetails modal -->
+
+<div class="modal fade up-gcpDetails" tabindex="-1" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Specify Google Cloud Platform details</h4>
+      </div>
+      <div class="modal-body">
+		<p>
+		GCP particulars...
+		</p>
+		<div class="form-group">
+			<label for="gcpDetailsBucketName">Storage Bucket Name</label>
+			<input type="text" class="form-control" id="gcpDetailsBucketName" placeholder="Bucket name">
+		</div>
+		<p>
+		TODO: Storage region, Compute zone
+		</p>
+		<div class="panel panel-danger up-error">
+			<div class="panel-heading">Error</div>
+			<div class="panel-body up-error-msg"></div>
+		</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Continue</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- serverUserName modal -->
+
+<div class="modal fade up-serverUserName" tabindex="-1" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Configure your server user</h4>
+      </div>
+      <div class="modal-body">
+		<p>
+		Specify a <b>user name</b> for the Upspin server, distinct to
+		your primary Upspin user. (The name is derived from your
+		current user name with the addition of a suffix to the user
+		name component.)
+		</p>
+		<p>
+		TODO: more about this
+		</p>
+		<div class="form-group form-inline">
+			<div class="input-group">
+				<div id="serverUserNamePrefix" class="input-group-addon"></div>
+				<input id="serverUserNameSuffix" type="text" class="form-control" placeholder="suffix">
+				<div id="serverUserNameDomain" class="input-group-addon"></div>
+			</div>
+		</div>
+		<div class="panel panel-danger up-error">
+			<div class="panel-heading">Error</div>
+			<div class="panel-body up-error-msg"></div>
+		</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Continue</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- serverSecretseed modal -->
+
+<div class="modal fade up-serverSecretseed" tabindex="-1" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Write down your server's secret key</h4>
+      </div>
+      <div class="modal-body">
+		<p>
+		An Upspin key pair was generated for the server user 
+		<b class="up-username"></b>
+		and stored in this directory on your local machine:
+		</p>
+		<pre id="serverSecretseedKeyDir"></pre>
+		<p>
+		This key pair provides access to your server's Upspin identity
+		and data. If you lose the keys you can re-create them using
+		this "secret seed":
+		</p>
+		<pre id="serverSecretseedSecretSeed"></pre>
+		<p>
+		<b>Write this down and store it in a secure, private place.
+		Do not share your secret key or this string with anyone.</b>
+		</p>
+		<div class="panel panel-danger up-error">
+			<div class="panel-heading">Error</div>
+			<div class="panel-body up-error-msg"></div>
+		</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger">OK, I wrote it down</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- serverHostName modal -->
+
+<div class="modal fade up-serverHostName" tabindex="-1" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Configure your server host name</h4>
+      </div>
+      <div class="modal-body">
+		<p>
+		Your Upspin server is running on a virtual machine at
+		<b class="up-ipAddr"></b> and now we must configure it
+		before it will be usable.
+		</p>
+		<p>
+		Specify a <b>host name</b> for your Upspin server.
+		This name is not typically user-visible, appearing only in your
+		key server record, configuration file, and in the metadata for
+		all Upspin content you write.
+		</p>
+		<p>
+		If you wish to use a host name under a domain you control,
+		create a DNS A record for that host name that points to
+		<b class="up-ipAddr"></b> and specify the host name in the
+		field below.
+		</p>
+		<p>
+		Otherwise, you may leave the field blank to use a default host
+		name provided for you under the domain <b>upspin.services</b>.
+		</p>
+		<div class="form-group">
+			<input type="text" class="form-control" id="serverHostName" placeholder="Host name (leave blank for default)">
+		</div>
+		<div class="panel panel-danger up-error">
+			<div class="panel-heading">Error</div>
+			<div class="panel-body up-error-msg"></div>
+		</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Continue</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- serverWriters modal -->
+
+<div class="modal fade up-serverWriters" tabindex="-1" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Configure server access control</h4>
+      </div>
+      <div class="modal-body">
+		<p>
+		Your Upspin server is configured to allow writes by your user
+		and the server user. If you would like to allow other users to
+		store their directory trees and content in your Upspin server,
+		add them to this list:
+		</p>
+		<div class="form-group">
+			<textarea class="form-control" id="serverWriters" placeholder="user@example.com" rows=4></textarea>
+		</div>
+		<div class="panel panel-danger up-error">
+			<div class="panel-heading">Error</div>
+			<div class="panel-body up-error-msg"></div>
+		</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Continue</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- inspector modal -->
 
 <div class="modal fade up-inspector" tabindex="-1" role="dialog">

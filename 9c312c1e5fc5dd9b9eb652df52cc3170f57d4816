@@ -1,0 +1,225 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "28270206_fcd77a94",
+        "filename": "cmd/browser/gcp.go",
+        "patchSetId": 9
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-08-23T01:45:35Z",
+      "side": 1,
+      "message": "drop the renamings. they\u0027re ugly and unnecessary",
+      "revId": "9c312c1e5fc5dd9b9eb652df52cc3170f57d4816",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d4eba352_1061b74c",
+        "filename": "cmd/browser/gcp.go",
+        "patchSetId": 9
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-08-23T01:45:35Z",
+      "side": 1,
+      "message": "lots of doc comments missing on functions and methods, but some are present. unclear what your criterion is.",
+      "revId": "9c312c1e5fc5dd9b9eb652df52cc3170f57d4816",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1e90968a_c112e318",
+        "filename": "cmd/browser/startup.go",
+        "patchSetId": 9
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-08-23T01:45:35Z",
+      "side": 1,
+      "message": "s/they select/user selects/",
+      "revId": "9c312c1e5fc5dd9b9eb652df52cc3170f57d4816",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "815ad8c5_39c803fd",
+        "filename": "cmd/browser/startup.go",
+        "patchSetId": 9
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-08-23T01:45:35Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "9c312c1e5fc5dd9b9eb652df52cc3170f57d4816",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fe9bec6e_674ccdd9",
+        "filename": "cmd/browser/startup.go",
+        "patchSetId": 9
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-08-23T01:45:35Z",
+      "side": 1,
+      "message": "s/their/the/",
+      "revId": "9c312c1e5fc5dd9b9eb652df52cc3170f57d4816",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7bd4fbd9_625abbd2",
+        "filename": "cmd/browser/startup.go",
+        "patchSetId": 9
+      },
+      "lineNbr": 352,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-08-23T01:45:35Z",
+      "side": 1,
+      "message": "TODO",
+      "revId": "9c312c1e5fc5dd9b9eb652df52cc3170f57d4816",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ab82f0d8_ebde26a8",
+        "filename": "cmd/browser/startup.go",
+        "patchSetId": 9
+      },
+      "lineNbr": 411,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-08-23T01:45:35Z",
+      "side": 1,
+      "message": "but add others twice? instead of this, i\u0027d gather all the list and then sort and uniq at the end.",
+      "revId": "9c312c1e5fc5dd9b9eb652df52cc3170f57d4816",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e553ace3_630a4121",
+        "filename": "cmd/browser/startup.go",
+        "patchSetId": 9
+      },
+      "lineNbr": 431,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-08-23T01:45:35Z",
+      "side": 1,
+      "message": "Otherwise",
+      "revId": "9c312c1e5fc5dd9b9eb652df52cc3170f57d4816",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f2c375db_baa30051",
+        "filename": "cmd/browser/startup.go",
+        "patchSetId": 9
+      },
+      "lineNbr": 432,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-08-23T01:45:35Z",
+      "side": 1,
+      "message": "s/their/the/",
+      "revId": "9c312c1e5fc5dd9b9eb652df52cc3170f57d4816",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f21e798b_bb6d71f2",
+        "filename": "cmd/browser/startup.go",
+        "patchSetId": 9
+      },
+      "lineNbr": 561,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-08-23T01:45:35Z",
+      "side": 1,
+      "message": "it doesn\u0027t bother me like this.",
+      "revId": "9c312c1e5fc5dd9b9eb652df52cc3170f57d4816",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bbc14ed6_71d84b77",
+        "filename": "cmd/browser/startup.go",
+        "patchSetId": 9
+      },
+      "lineNbr": 610,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-08-23T01:45:35Z",
+      "side": 1,
+      "message": "TODO",
+      "revId": "9c312c1e5fc5dd9b9eb652df52cc3170f57d4816",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c26ee98f_0cbdc56f",
+        "filename": "cmd/browser/startup.go",
+        "patchSetId": 9
+      },
+      "lineNbr": 712,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-08-23T01:45:35Z",
+      "side": 1,
+      "message": "check you actually got something?",
+      "revId": "9c312c1e5fc5dd9b9eb652df52cc3170f57d4816",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ec528df7_76ff34c0",
+        "filename": "cmd/browser/startup.go",
+        "patchSetId": 9
+      },
+      "lineNbr": 747,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-08-23T01:45:35Z",
+      "side": 1,
+      "message": "is accessible, really. it will say no if it exists but has a permission problem",
+      "revId": "9c312c1e5fc5dd9b9eb652df52cc3170f57d4816",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    }
+  ]
+}

@@ -155,6 +155,9 @@ function Browser(parentEl, page) {
 				refresh();
 			}, function(err) {
 				reportError(err);
+				// Refresh the pane because entries may have
+				// been deleted even if an error occurred.
+				refresh();
 			});
 		});
 	});
@@ -170,6 +173,9 @@ function Browser(parentEl, page) {
 				page.refreshDestination();
 			}, function(error) {
 				reportError(error);
+				// Refresh the destination pane as files may
+				// have been copied even if an error occurred.
+				page.refreshDestination();
 			});
 		});
 	});

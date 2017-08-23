@@ -46,10 +46,9 @@ var noneEndpoint = upspin.Endpoint{
 type startupResponse struct {
 	// Step is the modal dialog that should be displayed to the user at
 	// this stage of the startup process.
-	// It may be one of "startup", "secretseed", or "verify".
 	Step string
 
-	// Step: "secretseed" and "serverSecretseed"
+	// Step: "secretSeed" and "serverSecretSeed"
 	KeyDir     string
 	SecretSeed string
 
@@ -97,7 +96,7 @@ type startupResponse struct {
 //      - Create the GCP Storage Bucket, Address, and Compute Instance.
 //      - Prompt user for a user name for the server ("serverUserName").
 //      - Register the server user name with the key server.
-//      - Display server user proquint, ask user to write it down ("serverSecretseed").
+//      - Display server user proquint, ask user to write it down ("serverSecretSeed").
 //      - Prompt user for a host name for the server ("serverHostName").
 //      - If they elect for a default, create a host name through host@upspin.io.
 //      - Check that the host name resolves to the server IP.
@@ -199,7 +198,7 @@ func (s *server) startup(req *http.Request) (*startupResponse, upspin.Config, er
 		next := "verify"
 		if secretSeed != "" {
 			// Show the secret seed if we have just generated the key.
-			next = "secretseed"
+			next = "secretSeed"
 		}
 		return &startupResponse{
 			Step:       next,
@@ -324,7 +323,7 @@ func (s *server) startup(req *http.Request) (*startupResponse, upspin.Config, er
 		}
 
 		return &startupResponse{
-			Step:       "serverSecretseed",
+			Step:       "serverSecretSeed",
 			SecretSeed: seed,
 			KeyDir:     keyDir,
 		}, nil, nil

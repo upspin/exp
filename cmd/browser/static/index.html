@@ -125,7 +125,7 @@ license that can be found in the LICENSE file.
 
 <!-- loading modal -->
 
-<div class="modal fade up-loading" tabindex="-1" data-backdrop="static" data-keyboard="false">
+<div id="mLoading" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -147,7 +147,7 @@ license that can be found in the LICENSE file.
 
 <!-- signup modal -->
 
-<div class="modal fade up-signup" tabindex="-1" data-backdrop="static" data-keyboard="false">
+<div id="mSignup" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -181,9 +181,9 @@ license that can be found in the LICENSE file.
   </div>
 </div>
 
-<!-- secretseed modal -->
+<!-- secretSeed modal -->
 
-<div class="modal fade up-secretseed" tabindex="-1" data-backdrop="static" data-keyboard="false">
+<div id="mSecretSeed" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -194,12 +194,12 @@ license that can be found in the LICENSE file.
 		An Upspin key pair was generated for you and stored in this
 		directory on your local machine:
 		</p>
-		<pre id="secretseedKeyDir"></pre>
+		<pre id="secretSeedKeyDir"></pre>
 		<p>
 		This key pair provides access to your Upspin identity and data.
 		If you lose the keys you can re-create them using this "secret seed":
 		</p>
-		<pre id="secretseedSecretSeed"></pre>
+		<pre id="secretSeedSecretSeed"></pre>
 		<p>
 		<b>Write this down and store it in a secure, private place.
 		Do not share your secret key or this string with anyone.</b>
@@ -218,7 +218,7 @@ license that can be found in the LICENSE file.
 
 <!-- verify modal -->
 
-<div class="modal fade up-verify" tabindex="-1" data-backdrop="static" data-keyboard="false">
+<div id="mVerify" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -249,7 +249,7 @@ license that can be found in the LICENSE file.
 
 <!-- serverSelect modal -->
 
-<div class="modal fade up-serverSelect" tabindex="-1" data-backdrop="static" data-keyboard="false">
+<div id="mServerSelect" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -294,7 +294,7 @@ license that can be found in the LICENSE file.
 
 <!-- serverExisting modal -->
 
-<div class="modal fade up-serverExisting" tabindex="-1" data-backdrop="static" data-keyboard="false">
+<div id="mServerExisting" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -327,7 +327,7 @@ license that can be found in the LICENSE file.
 
 <!-- serverGCP modal -->
 
-<div class="modal fade up-serverGCP" tabindex="-1" data-backdrop="static" data-keyboard="false">
+<div id="mServerGCP" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -372,7 +372,7 @@ license that can be found in the LICENSE file.
 
 <!-- gcpDetails modal -->
 
-<div class="modal fade up-gcpDetails" tabindex="-1" data-backdrop="static" data-keyboard="false">
+<div id="mGCPDetails" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -404,7 +404,7 @@ license that can be found in the LICENSE file.
 
 <!-- serverUserName modal -->
 
-<div class="modal fade up-serverUserName" tabindex="-1" data-backdrop="static" data-keyboard="false">
+<div id="mServerUserName" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -439,9 +439,9 @@ license that can be found in the LICENSE file.
   </div>
 </div>
 
-<!-- serverSecretseed modal -->
+<!-- serverSecretSeed modal -->
 
-<div class="modal fade up-serverSecretseed" tabindex="-1" data-backdrop="static" data-keyboard="false">
+<div  id="mServerSecretSeed" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -453,13 +453,13 @@ license that can be found in the LICENSE file.
 		<b class="up-username"></b>
 		and stored in this directory on your local machine:
 		</p>
-		<pre id="serverSecretseedKeyDir"></pre>
+		<pre id="serverSecretSeedKeyDir"></pre>
 		<p>
 		This key pair provides access to your server's Upspin identity
 		and data. If you lose the keys you can re-create them using
 		this "secret seed":
 		</p>
-		<pre id="serverSecretseedSecretSeed"></pre>
+		<pre id="serverSecretSeedSecretSeed"></pre>
 		<p>
 		<b>Write this down and store it in a secure, private place.
 		Do not share your secret key or this string with anyone.</b>
@@ -478,7 +478,7 @@ license that can be found in the LICENSE file.
 
 <!-- serverHostName modal -->
 
-<div class="modal fade up-serverHostName" tabindex="-1" data-backdrop="static" data-keyboard="false">
+<div id="mServerHostName" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -523,7 +523,7 @@ license that can be found in the LICENSE file.
 
 <!-- serverWriters modal -->
 
-<div class="modal fade up-serverWriters" tabindex="-1" data-backdrop="static" data-keyboard="false">
+<div id="mServerWriters" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -553,7 +553,7 @@ license that can be found in the LICENSE file.
 
 <!-- inspector modal -->
 
-<div class="modal fade up-inspector" tabindex="-1" role="dialog">
+<div id="mInspector" class="modal fade" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -593,7 +593,7 @@ license that can be found in the LICENSE file.
 
 <!-- delete/copy modal -->
 
-<div class="modal fade up-confirm" tabindex="-1" role="dialog">
+<div id="mConfirm" class="modal fade" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -619,7 +619,7 @@ license that can be found in the LICENSE file.
 
 <!-- mkdir modal -->
 
-<div class="modal fade up-mkdir" tabindex="-1" role="dialog">
+<div id="mMkdir" class="modal fade" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">

@@ -384,7 +384,9 @@ function Startup(xhr, doneCallback) {
 	gcpDetailsEl.find("button").click(function() {
 		action({
 			action: "createGCP",
-			bucketName: $("#gcpDetailsBucketName").val()
+			bucketName: $("#gcpDetailsBucketName").val(),
+			bucketLoc: $("#gcpDetailsBucketLoc").val(),
+			regionZone: $("#gcpDetailsRegionZone").val()
 		});
 	});
 	var serverHostNameEl = $("body > .up-serverHostName");
@@ -403,7 +405,7 @@ function Startup(xhr, doneCallback) {
 	});
 	var serverSecretseedEl = $("body > .up-serverSecretseed");
 	serverSecretseedEl.find("button").click(function() {
-		show({Step: "serverHostName"});
+		action({}); // Should bounce to serverHostName.
 	});
 	var serverWritersEl = $("body > .up-serverWriters");
 	serverWritersEl.find("button").click(function() {
@@ -457,6 +459,34 @@ function Startup(xhr, doneCallback) {
 			break;
 		case "gcpDetails":
 			$("#gcpDetailsBucketName").val(data.BucketName);
+
+			var locs = $("#gcpDetailsBucketLoc").empty();
+			for (var i=0; i < data.Locations.length; i++) {
+				var loc = data.Locations[i];
+				var label = loc;
+				if (loc.indexOf("-") >= 0) {
+					label += " (Regional)";
+				} else {
+					label += " (Multi-regional)";
+				}
+				var opt = $("<option/>").attr("value", loc).text(label);
+				if (loc == "us") {
+					opt.attr("selected", true); // A sane default.
+				}
+				locs.append(opt);
+			}
+
+			var zones = $("#gcpDetailsRegionZone").empty();
+			for (var i=0; i < data.Zones.length; i++) {
+				var zone = data.Zones[i];
+				var label = zone.slice(zone.indexOf("/")+1);
+				var opt = $("<option/>").attr("value", zone).text(label);
+				if (zone == "us-central1/us-central1-c") {
+					opt.attr("selected", true); // As sane default.
+				}
+				zones.append(opt);
+			}
+
 			lastEl = gcpDetailsEl;
 			break;
 		case "serverUserName":
@@ -482,7 +512,7 @@ function Startup(xhr, doneCallback) {
 		lastStep = data.Step;
 
 		// Re-enable buttons, hide old errors, show the dialog.
-		lastEl.find("button, input").prop("disabled", false);
+		lastEl.find("button, input, select").prop("disabled", false);
 		lastEl.find(".up-error").hide();
 		lastEl.modal("show");
 	}

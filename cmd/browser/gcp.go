@@ -16,6 +16,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"path/filepath"
+	"sort"
 	"strings"
 	"time"
 
@@ -190,12 +191,63 @@ func (s *gcpState) enableAPI(name string, svc *servicemanagement.APIService) err
 	return err
 }
 
+func (s *gcpState) listZones() ([]string, error) {
+	client := s.JWTConfig.Client(context.Background())
+	svc, err := compute.New(client)
+	if err != nil {
+		return nil, err
+	}
+
+	list, err := svc.Regions.List(s.ProjectID).Do()
+	if err != nil {
+		return nil, err
+	}
+	var zones []string
+	for _, region := range list.Items {
+		if region.Status == "DOWN" {
+			continue
+		}
+		for _, z := range region.Zones {
+			i := strings.LastIndex(z, "/")
+			if i < 0 {
+				continue
+			}
+			zones = append(zones, region.Name+z[i:])
+		}
+	}
+	sort.Strings(zones)
+	return zones, nil
+}
+
+func (s *gcpState) listStorageLocations() ([]string, error) {
+	// There's no API for this. Scraped from:
+	// https://cloud.google.com/storage/docs/bucket-locations
+	return []string{
+		// Multi-regional locations.
+		"asia",
+		"eu",
+		"us",
+		// Regional locations.
+		"asia-east1",
+		"asia-northeast1",
+		"asia-southeast1",
+		"australia-southeast1",
+		"europe-west1",
+		"europe-west2",
+		"europe-west3",
+		"us-central1",
+		"us-east1",
+		"us-east4",
+		"us-west1",
+	}, nil
+}
+
 // create creates a Storage bucket with the given name, a service account to
 // access the bucket, and a Compute instance running on a static IP address.
-func (s *gcpState) create(bucketName string) error {
+func (s *gcpState) create(region, zone, bucketName, bucketLoc string) error {
+	s.Region = region
+	s.Zone = zone
 	// TODO: make these user-configurable.
-	s.Region = "us-central1"
-	s.Zone = "us-central1-a"
 	s.MachineType = "n1-standard-1"
 
 	if s.Storage.ServiceAccount == "" {
@@ -205,19 +257,19 @@ func (s *gcpState) create(bucketName string) error {
 		}
 		s.Storage.ServiceAccount = email
 		s.Storage.PrivateKeyData = key
-	}
-	if err := s.save(); err != nil {
-		return err
+		if err := s.save(); err != nil {
+			return err
+		}
 	}
 	if s.Storage.Bucket == "" {
-		err := s.createBucket(bucketName)
+		err := s.createBucket(bucketName, bucketLoc)
 		if err != nil {
 			return err
 		}
 		s.Storage.Bucket = bucketName
-	}
-	if err := s.save(); err != nil {
-		return err
+		if err := s.save(); err != nil {
+			return err
+		}
 	}
 	if s.Server.IPAddr == "" {
 		ip, err := s.createAddress()
@@ -225,9 +277,9 @@ func (s *gcpState) create(bucketName string) error {
 			return err
 		}
 		s.Server.IPAddr = ip
-	}
-	if err := s.save(); err != nil {
-		return err
+		if err := s.save(); err != nil {
+			return err
+		}
 	}
 	if !s.Server.Created {
 		err := s.createInstance()
@@ -235,8 +287,11 @@ func (s *gcpState) create(bucketName string) error {
 			return err
 		}
 		s.Server.Created = true
+		if err := s.save(); err != nil {
+			return err
+		}
 	}
-	return s.save()
+	return nil
 }
 
 // createAddress reserves a static IP address with the name "upspinserver".
@@ -368,7 +423,7 @@ func (s *gcpState) createServiceAccount() (email, privateKeyData string, err err
 
 // createBucket creates the named Storage bucket, giving "owner" access to
 // Storage.ServiceAccount in gcpState.
-func (s *gcpState) createBucket(bucket string) error {
+func (s *gcpState) createBucket(name, loc string) error {
 	client := s.JWTConfig.Client(context.Background())
 	svc, err := storage.New(client)
 	if err != nil {
@@ -377,13 +432,13 @@ func (s *gcpState) createBucket(bucket string) error {
 
 	_, err = svc.Buckets.Insert(s.ProjectID, &storage.Bucket{
 		Acl: []*storage.BucketAccessControl{{
-			Bucket: bucket,
+			Bucket: name,
 			Entity: "user-" + s.Storage.ServiceAccount,
 			Email:  s.Storage.ServiceAccount,
 			Role:   "OWNER",
 		}},
-		Name: bucket,
-		// TODO(adg): region
+		Name:     name,
+		Location: loc,
 	}).Do()
 	if isExists(err) {
 		// Bucket already exists.

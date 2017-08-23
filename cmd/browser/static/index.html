@@ -380,14 +380,37 @@ license that can be found in the LICENSE file.
       </div>
       <div class="modal-body">
 		<p>
-		GCP particulars...
+		TODO: explanation
 		</p>
 		<div class="form-group">
 			<label for="gcpDetailsBucketName">Storage Bucket Name</label>
 			<input type="text" class="form-control" id="gcpDetailsBucketName" placeholder="Bucket name">
+			<p class="help-block">
+			This name must be globally unique, so we suggest using your Project ID as a prefix.
+			</p>
+		</div>
+		<div class="form-group">
+			<label for="gcpDetailsBucketLoc">Storage Bucket Location</label>
+			<select id="gcpDetailsBucketLoc" class="form-control">
+			</select>
+			<p class="help-block">
+			See the
+			<a href="https://cloud.google.com/storage/docs/bucket-locations" target="_blank">documentation</a>
+			to learn about Bucket Locations.
+			</p>
+		</div>
+		<div class="form-group">
+			<label for="gcpDetailsRegionZone">Compute Zone</label>
+			<select id="gcpDetailsRegionZone" class="form-control">
+			</select>
+			<p class="help-block">
+			See the
+			<a href="https://cloud.google.com/compute/docs/regions-zones/regions-zones" target="_blank">documentation</a>
+			to learn about Regions and Zones.
+			</p>
 		</div>
 		<p>
-		TODO: Storage region, Compute zone
+		TODO: machine type
 		</p>
 		<div class="panel panel-danger up-error">
 			<div class="panel-heading">Error</div>

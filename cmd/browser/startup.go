@@ -57,7 +57,9 @@ type startupResponse struct {
 
 	// Step: "gcpDetails"
 	BucketName string
-	// TODO: region, zone, instance size
+	Zones      []string
+	Locations  []string
+	// TODO: machine type
 
 	// Step: "serverUserName"
 	UserNamePrefix string // Includes trailing "+".
@@ -269,9 +271,16 @@ func (s *server) startup(req *http.Request) (*startupResponse, upspin.Config, er
 
 	case "createGCP":
 		bucketName := req.FormValue("bucketName")
+		bucketLoc := req.FormValue("bucketLoc")
+		regionZone := req.FormValue("regionZone")
+		p := strings.SplitN(regionZone, "/", 2)
+		if len(p) != 2 {
+			return nil, nil, errors.Errorf("invalid region/zone %q", regionZone)
+		}
+		region, zone := p[0], p[1]
 
 		// Create the bucket, VM instance, and other associated bits.
-		if err := st.create(bucketName); err != nil {
+		if err := st.create(region, zone, bucketName, bucketLoc); err != nil {
 			return nil, nil, err
 		}
 
@@ -472,9 +481,20 @@ func (s *server) startup(req *http.Request) (*startupResponse, upspin.Config, er
 		bucketName := st.ProjectID + "-upspin"
 		// TODO: check bucketName is available
 
+		zones, err := st.listZones()
+		if err != nil {
+			return nil, nil, err
+		}
+		locs, err := st.listStorageLocations()
+		if err != nil {
+			return nil, nil, err
+		}
+
 		return &startupResponse{
 			Step:       "gcpDetails",
 			BucketName: bucketName,
+			Zones:      zones,
+			Locations:  locs,
 		}, nil, nil
 
 	case "serverUserName":

@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "27c53daf_9066a4ed",
+        "filename": "cmd/browser/static/script.js",
+        "patchSetId": 11
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 6085
+      },
+      "writtenOn": "2017-08-23T13:12:02Z",
+      "side": 1,
+      "message": "Instead of making a var for all of these elements, it\u0027s also common to write something like\n\n$(\"body \u003e .up-serverGCP\").find(\"button\").click(function() {\n  ...\n});\n\n\nAlso, based on https://api.jquery.com/jquery/#selector-context, you can simplify it further:\n\n$(\"button\", \"body \u003e .up-serverGCP\").click(function() {\n  ...\n});",
+      "range": {
+        "startLine": 364,
+        "startChar": 45,
+        "endLine": 364,
+        "endChar": 0
+      },
+      "revId": "5aa8602ae831b8b6185cd3a52759e24387be9773",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    }
+  ]
+}

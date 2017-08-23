@@ -384,7 +384,9 @@ function Startup(xhr, doneCallback) {
 	$("#mGCPDetails").find("button").click(function() {
 		action({
 			action: "createGCP",
-			bucketName: $("#gcpDetailsBucketName").val()
+			bucketName: $("#gcpDetailsBucketName").val(),
+			bucketLoc: $("#gcpDetailsBucketLoc").val(),
+			regionZone: $("#gcpDetailsRegionZone").val()
 		});
 	});
 
@@ -403,7 +405,10 @@ function Startup(xhr, doneCallback) {
 	});
 
 	$("#mServerSecretSeed").find("button").click(function() {
-		show({Step: "serverHostName"});
+		// Performing an empty action will bounce the user to the next
+		// screen, serverHostName, with the server IP address populated
+		// by the server side.
+		action({});
 	});
 
 	$("#mServerWriters").find("button").click(function() {
@@ -449,7 +454,36 @@ function Startup(xhr, doneCallback) {
 			break;
 		case "gcpDetails":
 			el = $("#mGCPDetails");
+
 			$("#gcpDetailsBucketName").val(data.BucketName);
+
+			var locs = $("#gcpDetailsBucketLoc").empty();
+			for (var i=0; i < data.Locations.length; i++) {
+				var loc = data.Locations[i];
+				var label = loc;
+				if (loc.indexOf("-") >= 0) {
+					label += " (Regional)";
+				} else {
+					label += " (Multi-regional)";
+				}
+				var opt = $("<option/>").attr("value", loc).text(label);
+				if (loc == "us") {
+					opt.attr("selected", true); // A sane default.
+				}
+				locs.append(opt);
+			}
+
+			var zones = $("#gcpDetailsRegionZone").empty();
+			for (var i=0; i < data.Zones.length; i++) {
+				var zone = data.Zones[i];
+				var label = zone.slice(zone.indexOf("/")+1);
+				var opt = $("<option/>").attr("value", zone).text(label);
+				if (zone == "us-central1/us-central1-c") {
+					opt.attr("selected", true); // As sane default.
+				}
+				zones.append(opt);
+			}
+
 			break;
 		case "serverUserName":
 			el = $("#mServerUserName");
@@ -474,7 +508,7 @@ function Startup(xhr, doneCallback) {
 		step = data.Step;
 
 		// Re-enable buttons, hide old errors, show the dialog.
-		el.find("button, input").prop("disabled", false);
+		el.find("button, input, select").prop("disabled", false);
 		el.find(".up-error").hide();
 		el.modal("show");
 	}

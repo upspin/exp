@@ -55,6 +55,11 @@ func (s *server) copyEntry(dstDir upspin.PathName, srcEntry *upspin.DirEntry) er
 		// root for a copy, so this shouldn't come up in practice.
 		return errors.E(srcEntry.Name, errors.Str("cannot copy a root"))
 	}
+	dstDirPath, _ := path.Parse(dstDir)
+	if dstDirPath.HasPrefix(srcPath) {
+		return errors.E(srcEntry.Name, errors.Str("cannot copy a directory into one of its sub-directories"))
+	}
+
 	dst := path.Join(dstDir, srcPath.Elem(srcPath.NElem()-1))
 
 	switch {

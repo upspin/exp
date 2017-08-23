@@ -51,19 +51,20 @@ function FormatEntryAttr(entry) {
 
 // Inspector displays a modal containing the details of the given entity.
 function Inspect(entry) {
-	var el = $("body > .up-inspector").modal("show");
+	var el = $("#mInspector");
 	el.find(".up-entry-name").text(entry.Name);
 	el.find(".up-entry-size").text(FormatEntrySize(entry));
 	el.find(".up-entry-time").text(FormatEntryTime(entry));
 	el.find(".up-entry-attr").text(FormatEntryAttr(entry));
 	el.find(".up-entry-writer").text(entry.Writer);
+	el.modal("show");
 }
 
 // Confirm displays a modal that prompts the user to confirm the copy or delete
 // of the given paths. If action is "copy", dest should be the copy destination.
 // The callback argument is a niladic function that performs the action.
 function Confirm(action, paths, dest, callback) {
-	var el = $("body > .up-confirm");
+	var el = $("#mConfirm");
 
 	var button = el.find(".up-confirm-button");
 	if (action == "delete") {
@@ -98,7 +99,7 @@ function Confirm(action, paths, dest, callback) {
 // The mkdir argument is a function that creates a directory and takes
 // the path name as its single argument.
 function Mkdir(basePath, mkdir) {
-	var el = $("body > .up-mkdir");
+	var el = $("#mMkdir");
 	var input = el.find(".up-path").val(basePath);
 
 	el.find(".up-mkdir-button").off("click").click(function() {
@@ -121,7 +122,7 @@ function Browser(parentEl, page) {
 		reportError: reportError
 	};
 
-	var el = $(".up-template.up-browser").clone().removeClass("up-template");
+	var el = $("body > .up-template.up-browser").clone().removeClass("up-template");
 	el.appendTo(parentEl);
 
 	function navigate(path) {
@@ -314,33 +315,26 @@ function Browser(parentEl, page) {
 // Startup manages the signup process and fetches the name of the logged-in
 // user and the XSRF token for making subsequent requests.
 function Startup(xhr, doneCallback) {
-	var loadingEl = $("body > .up-loading").modal("show");
-	loadingEl.find(".up-error").hide();
 
-	var signupEl = $("body > .up-signup");
-	signupEl.find("button").click(function() {
-		// TODO: validate input before sending it to the server.
+	$("#mSignup").find("button").click(function() {
 		action({
 			action: "signup",
 			username: $("#signupUserName").val(),
 		});
 	});
 
-	var secretseedEl = $("body > .up-secretseed");
-	secretseedEl.find("button").click(function() {
+	$("#mSecretSeed").find("button").click(function() {
 		action();
 	});
 
-	var verifyEl = $("body > .up-verify");
-	verifyEl.find("button.up-resend").click(function() {
+	$("#mVerify").find("button.up-resend").click(function() {
 		action({action: "register"});
 	});
-	verifyEl.find("button.up-proceed").click(function() {
+	$("#mVerify").find("button.up-proceed").click(function() {
 		action();
 	});
 
-	var serverSelectEl = $("body > .up-serverSelect");
-	serverSelectEl.find("button").click(function() {
+	$("#mServerSelect").find("button").click(function() {
 		switch (true) {
 		case $("#serverSelectExisting").is(":checked"):
 			show({Step: "serverExisting"});
@@ -353,16 +347,16 @@ function Startup(xhr, doneCallback) {
 			break;
 		}
 	});
-	var serverExistingEl = $("body > .up-serverExisting");
-	serverExistingEl.find("button").click(function() {
+
+	$("#mServerExisting").find("button").click(function() {
 		action({
 			action: "specifyEndpoints",
 			dirServer: $("#serverExistingDirServer").val(),
 			storeServer: $("#serverExistingStoreServer").val()
 		});
 	});
-	var serverGCPEl = $("body > .up-serverGCP");
-	serverGCPEl.find("button").click(function() {
+
+	$("#mServerGCP").find("button").click(function() {
 		var fileEl = $("#serverGCPKeyFile");
 		if (fileEl[0].files.length != 1) {
 			error("You must provide a JSON Private Key file.");
@@ -380,131 +374,135 @@ function Startup(xhr, doneCallback) {
 		};
 		r.readAsText(fileEl[0].files[0]);
 	});
-	var gcpDetailsEl = $("body > .up-gcpDetails");
-	gcpDetailsEl.find("button").click(function() {
+
+	$("#mGCPDetails").find("button").click(function() {
 		action({
 			action: "createGCP",
 			bucketName: $("#gcpDetailsBucketName").val()
 		});
 	});
-	var serverHostNameEl = $("body > .up-serverHostName");
-	serverHostNameEl.find("button").click(function() {
+
+	$("#mServerHostName").find("button").click(function() {
 		action({
 			action: "configureServerHostName",
 			hostName: $("#serverHostName").val()
 		});
 	});
-	var serverUserNameEl = $("body > .up-serverUserName");
-	serverUserNameEl.find("button").click(function() {
+
+	$("#mServerUserName").find("button").click(function() {
 		action({
 			action: "configureServerUserName",
 			userNameSuffix: $("#serverUserNameSuffix").val()
 		});
 	});
-	var serverSecretseedEl = $("body > .up-serverSecretseed");
-	serverSecretseedEl.find("button").click(function() {
+
+	$("#mServerSecretSeed").find("button").click(function() {
 		show({Step: "serverHostName"});
 	});
-	var serverWritersEl = $("body > .up-serverWriters");
-	serverWritersEl.find("button").click(function() {
+
+	$("#mServerWriters").find("button").click(function() {
 		action({
 			action: "configureServer",
 			writers: $("#serverWriters").val()
 		});
 	});
 
-	var lastStep = "loading";
-	var lastEl = loadingEl;
+	var step; // String representation of the current step.
+	var el; // jQuery element of the current step's modal.
+	function show(data) {
+		// If we've moved onto another step, hide the previous one.
+		if (el && data.Step != step) {
+			el.modal("hide");
+		}
+
+		// Set el and step and do step-specific setup.
+		switch (data.Step) {
+		case "loading":
+			el = $("#mLoading");
+			break;
+		case "signup":
+			el = $("#mSignup");
+			break;
+		case "secretSeed":
+			el = $("#mSecretSeed");
+			$("#secretSeedKeyDir").text(data.KeyDir);
+			$("#secretSeedSecretSeed").text(data.SecretSeed);
+			break;
+		case "verify":
+			el = $("#mVerify");
+			el.find(".up-username").text(data.UserName);
+			break;
+		case "serverSelect":
+			el = $("#mServerSelect");
+			break;
+		case "serverExisting":
+			el = $("#mServerExisting");
+			break;
+		case "serverGCP":
+			el = $("#mServerGCP");
+			break;
+		case "gcpDetails":
+			el = $("#mGCPDetails");
+			$("#gcpDetailsBucketName").val(data.BucketName);
+			break;
+		case "serverUserName":
+			el = $("#mServerUserName");
+			$("#serverUserNamePrefix").text(data.UserNamePrefix);
+			$("#serverUserNameSuffix").val(data.UserNameSuffix);
+			$("#serverUserNameDomain").text(data.UserNameDomain);
+			break;
+		case "serverSecretSeed":
+			el = $("#mServerSecretSeed");
+			$("#serverSecretSeedKeyDir").text(data.KeyDir);
+			$("#serverSecretSeedSecretSeed").text(data.SecretSeed);
+			break;
+		case "serverHostName":
+			el = $("#mServerHostName");
+			el.find(".up-ipAddr").text(data.IPAddr);
+			break;
+		case "serverWriters":
+			el = $("#mServerWriters");
+			$("#serverWriters").val(data.Writers.join("\n"));
+			break;
+		}
+		step = data.Step;
+
+		// Re-enable buttons, hide old errors, show the dialog.
+		el.find("button, input").prop("disabled", false);
+		el.find(".up-error").hide();
+		el.modal("show");
+	}
 	function success(resp) {
 		if (!resp.Startup) {
 			// The startup process is complete.
-			if (lastEl) {
-				lastEl.modal("hide");
+			if (el) {
+				el.modal("hide");
 			}
 			doneCallback(resp);
 			return;
 		}
 		show(resp.Startup);
 	}
-	function show(data) {
-		// If we've moved onto another step, hide the previous one.
-		if (lastEl && data.Step != lastStep) {
-			lastEl.modal("hide");
-		}
-
-		// Set lastEl and lastStep and do step-specific setup.
-		switch (data.Step) {
-		case "signup":
-			lastEl = signupEl;
-			break;
-		case "secretseed":
-			$("#secretseedKeyDir").text(data.KeyDir);
-			$("#secretseedSecretSeed").text(data.SecretSeed);
-			lastEl = secretseedEl;
-			break;
-		case "verify":
-			verifyEl.find(".up-username").text(data.UserName);
-			lastEl = verifyEl;
-			break;
-		case "serverSelect":
-			lastEl = serverSelectEl;
-			break;
-		case "serverExisting":
-			lastEl = serverExistingEl;
-			break;
-		case "serverGCP":
-			lastEl = serverGCPEl;
-			break;
-		case "gcpDetails":
-			$("#gcpDetailsBucketName").val(data.BucketName);
-			lastEl = gcpDetailsEl;
-			break;
-		case "serverUserName":
-			$("#serverUserNamePrefix").text(data.UserNamePrefix);
-			$("#serverUserNameSuffix").val(data.UserNameSuffix);
-			$("#serverUserNameDomain").text(data.UserNameDomain);
-			lastEl = serverUserNameEl;
-			break;
-		case "serverSecretseed":
-			$("#serverSecretseedKeyDir").text(data.KeyDir);
-			$("#serverSecretseedSecretSeed").text(data.SecretSeed);
-			lastEl = serverSecretseedEl;
-			break;
-		case "serverHostName":
-			serverHostNameEl.find(".up-ipAddr").text(data.IPAddr);
-			lastEl = serverHostNameEl;
-			break;
-		case "serverWriters":
-			serverWritersEl.find("#serverWriters").val(data.Writers.join("\n"));
-			lastEl = serverWritersEl;
-			break;
-		}
-		lastStep = data.Step;
-
-		// Re-enable buttons, hide old errors, show the dialog.
-		lastEl.find("button, input").prop("disabled", false);
-		lastEl.find(".up-error").hide();
-		lastEl.modal("show");
-	}
 	function error(err) {
-		if (lastEl) {
+		if (el) {
 			// Show the error, re-enable buttons.
-			lastEl.find(".up-error").show().find(".up-error-msg").text(err);
-			lastEl.find("button, input").prop("disabled", false);
+			el.find(".up-error").show().find(".up-error-msg").text(err);
+			el.find("button, input").prop("disabled", false);
 		} else {
 			alert(err)
 			// TODO(adg): display the initial error in a more friendly way.
 		}
 	}
 	function action(data) {
-		if (lastEl) {
+		if (el) {
 			// Disable buttons, hide old errors.
-			lastEl.find("button, input").prop("disabled", true);
-			lastEl.find(".up-error").hide();
+			el.find("button, input").prop("disabled", true);
+			el.find(".up-error").hide();
 		}
 		xhr(data, success, error);
 	}
 
+	show({Step: "loading"});
 	action(); // Kick things off.
 }
 

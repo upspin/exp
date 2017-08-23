@@ -22,6 +22,30 @@
       "revId": "5aa8602ae831b8b6185cd3a52759e24387be9773",
       "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d20d5797_a83e2d0c",
+        "filename": "cmd/browser/static/script.js",
+        "patchSetId": 11
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 5389
+      },
+      "writtenOn": "2017-08-23T16:14:21Z",
+      "side": 1,
+      "message": "Yeah I think I\u0027m going to switch all the \".up-foo\" classes to element ids and make the change you suggest, but in an upcoming CL",
+      "parentUuid": "27c53daf_9066a4ed",
+      "range": {
+        "startLine": 364,
+        "startChar": 45,
+        "endLine": 364,
+        "endChar": 0
+      },
+      "revId": "5aa8602ae831b8b6185cd3a52759e24387be9773",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
     }
   ]
 }

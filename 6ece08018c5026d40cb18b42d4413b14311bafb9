@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c7e6ab8b_2862416a",
+        "filename": "cmd/browser/static/index.html",
+        "patchSetId": 2
+      },
+      "lineNbr": 389,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-08-24T04:53:09Z",
+      "side": 1,
+      "message": "s/and //",
+      "revId": "6ece08018c5026d40cb18b42d4413b14311bafb9",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    }
+  ]
+}

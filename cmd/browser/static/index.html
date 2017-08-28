@@ -380,7 +380,8 @@ license that can be found in the LICENSE file.
       </div>
       <div class="modal-body">
 		<p>
-		TODO: explanation
+		Choose a name for the Google Cloud Storage Bucket that will
+		hold your Upspin data.
 		</p>
 		<div class="form-group">
 			<label for="gcpDetailsBucketName">Storage Bucket Name</label>
@@ -389,6 +390,11 @@ license that can be found in the LICENSE file.
 			This name must be globally unique, so we suggest using your Project ID as a prefix.
 			</p>
 		</div>
+		<p>
+		Choose the geographical locations of your Storage Bucket and
+		Compute Instance. For best performance these should be close to
+		the users of your Upspin server.
+		</p>
 		<div class="form-group">
 			<label for="gcpDetailsBucketLoc">Storage Bucket Location</label>
 			<select id="gcpDetailsBucketLoc" class="form-control">
@@ -396,7 +402,8 @@ license that can be found in the LICENSE file.
 			<p class="help-block">
 			See the
 			<a href="https://cloud.google.com/storage/docs/bucket-locations" target="_blank">documentation</a>
-			to learn about Bucket Locations.
+			to learn about Bucket Locations. (Note that "Regional"
+			storage is cheaper than "Multi-regional" storage.)
 			</p>
 		</div>
 		<div class="form-group">
@@ -409,9 +416,6 @@ license that can be found in the LICENSE file.
 			to learn about Regions and Zones.
 			</p>
 		</div>
-		<p>
-		TODO: machine type
-		</p>
 		<div class="panel panel-danger up-error">
 			<div class="panel-heading">Error</div>
 			<div class="panel-body up-error-msg"></div>
@@ -435,13 +439,14 @@ license that can be found in the LICENSE file.
       </div>
       <div class="modal-body">
 		<p>
-		Specify a <b>user name</b> for the Upspin server, distinct to
-		your primary Upspin user. (The name is derived from your
-		current user name with the addition of a suffix to the user
-		name component.)
+		Every Upspin server runs as its own Upspin user.
+		We will use a user derived from your user name,
+		with the addition of a suffix.
 		</p>
-		<p>
-		TODO: more about this
+		Specify a <b>user name suffix</b> for your Upspin server user.
+		The user name with suffix need not be a valid email address;
+		your Upspin user may register any number of "suffixed" users
+		without email verification.
 		</p>
 		<div class="form-group form-inline">
 			<div class="input-group">
@@ -509,15 +514,14 @@ license that can be found in the LICENSE file.
       </div>
       <div class="modal-body">
 		<p>
-		Your Upspin server is running on a virtual machine at
-		<b class="up-ipAddr"></b> and now we must configure it
-		before it will be usable.
+		Your Upspin server is running on a virtual machine with the IP
+		address <b class="up-ipAddr"></b>.
 		</p>
 		<p>
 		Specify a <b>host name</b> for your Upspin server.
-		This name is not typically user-visible, appearing only in your
-		key server record, configuration file, and in the metadata for
-		all Upspin content you write.
+		This name is not user-visible, appearing only in your key
+		server record, configuration file, and in the metadata for all
+		Upspin content you write.
 		</p>
 		<p>
 		If you wish to use a host name under a domain you control,
@@ -563,6 +567,8 @@ license that can be found in the LICENSE file.
 		You opted to use a default host name (provided by the Upspin project)
 		for your Upspin server.
 		The assigned name is <b class="up-hostName"></b>.
+		You need not write this down; it will be stored in your key
+		server record and configuration file.
 		</p>
 		<p>
 		Wait a few minutes for the changes to propagate through

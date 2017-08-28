@@ -41,9 +41,8 @@ type gcpState struct {
 
 	APIsEnabled bool
 
-	Region      string
-	Zone        string
-	MachineType string
+	Region string
+	Zone   string
 
 	Storage struct {
 		ServiceAccount string
@@ -247,8 +246,6 @@ func (s *gcpState) listStorageLocations() ([]string, error) {
 func (s *gcpState) create(region, zone, bucketName, bucketLoc string) error {
 	s.Region = region
 	s.Zone = zone
-	// TODO: make these user-configurable.
-	s.MachineType = "n1-standard-1"
 
 	if s.Storage.ServiceAccount == "" {
 		email, key, err := s.createServiceAccount()
@@ -329,7 +326,6 @@ func (s *gcpState) createInstance() error {
 		return err
 	}
 
-	// TODO: make these configurable?
 	const (
 		firewallName = "allow-https"
 		firewallTag  = firewallName
@@ -366,7 +362,7 @@ func (s *gcpState) createInstance() error {
 				SourceImage: "projects/cos-cloud/global/images/family/cos-stable",
 			},
 		}},
-		MachineType: "zones/" + s.Zone + "/machineTypes/" + s.MachineType,
+		MachineType: "zones/" + s.Zone + "/machineTypes/g1-small",
 		Name:        instanceName,
 		Tags:        &compute.Tags{Items: []string{firewallTag}},
 		Metadata: &compute.Metadata{
@@ -430,24 +426,35 @@ func (s *gcpState) createBucket(name, loc string) error {
 		return err
 	}
 
+	acl := &storage.BucketAccessControl{
+		Bucket: name,
+		Entity: "user-" + s.Storage.ServiceAccount,
+		Email:  s.Storage.ServiceAccount,
+		Role:   "OWNER",
+	}
 	_, err = svc.Buckets.Insert(s.ProjectID, &storage.Bucket{
-		Acl: []*storage.BucketAccessControl{{
-			Bucket: name,
-			Entity: "user-" + s.Storage.ServiceAccount,
-			Email:  s.Storage.ServiceAccount,
-			Role:   "OWNER",
-		}},
+		Acl:      []*storage.BucketAccessControl{acl},
 		Name:     name,
 		Location: loc,
 	}).Do()
-	if isExists(err) {
-		// Bucket already exists.
-		// TODO(adg): update bucket ACL to make sure the service
-		// account has access. (For now, we assume that the user
-		// created the bucket using this command and that the bucket
-		// has the correct permissions.)
-		return nil
+	if !isExists(err) {
+		return err // May be nil.
 	}
+	// Bucket already exists. Check bucket ownership and ACL to make sure
+	// the service account has access.
+	bkt, err := svc.Buckets.Get(name).Do()
+	if err != nil {
+		return err
+	}
+	for _, a := range bkt.Acl {
+		if a.Email == s.Storage.ServiceAccount && a.Role == "OWNER" {
+			// The service account has OWNER privileges; we're ok.
+			return nil
+		}
+	}
+	// The service account doesn't have OWNER privileges; try to add them.
+	bkt.Acl = append(bkt.Acl, acl)
+	_, err = svc.Buckets.Update(name, bkt).Do()
 	return err
 }
 
@@ -575,6 +582,7 @@ write_files:
     ExecStart=/usr/bin/docker run --rm -u=2000 --volume=/home/upspin:/upspin -p=443:8443 --name=upspinserver gcr.io/upspin-containers/upspinserver:latest
     ExecStop=/usr/bin/docker stop upspinserver
     ExecStopPost=/usr/bin/docker rm upspinserver
+    Restart=on-failure
 
 runcmd:
 - systemctl daemon-reload

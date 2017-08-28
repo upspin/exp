@@ -390,13 +390,6 @@ function Startup(xhr, doneCallback) {
 		});
 	});
 
-	$("#mServerHostName").find("button").click(function() {
-		action({
-			action: "configureServerHostName",
-			hostName: $("#serverHostName").val()
-		});
-	});
-
 	$("#mServerUserName").find("button").click(function() {
 		action({
 			action: "configureServerUserName",
@@ -409,6 +402,23 @@ function Startup(xhr, doneCallback) {
 		// screen, serverHostName, with the server IP address populated
 		// by the server side.
 		action({});
+	});
+
+	$("#mServerHostName").find("button").click(function() {
+		action({
+			action: "configureServerHostName",
+			hostName: $("#serverHostName").val()
+		});
+	});
+
+	$("#mWaitServerHostName").find("button.btn-primary").click(function() {
+		action({action: "checkServerHostName"});
+	});
+	$("#mWaitServerHostName").find("button.btn-danger").click(function() {
+		action({
+			action: "checkServerHostName",
+			reset: "true"
+		});
 	});
 
 	$("#mServerWriters").find("button").click(function() {
@@ -499,6 +509,18 @@ function Startup(xhr, doneCallback) {
 		case "serverHostName":
 			el = $("#mServerHostName");
 			el.find(".up-ipAddr").text(data.IPAddr);
+			break;
+		case "waitServerHostName":
+			el = $("#mWaitServerHostName");
+			el.find(".up-ipAddr").text(data.IPAddr);
+			el.find(".up-hostName").text(data.HostName);
+			if (data.HostName.endsWith("upspin.services")) {
+				el.find(".up-upspinServices").show();
+				el.find(".up-ownDomain").hide();
+			} else {
+				el.find(".up-upspinServices").hide();
+				el.find(".up-ownDomain").show();
+			}
 			break;
 		case "serverWriters":
 			el = $("#mServerWriters");

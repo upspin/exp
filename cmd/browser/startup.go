@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+// TODO: cache gcp zone/location lists
+
 package main
 
 import (
@@ -16,7 +18,6 @@ import (
 	"reflect"
 	"sort"
 	"strings"
-	"time"
 
 	"upspin.io/bind"
 	"upspin.io/client"
@@ -66,8 +67,11 @@ type startupResponse struct {
 	UserNameSuffix string // Suggested default.
 	UserNameDomain string // Includes leading "@".
 
-	// Step: "serverHostName"
+	// Step: "serverHostName" and "waitServerHostName"
 	IPAddr string
+
+	// Step: "waitServerHostName"
+	HostName string
 
 	// Step: "serverWriters"
 	Writers []upspin.UserName
@@ -340,33 +344,43 @@ func (s *server) startup(req *http.Request) (*startupResponse, upspin.Config, er
 	case "configureServerHostName":
 		hostName := req.FormValue("hostName")
 
-		// Load server user and config for use by serviceHostName and later.
-		serverUser := st.Server.UserName
-		_, serverSuffix, _, _ := user.Parse(serverUser)
-		serverCfgFile := flags.Config + "." + serverSuffix
-		serverCfg, err := config.FromFile(serverCfgFile)
-		if err != nil {
-			return nil, nil, err
-		}
-
 		// Set up a default host name if none provided.
 		if hostName == "" {
+			serverCfg, _, err := serverConfig(st.Server.UserName)
+			if err != nil {
+				return nil, nil, err
+			}
 			hostName, err = serviceHostName(serverCfg, st.Server.IPAddr)
 			if err != nil {
 				return nil, nil, err
 			}
-			// Wait a few seconds before calling hostResolvesTo so
-			// that the change has a chance to propagate. This may
-			// not be long enough in some configurations.
-			// TODO(adg): More testing is required.
-			time.Sleep(15 * time.Second)
+		}
+
+		// Save the state.
+		st.Server.HostName = hostName
+		if err := st.save(); err != nil {
+			return nil, nil, err
+		}
+
+		response = "waitServerHostName"
+
+	case "checkServerHostName":
+		if req.FormValue("reset") == "true" {
+			// User clicked the "Choose another host name" button.
+			// Zero out the host name field to give
+			// ther user a second chance to select one.
+			st.Server.HostName = ""
+			if err := st.save(); err != nil {
+				return nil, nil, err
+			}
+			break
 		}
 
 		// Check that the host name resolves to what we expect.
-		if err := hostResolvesTo(hostName, st.Server.IPAddr); err != nil {
+		if err := hostResolvesTo(st.Server.HostName, st.Server.IPAddr); err != nil {
 			return nil, nil, err
 		}
-		ep, err := hostnameToEndpoint(hostName)
+		ep, err := hostnameToEndpoint(st.Server.HostName)
 		if err != nil {
 			return nil, nil, err
 		}
@@ -382,18 +396,16 @@ func (s *server) startup(req *http.Request) (*startupResponse, upspin.Config, er
 		}
 
 		// Update the server user config and key server record.
+		serverCfg, serverCfgFile, err := serverConfig(st.Server.UserName)
+		if err != nil {
+			return nil, nil, err
+		}
 		serverCfg = config.SetDirEndpoint(serverCfg, ep)
 		serverCfg = config.SetStoreEndpoint(serverCfg, ep)
-		if err := writeConfig(serverCfgFile, serverUser, ep, ep, true); err != nil {
+		if err := writeConfig(serverCfgFile, st.Server.UserName, ep, ep, true); err != nil {
 			return nil, nil, err
 		}
 		if err := putUser(cfg, serverCfg); err != nil {
-			return nil, nil, err
-		}
-
-		// Save the state.
-		st.Server.HostName = hostName
-		if err := st.save(); err != nil {
 			return nil, nil, err
 		}
 
@@ -455,7 +467,7 @@ func (s *server) startup(req *http.Request) (*startupResponse, upspin.Config, er
 			response = "serverHostName"
 		}
 		if st.Server.HostName != "" {
-			response = "serverWriters"
+			response = "waitServerHostName"
 		}
 		if st.Server.Configured {
 			response = ""
@@ -535,12 +547,20 @@ func (s *server) startup(req *http.Request) (*startupResponse, upspin.Config, er
 			IPAddr: st.Server.IPAddr,
 		}, nil, nil
 
+	case "waitServerHostName":
+		// Ask the user to wait a few minutes for the host name to
+		// propagate.
+		return &startupResponse{
+			Step:     "waitServerHostName",
+			IPAddr:   st.Server.IPAddr,
+			HostName: st.Server.HostName,
+		}, nil, nil
+
 	case "serverWriters":
 		// Prompt for a list of server Writers.
 		// Pre-populate the list with the server user name
 		// and the active user, so they get the idea.
 		// Those users will *always* be added to the list, though.
-
 		return &startupResponse{
 			Step: "serverWriters",
 			Writers: []upspin.UserName{
@@ -790,4 +810,14 @@ func hostnameToEndpoint(hostname string) (upspin.Endpoint, error) {
 		Transport: upspin.Remote,
 		NetAddr:   upspin.NetAddr(host + ":" + port),
 	}, nil
+}
+
+// serverConfig returns the config for the given server user
+// (obtained by concatenating flags.Config and the user name suffix)
+// and the name of the config file.
+func serverConfig(name upspin.UserName) (cfg upspin.Config, filename string, err error) {
+	_, suffix, _, _ := user.Parse(name)
+	filename = flags.Config + "." + suffix
+	cfg, err = config.FromFile(filename)
+	return
 }

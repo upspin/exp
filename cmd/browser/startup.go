@@ -60,7 +60,6 @@ type startupResponse struct {
 	BucketName string
 	Zones      []string
 	Locations  []string
-	// TODO: machine type
 
 	// Step: "serverUserName"
 	UserNamePrefix string // Includes trailing "+".

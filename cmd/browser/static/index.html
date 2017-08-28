@@ -544,6 +544,44 @@ license that can be found in the LICENSE file.
   </div>
 </div>
 
+<!-- waitServerHostName modal -->
+
+<div id="mWaitServerHostName" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Wait for DNS propagation</h4>
+      </div>
+      <div class="modal-body">
+		<p class="up-ownDomain">
+		You have nominated the host name <b class="up-hostName"></b>
+		for use with your Upspin server.
+		Make sure you have set up a DNS "A record" that points that
+		host name to <b class="up-ipAddr"></b>.
+		</p>
+		<p class="up-upspinServices">
+		You opted to use a default host name (provided by the Upspin project)
+		for your Upspin server.
+		The assigned name is <b class="up-hostName"></b>.
+		</p>
+		<p>
+		Wait a few minutes for the changes to propagate through
+		the DNS system before clicking 'Continue'.
+		(Please be patient; this can sometimes take up to an hour.)
+		</p>
+		<div class="panel panel-danger up-error">
+			<div class="panel-heading">Error</div>
+			<div class="panel-body up-error-msg"></div>
+		</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger">Choose another host name</button>
+        <button type="button" class="btn btn-primary">Continue</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- serverWriters modal -->
 
 <div id="mServerWriters" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">

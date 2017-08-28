@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c1e5738f_47ae3ab9",
+        "filename": "cmd/browser/static/index.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 446,
+      "author": {
+        "id": 5307
+      },
+      "writtenOn": "2017-08-28T16:32:47Z",
+      "side": 1,
+      "message": "Change \"name\" to \"default server name\" or \"suggested server name\"?   I\u0027m not certain of the meaning here.",
+      "revId": "5a42427a3cf8d1059de0e96867bd47075f17d57f",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    }
+  ]
+}

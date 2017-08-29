@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fed0ad88_ab89c4c9",
+        "filename": "cmd/browser/static/index.html",
+        "patchSetId": 2
+      },
+      "lineNbr": 443,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-08-29T01:39:09Z",
+      "side": 1,
+      "message": "s/use/create/? /deploy/?",
+      "revId": "34e12cca1045c8d6494f78f543682fe7c483ba5b",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    }
+  ]
+}

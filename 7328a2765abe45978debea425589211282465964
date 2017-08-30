@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8546c42f_4e2f3c0b",
+        "filename": "cmd/browser/static/js/ladda.min.js",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-08-30T06:45:00Z",
+      "side": 1,
+      "message": "shouldn\u0027t there be one of these comments (or something like it)in the other .js file?",
+      "revId": "7328a2765abe45978debea425589211282465964",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    }
+  ]
+}

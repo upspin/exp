@@ -8,10 +8,12 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net"
 	"net/http"
+	"net/url"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -50,30 +52,30 @@ type startupResponse struct {
 	Step string
 
 	// Step: "secretSeed" and "serverSecretSeed"
-	KeyDir     string
-	SecretSeed string
+	KeyDir     string `json:",omitempty"`
+	SecretSeed string `json:",omitempty"`
 
 	// Step: "verify"
-	UserName upspin.UserName
+	UserName upspin.UserName `json:",omitempty"`
 
 	// Step: "gcpDetails"
-	BucketName string
-	Zones      []string
-	Locations  []string
+	BucketName string   `json:",omitempty"`
+	Zones      []string `json:",omitempty"`
+	Locations  []string `json:",omitempty"`
 
 	// Step: "serverUserName"
-	UserNamePrefix string // Includes trailing "+".
-	UserNameSuffix string // Suggested default.
-	UserNameDomain string // Includes leading "@".
+	UserNamePrefix string `json:",omitempty"` // Includes trailing "+".
+	UserNameSuffix string `json:",omitempty"` // Suggested default.
+	UserNameDomain string `json:",omitempty"` // Includes leading "@".
 
 	// Step: "serverHostName" and "waitServerHostName"
-	IPAddr string
+	IPAddr string `json:",omitempty"`
 
 	// Step: "waitServerHostName"
-	HostName string
+	HostName string `json:",omitempty"`
 
 	// Step: "serverWriters"
-	Writers []upspin.UserName
+	Writers []upspin.UserName `json:",omitempty"`
 }
 
 // startup populates s.cfg and s.cli by either loading the config file
@@ -114,13 +116,27 @@ type startupResponse struct {
 // presented with a given step, startup returns a non-nil startupResponse. If
 // all the conditions are met, startup returns a non-nil Config. If an error
 // occurs startup returns that error.
-func (s *server) startup(req *http.Request) (*startupResponse, upspin.Config, error) {
+func (s *server) startup(req *http.Request) (resp *startupResponse, cfg upspin.Config, err error) {
 	s.mu.Lock()
-	cfg := s.cfg
+	cfg = s.cfg
 	s.mu.Unlock()
 	if cfg != nil {
 		return nil, cfg, nil
 	}
+
+	if err := req.ParseForm(); err != nil {
+		return nil, nil, err
+	}
+	logf("startup: request: %v", formatRequest(req.Form))
+	defer func() {
+		if err != nil {
+			logf("startup: error: %v", err)
+		} else if resp != nil {
+			logf("startup: response: %v", formatResponse(resp))
+		} else if cfg != nil {
+			logf("startup: returned with config")
+		}
+	}()
 
 	action := req.FormValue("action")
 
@@ -176,7 +192,7 @@ func (s *server) startup(req *http.Request) (*startupResponse, upspin.Config, er
 	}
 
 	// Load existing config file.
-	cfg, err := config.FromFile(flags.Config)
+	cfg, err = config.FromFile(flags.Config)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -451,9 +467,11 @@ func (s *server) startup(req *http.Request) (*startupResponse, upspin.Config, er
 	}
 
 	// If we're in the middle of setting up a GCP instance, prompt the user
-	// with the correct step of the process. Otherwise, if the user has not
-	// specified an endpoint (including 'unassigned') in the config file,
-	// prompt them to select Upspin servers.
+	// with the correct step of the process. Otherwise, if the user not
+	// registered with the KeyServer, prompt them to click the verification
+	// link. If they have a registered user, but not specified an endpoint
+	// (including 'unassigned') in the config file, prompt them to select
+	// Upspin servers.
 	if st != nil && response == "" {
 		// Deploying to GCP...
 		if st.APIsEnabled {
@@ -471,6 +489,15 @@ func (s *server) startup(req *http.Request) (*startupResponse, upspin.Config, er
 		if st.Server.Configured {
 			response = ""
 		}
+	} else if ok, err := isRegistered(cfg); err != nil {
+		return nil, nil, err
+	} else if !ok {
+		// TODO: Read seed from secret.upspinkey
+		// and display proquint again?
+		return &startupResponse{
+			Step:     "verify",
+			UserName: cfg.UserName(),
+		}, nil, nil
 	} else if response == "" && cfg.DirEndpoint() == (upspin.Endpoint{}) {
 		ok, err := hasEndpoints(flags.Config)
 		if err != nil {
@@ -566,18 +593,6 @@ func (s *server) startup(req *http.Request) (*startupResponse, upspin.Config, er
 				st.Server.UserName,
 				cfg.UserName(),
 			},
-		}, nil, nil
-	}
-
-	// Is the user now registered with the KeyServer?
-	if ok, err := isRegistered(cfg); err != nil {
-		return nil, nil, err
-	} else if !ok {
-		// TODO: Read seed from secret.upspinkey
-		// and display proquint again?
-		return &startupResponse{
-			Step:     "verify",
-			UserName: cfg.UserName(),
 		}, nil, nil
 	}
 
@@ -819,4 +834,54 @@ func serverConfig(name upspin.UserName) (cfg upspin.Config, filename string, err
 	filename = flags.Config + "." + suffix
 	cfg, err = config.FromFile(filename)
 	return
+}
+
+// formatRequest returns a human-readable string representation of the given
+// request values, redacting any private key information.
+func formatRequest(vals url.Values) string {
+	var buf bytes.Buffer
+	fmt.Fprint(&buf, "{")
+	first := true
+	for k, vs := range vals {
+		// Redact private key data from the log file, so users don't
+		// inadvertently leak their cloud project credentials to the
+		// world when reporting bugs.
+		if k == "privateKeyData" {
+			vs = []string{"REDACTED"}
+		}
+		// This field is always "startup" so omit it.
+		if k == "method" {
+			continue
+		}
+		if first {
+			fmt.Fprint(&buf, "\n")
+			first = false
+		} else {
+			fmt.Fprint(&buf, ",\n")
+		}
+		fmt.Fprintf(&buf, "\t%q: %q", k, vs)
+	}
+	if first {
+		fmt.Fprint(&buf, "}")
+	} else {
+		fmt.Fprint(&buf, "\n}")
+	}
+	return buf.String()
+}
+
+// formatResponse returns a human-readable string representation of the given
+// response, redacting any prviate key information.
+func formatResponse(resp *startupResponse) string {
+	if resp == nil {
+		return "<nil>"
+	}
+	r := *resp
+	if r.SecretSeed != "" {
+		// Redact secret seeds from the log file, so users don't
+		// inadvertently leak their cloud project credentials to the
+		// world when reporting bugs.
+		r.SecretSeed = "REDACTED"
+	}
+	b, _ := json.MarshalIndent(&r, "", "\t")
+	return string(b)
 }

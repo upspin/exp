@@ -179,6 +179,24 @@
       "revId": "a5fe9430690c401991ab056bcd26ff2c5071cd14",
       "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "35598d99_fcefebab",
+        "filename": "cmd/browser/startup.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 881,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-08-30T06:43:14Z",
+      "side": 1,
+      "message": "It seems wrong to me to have two separate logs I need to look at to understand what happened. Also when helping users, we\u0027ll need to tell them to report two sets of logs.\n\nOnce the browser is up and running, we can expect lots of errors. Why not save them to the \"browser log file\"?",
+      "parentUuid": "f92030f4_33a26944",
+      "revId": "a5fe9430690c401991ab056bcd26ff2c5071cd14",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
     }
   ]
 }

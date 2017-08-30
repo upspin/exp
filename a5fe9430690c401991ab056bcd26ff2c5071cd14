@@ -197,6 +197,24 @@
       "revId": "a5fe9430690c401991ab056bcd26ff2c5071cd14",
       "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c9054b16_0cc018aa",
+        "filename": "cmd/browser/startup.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 881,
+      "author": {
+        "id": 5389
+      },
+      "writtenOn": "2017-08-30T07:05:17Z",
+      "side": 1,
+      "message": "Well, in that case do you think that I should create this log file when the browser process starts, and redirect all log output there?",
+      "parentUuid": "35598d99_fcefebab",
+      "revId": "a5fe9430690c401991ab056bcd26ff2c5071cd14",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
     }
   ]
 }

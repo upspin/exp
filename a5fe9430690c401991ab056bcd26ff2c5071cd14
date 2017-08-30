@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "00995047_33b7b04e",
+        "filename": "cmd/browser/startup.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 841,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-08-30T05:57:21Z",
+      "side": 1,
+      "message": "your upspin directory will clutter quickly if this sets a precedent.\nhow about\n\n$HOME/upspin/log/browser.log?",
+      "revId": "a5fe9430690c401991ab056bcd26ff2c5071cd14",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "238cb679_33153062",
+        "filename": "cmd/browser/startup.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 842,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-08-30T05:57:21Z",
+      "side": 1,
+      "message": "s/the log/that/",
+      "revId": "a5fe9430690c401991ab056bcd26ff2c5071cd14",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "19f67359_d7b4cc5d",
+        "filename": "cmd/browser/startup.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 881,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-08-30T05:57:21Z",
+      "side": 1,
+      "message": "you should also do upspin.io/log/SetOutput(logger.Output), if you know what i mean.",
+      "revId": "a5fe9430690c401991ab056bcd26ff2c5071cd14",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    }
+  ]
+}

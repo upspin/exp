@@ -529,7 +529,19 @@ function Startup(xhr, doneCallback) {
 		}
 		step = data.Step;
 
-		// Re-enable buttons, hide old errors, show the dialog.
+		// Enable buttons, create spinners (or stop existing ones),
+		// hide old errors, show the dialog.
+		el.find("button").each(function() {
+			var l = $(this).data("Ladda");
+			if (typeof l == "object") {
+				l.stop();
+				return;
+			}
+			l = Ladda.create(this);
+			$(this).data("Ladda", l).click(function() {
+				l.start();
+			});
+		});
 		el.find("button, input, select").prop("disabled", false);
 		el.find(".up-error").hide();
 		el.modal("show");
@@ -550,6 +562,12 @@ function Startup(xhr, doneCallback) {
 			// Show the error, re-enable buttons.
 			el.find(".up-error").show().find(".up-error-msg").text(err);
 			el.find("button, input").prop("disabled", false);
+			el.find("button").each(function() {
+				var l = $(this).data("Ladda");
+				if (typeof l == "object") {
+					l.stop();
+				}
+			});
 		} else {
 			alert(err)
 			// TODO(adg): display the initial error in a more friendly way.

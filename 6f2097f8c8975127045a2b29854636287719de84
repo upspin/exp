@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a9e9ec8_d06fe202",
+        "filename": "cmd/browser/log.go",
+        "patchSetId": 4
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-08-31T00:32:57Z",
+      "side": 1,
+      "message": "one line would do for this comment.",
+      "revId": "6f2097f8c8975127045a2b29854636287719de84",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "70f3a924_5bd9f835",
+        "filename": "cmd/browser/log.go",
+        "patchSetId": 4
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-08-31T00:32:57Z",
+      "side": 1,
+      "message": "the comments are oddly narrow in this file.",
+      "revId": "6f2097f8c8975127045a2b29854636287719de84",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    }
+  ]
+}

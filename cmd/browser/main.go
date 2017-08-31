@@ -30,8 +30,6 @@ import (
 	"strings"
 	"sync"
 
-	"golang.org/x/net/xsrftoken"
-
 	"upspin.io/errors"
 	"upspin.io/flags"
 	"upspin.io/upspin"
@@ -59,7 +57,7 @@ func main() {
 	if err != nil {
 		exit(err)
 	}
-	url := fmt.Sprintf("http://%s/", *httpAddr)
+	url := fmt.Sprintf("http://%s/#token=%s", *httpAddr, s.xsrfToken)
 	if !startBrowser(url) {
 		fmt.Printf("Open %s in your web browser.\n", url)
 	} else {
@@ -76,16 +74,16 @@ func exit(err error) {
 // server implements an http.Handler that performs various Upspin operations
 // using a config. It is the back end for the JavaScript Upspin browser.
 type server struct {
-	xsrfKey string       // Random secret key for generating XSRF tokens.
-	static  http.Handler // Handler for serving static content (HTML, JS, etc).
+	xsrfToken string       // Random token to prevent cross-site request forgery.
+	static    http.Handler // Handler for serving static content (HTML, JS, etc).
 
 	mu  sync.Mutex
 	cfg upspin.Config // Non-nil if signup flow has been completed.
 	cli upspin.Client
 }
 
-func newServer() (http.Handler, error) {
-	key, err := generateKey()
+func newServer() (*server, error) {
+	token, err := generateToken()
 	if err != nil {
 		return nil, err
 	}
@@ -96,8 +94,8 @@ func newServer() (http.Handler, error) {
 	}
 
 	return &server{
-		xsrfKey: key,
-		static:  http.FileServer(http.Dir(pkg.Dir)),
+		xsrfToken: token,
+		static:    http.FileServer(http.Dir(pkg.Dir)),
 	}, nil
 }
 
@@ -115,6 +113,11 @@ func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *server) serveContent(w http.ResponseWriter, r *http.Request) {
+	if r.FormValue("token") != s.xsrfToken {
+		http.Error(w, "Invalid XSRF token", http.StatusForbidden)
+		return
+	}
+
 	p := r.URL.Path[1:]
 	name := upspin.PathName(p)
 	de, err := s.cli.Lookup(name, true)
@@ -133,25 +136,25 @@ func (s *server) serveContent(w http.ResponseWriter, r *http.Request) {
 
 func (s *server) serveAPI(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
-		http.Error(w, "bad request", http.StatusBadRequest)
+		http.Error(w, "Bad request", http.StatusBadRequest)
 		return
 	}
+	// Require a valid XSRF token.
+	if r.FormValue("token") != s.xsrfToken {
+		http.Error(w, "Invalid XSRF token", http.StatusForbidden)
+		return
+	}
+
 	method := r.FormValue("method")
 
 	s.mu.Lock()
 	hasConfig := s.cfg != nil
 	s.mu.Unlock()
 
-	// Don't permit accesses of non-signup methods if there is no config
+	// Don't permit accesses of non-startup methods if there is no config
 	// nor client; those methods need them.
 	if method != "startup" && !hasConfig {
-		http.Error(w, "no config", http.StatusBadRequest)
-		return
-	}
-
-	// Require a valid XSRF token for any requests except "startup".
-	if method != "startup" && !xsrftoken.Valid(r.FormValue("token"), s.xsrfKey, "magic", "") {
-		http.Error(w, "invalid xsrf token", http.StatusForbidden)
+		http.Error(w, "No configuration", http.StatusBadRequest)
 		return
 	}
 
@@ -167,13 +170,11 @@ func (s *server) serveAPI(w http.ResponseWriter, r *http.Request) {
 		if cfg != nil {
 			user = string(cfg.UserName())
 		}
-		token := xsrftoken.Generate(s.xsrfKey, "magic", "")
 		resp = struct {
 			Startup  *startupResponse
 			UserName string
-			Token    string
 			Error    string
-		}{sResp, user, token, errString}
+		}{sResp, user, errString}
 	case "list":
 		path := upspin.PathName(r.FormValue("path"))
 		des, err := s.cli.Glob(upspin.AllFilesGlob(path))
@@ -227,8 +228,8 @@ func (s *server) serveAPI(w http.ResponseWriter, r *http.Request) {
 	w.Write(b)
 }
 
-func generateKey() (string, error) {
-	b := make([]byte, 8)
+func generateToken() (string, error) {
+	b := make([]byte, 32)
 	_, err := rand.Read(b)
 	if err != nil {
 		return "", err

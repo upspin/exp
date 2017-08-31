@@ -21,10 +21,12 @@ import (
 	"flag"
 	"fmt"
 	"go/build"
-	"log"
 	"net"
 	"net/http"
+	"os"
+	"os/exec"
 	"path"
+	"runtime"
 	"strings"
 	"sync"
 
@@ -43,18 +45,32 @@ func main() {
 
 	// Disallow listening on non-loopback addresses until we have a better
 	// security model. (Even this is not really secure enough.)
-	if !isLocal(*httpAddr) {
-		log.Fatalf("cannot listen on non-loopback address %q", *httpAddr)
+	if err := isLocal(*httpAddr); err != nil {
+		exit(err)
 	}
 
 	s, err := newServer()
 	if err != nil {
-		log.Fatal(err)
+		exit(err)
 	}
 	http.Handle("/", s)
 
-	log.Printf("Serving on http://%s/", *httpAddr)
-	log.Fatal(http.ListenAndServe(*httpAddr, nil))
+	l, err := net.Listen("tcp", *httpAddr)
+	if err != nil {
+		exit(err)
+	}
+	url := fmt.Sprintf("http://%s/", *httpAddr)
+	if !startBrowser(url) {
+		fmt.Printf("Open %s in your web browser.\n", url)
+	} else {
+		fmt.Printf("Serving at %s\n", url)
+	}
+	exit(http.Serve(l, nil))
+}
+
+func exit(err error) {
+	fmt.Fprintln(os.Stderr, err)
+	os.Exit(1)
 }
 
 // server implements an http.Handler that performs various Upspin operations
@@ -220,21 +236,22 @@ func generateKey() (string, error) {
 	return fmt.Sprintf("%x", b), nil
 }
 
-func isLocal(addr string) bool {
+// isLocal returns an error if the given address is not a loopback address.
+func isLocal(addr string) error {
 	host, _, err := net.SplitHostPort(addr)
 	if err != nil {
-		return false
+		return err
 	}
 	ips, err := net.LookupIP(host)
 	if err != nil {
-		return false
+		return err
 	}
 	for _, ip := range ips {
 		if !ip.IsLoopback() {
-			return false
+			return fmt.Errorf("cannot listen on non-loopback address %q", addr)
 		}
 	}
-	return true
+	return nil
 }
 
 // ifError checks if the error is the expected one, and if so writes back an
@@ -257,4 +274,20 @@ func httpError(w http.ResponseWriter, err error) {
 	default:
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
+}
+
+// startBrowser tries to open the URL in a web browser,
+// and returns whether it succeed.
+func startBrowser(url string) bool {
+	var args []string
+	switch runtime.GOOS {
+	case "darwin":
+		args = []string{"open"}
+	case "windows":
+		args = []string{"cmd", "/c", "start"}
+	default:
+		args = []string{"xdg-open"}
+	}
+	cmd := exec.Command(args[0], append(args[1:], url)...)
+	return cmd.Start() == nil
 }

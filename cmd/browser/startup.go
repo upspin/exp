@@ -878,8 +878,8 @@ func formatResponse(resp *startupResponse) string {
 	r := *resp
 	if r.SecretSeed != "" {
 		// Redact secret seeds from the log file, so users don't
-		// inadvertently leak their cloud project credentials to the
-		// world when reporting bugs.
+		// inadvertently leak their Upspin keys to the world when
+		// reporting bugs.
 		r.SecretSeed = "REDACTED"
 	}
 	b, _ := json.MarshalIndent(&r, "", "\t")

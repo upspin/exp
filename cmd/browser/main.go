@@ -59,7 +59,7 @@ func main() {
 	if err != nil {
 		exit(err)
 	}
-	url := fmt.Sprintf("http://%s/", *httpAddr)
+	url := fmt.Sprintf("http://%s/#key=%s", *httpAddr, s.key)
 	if !startBrowser(url) {
 		fmt.Printf("Open %s in your web browser.\n", url)
 	} else {
@@ -76,15 +76,18 @@ func exit(err error) {
 // server implements an http.Handler that performs various Upspin operations
 // using a config. It is the back end for the JavaScript Upspin browser.
 type server struct {
-	xsrfKey string       // Random secret key for generating XSRF tokens.
-	static  http.Handler // Handler for serving static content (HTML, JS, etc).
+	// key to prevent request forgery; static for server's lifetime.
+	key string
+
+	// Handler for serving static content (HTML, JS, etc).
+	static http.Handler
 
 	mu  sync.Mutex
 	cfg upspin.Config // Non-nil if signup flow has been completed.
 	cli upspin.Client
 }
 
-func newServer() (http.Handler, error) {
+func newServer() (*server, error) {
 	key, err := generateKey()
 	if err != nil {
 		return nil, err
@@ -96,9 +99,15 @@ func newServer() (http.Handler, error) {
 	}
 
 	return &server{
-		xsrfKey: key,
-		static:  http.FileServer(http.Dir(pkg.Dir)),
+		key:    key,
+		static: http.FileServer(http.Dir(pkg.Dir)),
 	}, nil
+}
+
+func (s *server) hasConfig() bool {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	return s.cfg != nil && s.cli != nil
 }
 
 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -115,7 +124,17 @@ func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *server) serveContent(w http.ResponseWriter, r *http.Request) {
+	if !s.hasConfig() {
+		http.Error(w, "No configuration", http.StatusServiceUnavailable)
+		return
+	}
+
 	p := r.URL.Path[1:]
+	if !xsrftoken.Valid(r.FormValue("token"), s.key, string(s.cfg.UserName()), p) {
+		http.Error(w, "Invalid XSRF token", http.StatusForbidden)
+		return
+	}
+
 	name := upspin.PathName(p)
 	de, err := s.cli.Lookup(name, true)
 	if err != nil {
@@ -133,25 +152,22 @@ func (s *server) serveContent(w http.ResponseWriter, r *http.Request) {
 
 func (s *server) serveAPI(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
-		http.Error(w, "bad request", http.StatusBadRequest)
+		http.Error(w, "Expected POST request", http.StatusMethodNotAllowed)
 		return
 	}
+
+	// Require a valid key.
+	if r.FormValue("key") != s.key {
+		http.Error(w, "Invalid key", http.StatusForbidden)
+		return
+	}
+
 	method := r.FormValue("method")
 
-	s.mu.Lock()
-	hasConfig := s.cfg != nil
-	s.mu.Unlock()
-
-	// Don't permit accesses of non-signup methods if there is no config
+	// Don't permit accesses of non-startup methods if there is no config
 	// nor client; those methods need them.
-	if method != "startup" && !hasConfig {
-		http.Error(w, "no config", http.StatusBadRequest)
-		return
-	}
-
-	// Require a valid XSRF token for any requests except "startup".
-	if method != "startup" && !xsrftoken.Valid(r.FormValue("token"), s.xsrfKey, "magic", "") {
-		http.Error(w, "invalid xsrf token", http.StatusForbidden)
+	if method != "startup" && !s.hasConfig() {
+		http.Error(w, "No configuration", http.StatusServiceUnavailable)
 		return
 	}
 
@@ -167,13 +183,11 @@ func (s *server) serveAPI(w http.ResponseWriter, r *http.Request) {
 		if cfg != nil {
 			user = string(cfg.UserName())
 		}
-		token := xsrftoken.Generate(s.xsrfKey, "magic", "")
 		resp = struct {
 			Startup  *startupResponse
 			UserName string
-			Token    string
 			Error    string
-		}{sResp, user, token, errString}
+		}{sResp, user, errString}
 	case "list":
 		path := upspin.PathName(r.FormValue("path"))
 		des, err := s.cli.Glob(upspin.AllFilesGlob(path))
@@ -181,10 +195,18 @@ func (s *server) serveAPI(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			errString = err.Error()
 		}
+		var entries []entryWithToken
+		for _, de := range des {
+			tok := xsrftoken.Generate(s.key, string(s.cfg.UserName()), string(de.Name))
+			entries = append(entries, entryWithToken{
+				DirEntry:  de,
+				FileToken: tok,
+			})
+		}
 		resp = struct {
-			Entries []*upspin.DirEntry
+			Entries []entryWithToken
 			Error   string
-		}{des, errString}
+		}{entries, errString}
 	case "mkdir":
 		_, err := s.cli.MakeDirectory(upspin.PathName(r.FormValue("path")))
 		var errString string
@@ -227,8 +249,13 @@ func (s *server) serveAPI(w http.ResponseWriter, r *http.Request) {
 	w.Write(b)
 }
 
+type entryWithToken struct {
+	*upspin.DirEntry
+	FileToken string
+}
+
 func generateKey() (string, error) {
-	b := make([]byte, 8)
+	b := make([]byte, 32)
 	_, err := rand.Read(b)
 	if err != nil {
 		return "", err

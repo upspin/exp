@@ -278,16 +278,20 @@ function Browser(parentEl, page) {
 			var shortName = name.slice(name.lastIndexOf("/")+1);
 			var nameEl = entryEl.find(".up-entry-name");
 			if (isDir) {
-				nameEl.text(shortName);
-				nameEl.addClass("up-clickable");
-				nameEl.data("up-path", name);
-				nameEl.click(function(event) {
-					var p = $(this).data("up-path");
-					navigate(p);
-				});
+				nameEl
+					.text(shortName)
+					.addClass("up-clickable")
+					.data("up-path", name)
+					.click(function(event) {
+						var p = $(this).data("up-path");
+						navigate(p);
+					});
 			} else {
-				var nameLink = $("<a>").text(shortName).attr("href", "/" + name).attr("target", "_blank");
-				nameEl.append(nameLink);
+				$("<a>")
+					.text(shortName)
+					.attr("href", "/" + name + "?token=" + page.token)
+					.attr("target", "_blank")
+					.appendTo(nameEl);
 			}
 
 			var sizeEl = entryEl.find(".up-entry-size");
@@ -689,7 +693,10 @@ function Page() {
 	function startup(data, success, error) {
 		$.ajax("/_upspin", {
 			method: "POST",
-			data: $.extend({method: "startup"}, data),
+			data: $.extend({
+				token: page.token,
+				method: "startup"
+			}, data),
 			dataType: "json",
 			success: function(data) {
 				if (data.Error) {
@@ -706,6 +713,7 @@ function Page() {
 		var browser1, browser2;
 		var parentEl = $(".up-browser-parent");
 		var methods = {
+			token: page.token,
 			rm: rm,
 			copy: copy,
 			list: list,
@@ -723,12 +731,22 @@ function Page() {
 		browser2.navigate("augie@upspin.io");
 	}
 
+	// Obtain an XSRF token.
+	var prefix = "#token="
+	if (!window.location.hash.startsWith(prefix)) {
+		// TODO(adg): make this more user-friendly,
+		// even though it will not happen often.
+		alert("No XSRF token provided in URL fragment.");
+		return;
+	}
+	page.token = window.location.hash.slice(prefix.length);
+	window.location.hash = "";
+
 	// Begin the Startup sequence.
 	Startup(startup, function(data) {
-		// When startup is complete note the user name and token and
-		// launch the browsers.
+		// When startup is complete, note the
+		// user name and launch the browsers.
 		page.username = data.UserName;
-		page.token = data.Token;
 		$("#headerUsername").text(page.username);
 		startBrowsers();
 	});

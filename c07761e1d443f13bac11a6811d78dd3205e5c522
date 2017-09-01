@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c3439615_dc8289e1",
+        "filename": "cmd/browser/main.go",
+        "patchSetId": 6
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 6085
+      },
+      "writtenOn": "2017-09-01T03:24:26Z",
+      "side": 1,
+      "message": "maybe also add\n\n; static for the server\u0027s lifetime",
+      "range": {
+        "startLine": 79,
+        "startChar": 64,
+        "endLine": 79,
+        "endChar": 0
+      },
+      "revId": "c07761e1d443f13bac11a6811d78dd3205e5c522",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f3b7b0ab_5bcd38d9",
+        "filename": "cmd/browser/main.go",
+        "patchSetId": 6
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 6085
+      },
+      "writtenOn": "2017-09-01T03:24:26Z",
+      "side": 1,
+      "message": "s.token should be called key or xsrfKey, to not mix up terminology. The \"token\" here is what comes in the request.",
+      "range": {
+        "startLine": 130,
+        "startChar": 21,
+        "endLine": 130,
+        "endChar": 79
+      },
+      "revId": "c07761e1d443f13bac11a6811d78dd3205e5c522",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    }
+  ]
+}

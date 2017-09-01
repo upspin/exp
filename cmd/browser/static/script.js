@@ -94,6 +94,16 @@ function Confirm(action, paths, dest, callback) {
 	el.modal("show");
 }
 
+// OnEnterClick clicks button when user presses enter with input focused.
+function OnEnterClick(input, button) {
+	input.keypress(function(event) {
+		if (event.which == 13) {
+			event.preventDefault();
+			button.click();
+		}
+	});
+}
+
 // Mkdir displays a modal that prompts the user for a directory to create.
 // The basePath is the path to pre-fill in the input box.
 // The mkdir argument is a function that creates a directory and takes
@@ -102,14 +112,36 @@ function Mkdir(basePath, mkdir) {
 	var el = $("#mMkdir");
 	var input = el.find(".up-path").val(basePath);
 
-	el.find(".up-mkdir-button").off("click").click(function() {
+	var btn = el.find(".up-mkdir-button").off("click").click(function() {
 		el.modal("hide");
 		mkdir(input.val());
 	});
+	OnEnterClick(input, btn);
 
 	el.modal("show").on("shown.bs.modal", function() {
 		input.focus();
 	});
+}
+
+function Edit(name, content, save) {
+	var el = $("#mEdit");
+	el.find(".up-entry-name").text(name);
+
+	var body = el.find(".up-body");
+	function updateHeight() {
+		var m = body.val().match(/\n/g);
+		var n = (m?m.length:0)+2;
+		body.attr("rows", n);
+	}
+	body.keyup(updateHeight).change(updateHeight);
+	body.val(content);
+	updateHeight();
+
+	el.find(".up-save-button").click(function() {
+		save(body.val());
+	});
+
+	el.modal("show");
 }
 
 // Browser instantiates an Upspin tree browser and appends it to parentEl.
@@ -258,7 +290,8 @@ function Browser(parentEl, page) {
 		var tmpl = el.find(".up-template.up-entry");
 		var parent = tmpl.parent();
 		parent.children().filter(".up-entry").not(tmpl).remove();
-		for (var i=0; i<entries.length; i++) {
+		var nEntries = entries?entries.length:0;
+		for (var i=0; i<nEntries; i++) {
 			var entry = entries[i];
 			var entryEl = tmpl.clone().removeClass("up-template");
 			entryEl.data("up-entry", entry);
@@ -303,16 +336,35 @@ function Browser(parentEl, page) {
 
 			entryEl.find(".up-entry-time").text(FormatEntryTime(entry));
 
-			var inspectEl = entryEl.find(".up-entry-inspect");
-			inspectEl.data("up-entry", entry);
-			inspectEl.click(function() {
+			entryEl.find(".up-entry-inspect").click(function() {
 				Inspect($(this).closest(".up-entry").data("up-entry"));
 			});
+
+			if (entry.Name.startsWith(page.username+"/") && entry.Name.endsWith("/Access")) {
+				entryEl.find(".up-entry-edit").click(function() {
+					var l = $(this).data("Ladda");
+					if (typeof l != "object") {
+						l = Ladda.create(this);
+						$(this).data("Ladda", l);
+					}
+					l.start();
+					var entry = $(this).closest(".up-entry").data("up-entry");
+					$.ajax("/"+entry.Name+"?token="+entry.FileToken, {
+						dataType: "text",
+						success: function(content) {
+							l.stop();
+							Edit(entry.Name, content, page.save);
+						}
+					});
+				});
+			} else {
+				entryEl.find(".up-entry-edit").remove();
+			}
 
 			parent.append(entryEl);
 		}
 		var emptyEl = parent.find(".up-empty");
-		if (entries.length == 0) {
+		if (nEntries == 0) {
 			emptyEl.show();
 		} else {
 			emptyEl.hide();
@@ -713,6 +765,7 @@ function Page() {
 		var browser1, browser2;
 		var parentEl = $(".up-browser-parent");
 		var methods = {
+			username: page.username,
 			rm: rm,
 			copy: copy,
 			list: list,
@@ -739,7 +792,7 @@ function Page() {
 		return;
 	}
 	page.key = window.location.hash.slice(prefix.length);
-	window.location.hash = "";
+	//window.location.hash = "";
 
 	// Begin the Startup sequence.
 	Startup(startup, function(data) {

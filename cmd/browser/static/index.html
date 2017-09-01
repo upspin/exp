@@ -88,13 +88,14 @@ license that can be found in the LICENSE file.
 				</span>
 				<input type="text" class="up-path form-control">
 			</div>
+		</div>
+
 			<div class="alert alert-danger up-error" role="alert">
 				Error message
 			</div>
 			<div class="alert alert-info up-loading" role="alert">
 				Loading...
 			</div>
-		</div>
 
 		<table class="table up-entries">
 			<tr>
@@ -111,9 +112,12 @@ license that can be found in the LICENSE file.
 				<td class="up-entry-name"></td>
 				<td class="up-entry-size"></td>
 				<td class="up-entry-time"></td>
-				<td>
+				<td nowrap>
 					<button type="button" class="btn btn-default btn-xs up-entry-inspect">
 						<span class="glyphicon glyphicon-info-sign"></span>
+					</button>
+					<button type="button" class="btn btn-default btn-xs up-entry-edit ladda-button" data-style="zoom-in">
+						<span class="ladda-label"><span class="glyphicon glyphicon-pencil"></span></span>
 					</button>
 				</td>
 			</tr>
@@ -669,7 +673,7 @@ license that can be found in the LICENSE file.
 	<h4 class="modal-title">Confirm <span class="up-action"></span></h4>
       </div>
       <div class="modal-body">
-	      <p>Recursively <span class="up-action"></span> these paths:</p>
+	      <p>Recursively <span class="up-action"></span> these paths?</p>
 	      <ul class="up-paths">
 	      </ul>
 	      <div class="up-dest-message">
@@ -703,6 +707,30 @@ license that can be found in the LICENSE file.
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary up-mkdir-button">Make directory</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- edit modal -->
+
+<div id="mEdit" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	<h4 class="modal-title"><b class="up-entry-name"></b></h4>
+      </div>
+      <div class="modal-body">
+	<form>
+		<div class="form-group">
+			<textarea class="form-control up-body" rows="10"></textarea>
+		</div>
+	</form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary up-save-button">Save</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
       </div>
     </div>

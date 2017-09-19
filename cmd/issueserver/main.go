@@ -8,7 +8,7 @@
 // access the GitHub API, giving it "repo" privileges.
 // See: https://github.com/settings/tokens/new
 // Put the token string (a string of hex digits) in the file
-// $HOME/upspin/issueserver-access-token and run issueserver with upbox:
+// $HOME/upspin/issueserver-github-token and run issueserver with upbox:
 //   $ upbox -schema=issueserver.upbox
 // If all goes well, upbox will leave you in an 'upspin shell' session as
 // issueserver@example.com. Type 'ls' to look around.

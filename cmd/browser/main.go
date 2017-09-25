@@ -20,7 +20,6 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"go/build"
 	"net"
 	"net/http"
 	"os"
@@ -29,6 +28,9 @@ import (
 	"runtime"
 	"strings"
 	"sync"
+	"time"
+
+	"exp.upspin.io/cmd/browser/static"
 
 	"golang.org/x/net/xsrftoken"
 
@@ -79,9 +81,6 @@ type server struct {
 	// key to prevent request forgery; static for server's lifetime.
 	key string
 
-	// Handler for serving static content (HTML, JS, etc).
-	static http.Handler
-
 	mu  sync.Mutex
 	cfg upspin.Config // Non-nil if signup flow has been completed.
 	cli upspin.Client
@@ -93,14 +92,8 @@ func newServer() (*server, error) {
 		return nil, err
 	}
 
-	pkg, err := build.Default.Import("exp.upspin.io/cmd/browser/static", "", build.FindOnly)
-	if err != nil {
-		return nil, fmt.Errorf("could not find static web content: %v", err)
-	}
-
 	return &server{
-		key:    key,
-		static: http.FileServer(http.Dir(pkg.Dir)),
+		key: key,
 	}, nil
 }
 
@@ -120,7 +113,24 @@ func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		s.serveContent(w, r)
 		return
 	}
-	s.static.ServeHTTP(w, r)
+	s.serveStatic(w, r)
+}
+
+func (s *server) serveStatic(w http.ResponseWriter, r *http.Request) {
+	p := r.URL.Path[1:]
+	if p == "" {
+		p = "index.html"
+	}
+	b, err := static.File(p)
+	if errors.Match(errors.E(errors.NotExist), err) {
+		http.NotFound(w, r)
+		return
+	}
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	http.ServeContent(w, r, path.Base(p), time.Now(), strings.NewReader(b))
 }
 
 func (s *server) serveContent(w http.ResponseWriter, r *http.Request) {

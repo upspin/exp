@@ -22,6 +22,30 @@
       "revId": "6425c61e9cdc8ae24ebb5355d8cb6424a88879bb",
       "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "58018882_6973f4bf",
+        "filename": "cmd/browser/static/makestatic.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 5389
+      },
+      "writtenOn": "2017-09-25T22:28:31Z",
+      "side": 1,
+      "message": "augie.png, for example.",
+      "parentUuid": "fb5a67b5_6ff1fde1",
+      "range": {
+        "startLine": 66,
+        "startChar": 2,
+        "endLine": 69,
+        "endChar": 28
+      },
+      "revId": "6425c61e9cdc8ae24ebb5355d8cb6424a88879bb",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
     }
   ]
 }

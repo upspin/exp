@@ -786,9 +786,11 @@ function Page() {
 	// Obtain a request key.
 	var prefix = "#key="
 	if (!window.location.hash.startsWith(prefix)) {
-		// TODO(adg): make this more user-friendly,
-		// even though it will not happen often.
-		alert("No key provided in URL fragment.");
+		$("#mLoading").modal("show").find(".up-error")
+			.show().find(".up-error-msg")
+			.text("No request key in browser URL.\n\n" +
+				"To use browser, click the URL that it printed to the console.\n"+
+				"(Something like http://localhost:8000/#key=3f0cf1e29...)");
 		return;
 	}
 	page.key = window.location.hash.slice(prefix.length);

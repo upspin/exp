@@ -50,7 +50,7 @@ import (
 )
 
 var (
-	watchGithub    = flag.String("watch-github", "", "Comma-separated list of GitHub owner/repo pairs to sync")
+	watchGitHub    = flag.String("watch-github", "", "Comma-separated list of GitHub owner/repo pairs to sync")
 	dataDir        = flag.String("data-dir", defaultDataDir, "Local directory in which to write issueserver files")
 	defaultDataDir = filepath.Join(os.Getenv("HOME"), "upspin", "issueserver")
 )
@@ -72,17 +72,17 @@ func main() {
 	corpus := new(maintner.Corpus)
 	logger := maintner.NewDiskMutationLogger(*dataDir)
 	corpus.EnableLeaderMode(logger, *dataDir)
-	if *watchGithub != "" {
-		for _, pair := range strings.Split(*watchGithub, ",") {
+	if *watchGitHub != "" {
+		for _, pair := range strings.Split(*watchGitHub, ",") {
 			splits := strings.SplitN(pair, "/", 2)
 			if len(splits) != 2 || splits[1] == "" {
 				log.Fatalf("Invalid github repo: %s. Should be 'owner/repo,owner2/repo2'", pair)
 			}
-			token, err := getGithubToken()
+			token, err := getGitHubToken()
 			if err != nil {
 				log.Fatalf("getting github token: %v", err)
 			}
-			corpus.TrackGithub(splits[0], splits[1], token)
+			corpus.TrackGitHub(splits[0], splits[1], token)
 		}
 	}
 	ctx, cancel := context.WithCancel(context.Background())
@@ -90,7 +90,7 @@ func main() {
 	if err := corpus.Initialize(ctx, logger); err != nil {
 		log.Fatal(err)
 	}
-	if *watchGithub != "" {
+	if *watchGitHub != "" {
 		go func() { log.Fatal(fmt.Errorf("Corpus.SyncLoop = %v", corpus.SyncLoop(ctx))) }()
 	}
 
@@ -105,9 +105,9 @@ func main() {
 	https.ListenAndServeFromFlags(nil)
 }
 
-// getGithubToken reads a GitHub Personal Access Token from the file
+// getGitHubToken reads a GitHub Personal Access Token from the file
 // $HOME/upspin/issueserver-github-token of the format "token".
-func getGithubToken() (string, error) {
+func getGitHubToken() (string, error) {
 	file := filepath.Join(config.Home(), "upspin", "issueserver-github-token")
 	token, err := ioutil.ReadFile(file)
 	if err != nil {
@@ -455,7 +455,7 @@ func (s dirServer) listDir(name upspin.PathName) ([]*upspin.DirEntry, error) {
 	switch p.NElem() {
 	case 0:
 		des = append(des, s.accessEntry)
-		owners := repoIDStrings(s.corpus, func(id maintner.GithubRepoID) string {
+		owners := repoIDStrings(s.corpus, func(id maintner.GitHubRepoID) string {
 			return id.Owner
 		})
 		for _, owner := range owners {
@@ -463,7 +463,7 @@ func (s dirServer) listDir(name upspin.PathName) ([]*upspin.DirEntry, error) {
 			des = append(des, directory(name))
 		}
 	case 1:
-		repos := repoIDStrings(s.corpus, func(id maintner.GithubRepoID) string {
+		repos := repoIDStrings(s.corpus, func(id maintner.GitHubRepoID) string {
 			if id.Owner == p.Elem(0) {
 				return id.Repo
 			}
@@ -521,7 +521,7 @@ func (s dirServer) listDir(name upspin.PathName) ([]*upspin.DirEntry, error) {
 // repoIDStrings returns a deduplicated, lexicographically sorted list of
 // strings returned by iterating over the given corpus' GitHub repositories and
 // calling fn for each of them. Empty strings returned by fn are ignored.
-func repoIDStrings(corpus *maintner.Corpus, fn func(maintner.GithubRepoID) string) []string {
+func repoIDStrings(corpus *maintner.Corpus, fn func(maintner.GitHubRepoID) string) []string {
 	idmap := map[string]bool{}
 	corpus.GitHub().ForeachRepo(func(repo *maintner.GitHubRepo) error {
 		idmap[fn(repo.ID())] = true

@@ -786,13 +786,18 @@ function Page() {
 	// Obtain a request key.
 	var prefix = "#key="
 	if (!window.location.hash.startsWith(prefix)) {
-		// TODO(adg): make this more user-friendly,
-		// even though it will not happen often.
-		alert("No key provided in URL fragment.");
+		$("#mLoading").modal("show").find(".up-error")
+			.show().find(".up-error-msg")
+			.text("No request key in browser URL.\n\n" +
+				"To use the Upspin browser, click the URL\n" +
+				"that it printed to the console.\n\n" +
+				"It will look something like\n" +
+				" http://localhost:8000/#key=3f0cf1e29...\n" +
+				"but with a different hash.");
 		return;
 	}
 	page.key = window.location.hash.slice(prefix.length);
-	//window.location.hash = "";
+	window.location.hash = "";
 
 	// Begin the Startup sequence.
 	Startup(startup, function(data) {

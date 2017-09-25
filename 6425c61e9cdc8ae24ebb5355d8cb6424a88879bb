@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fb5a67b5_6ff1fde1",
+        "filename": "cmd/browser/static/makestatic.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 5309
+      },
+      "writtenOn": "2017-09-25T21:09:09Z",
+      "side": 1,
+      "message": "Not sure I understand the logic here.  utf8.Valid says the whole file is acceptable UTF8.  What do we accept that isn\u0027t?",
+      "range": {
+        "startLine": 66,
+        "startChar": 2,
+        "endLine": 69,
+        "endChar": 28
+      },
+      "revId": "6425c61e9cdc8ae24ebb5355d8cb6424a88879bb",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    }
+  ]
+}

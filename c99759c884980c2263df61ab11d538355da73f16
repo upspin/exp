@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b2faede4_518832fa",
+        "filename": "cmd/browser/static/script.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 792,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-09-26T01:04:03Z",
+      "side": 1,
+      "message": "s/browser/the Upspin browser/",
+      "revId": "c99759c884980c2263df61ab11d538355da73f16",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d8d2a110_fa438351",
+        "filename": "cmd/browser/static/script.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 793,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-09-26T01:04:03Z",
+      "side": 1,
+      "message": "It will looks something like http://localhost:8000/#key\u003d3f0cf1e29... but with a different hash.\n\n(is it http or https?)",
+      "revId": "c99759c884980c2263df61ab11d538355da73f16",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    }
+  ]
+}

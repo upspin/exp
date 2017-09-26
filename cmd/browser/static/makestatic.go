@@ -23,6 +23,7 @@ import (
 
 var files = []string{
 	"augie.png",
+	"favicon-32x32.png",
 	"index.html",
 	"script.js",
 	"third_party/bootstrap/css/bootstrap-theme.min.css",

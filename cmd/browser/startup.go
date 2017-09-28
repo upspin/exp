@@ -860,6 +860,10 @@ func formatRequest(vals url.Values) string {
 		if k == "method" {
 			continue
 		}
+		// Don't redundantly log the session key.
+		if k == "key" {
+			continue
+		}
 		if first {
 			fmt.Fprint(&buf, "\n")
 			first = false

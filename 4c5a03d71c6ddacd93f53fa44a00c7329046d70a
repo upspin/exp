@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e92e16c8_0f132233",
+        "filename": "cmd/browser/startup.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 471,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-09-28T02:42:39Z",
+      "side": 1,
+      "message": "s/more or less //",
+      "revId": "4c5a03d71c6ddacd93f53fa44a00c7329046d70a",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    }
+  ]
+}

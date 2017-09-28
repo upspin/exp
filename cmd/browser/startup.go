@@ -466,6 +466,10 @@ func (s *server) startup(req *http.Request) (resp *startupResponse, cfg upspin.C
 		// TODO: delete state file instead of saving?
 	}
 
+	// readOnly is set if the user explicitly decided to not nominate a
+	// directory or store server, meaning they are read-only.
+	readOnly := false
+
 	// If we're in the middle of setting up a GCP instance, prompt the user
 	// with the correct step of the process. Otherwise, if the user not
 	// registered with the KeyServer, prompt them to click the verification
@@ -498,7 +502,7 @@ func (s *server) startup(req *http.Request) (resp *startupResponse, cfg upspin.C
 			Step:     "verify",
 			UserName: cfg.UserName(),
 		}, nil, nil
-	} else if response == "" && cfg.DirEndpoint() == (upspin.Endpoint{}) {
+	} else if ep := cfg.DirEndpoint(); response == "" && (ep == upspin.Endpoint{} || ep == noneEndpoint) {
 		ok, err := hasEndpoints(flags.Config)
 		if err != nil {
 			return nil, nil, err
@@ -508,6 +512,7 @@ func (s *server) startup(req *http.Request) (resp *startupResponse, cfg upspin.C
 				Step: "serverSelect",
 			}, nil, nil
 		}
+		readOnly = true
 	}
 
 	switch response {
@@ -596,8 +601,10 @@ func (s *server) startup(req *http.Request) (resp *startupResponse, cfg upspin.C
 		}, nil, nil
 	}
 
-	if err := makeRoot(cfg); err != nil {
-		return nil, nil, err
+	if !readOnly {
+		if err := makeRoot(cfg); err != nil {
+			return nil, nil, err
+		}
 	}
 
 	// We have a valid config. Set it in the server struct so that the

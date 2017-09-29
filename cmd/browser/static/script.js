@@ -177,6 +177,36 @@ function Browser(parentEl, page) {
 		errorEl.show().text(err);
 	}
 
+	el.on("dragover", function(e) {
+		e.preventDefault();
+		el.addClass("drag");
+	});
+	el.on("dragleave", function(e) {
+		e.preventDefault();
+		el.removeClass("drag");
+	});
+	el.on("drop", function(e) {
+		e.preventDefault();
+		el.removeClass("drag");
+
+		if (!e.originalEvent.dataTransfer || e.originalEvent.dataTransfer.files.length == 0) {
+			return;
+		}
+
+		var files = e.originalEvent.dataTransfer.files;
+		for (var i = 0; i < files.length; i++) {
+			var file = files[i];
+			page.put(browser.path, file, function() {
+				refresh();
+			}, function(err) {
+				reportError(err);
+				// Refresh the pane because entries may have
+				// been uploaded even if an error occurred.
+				refresh();
+			});
+		}
+	});
+
 	el.find(".up-delete").click(function() {
 		var paths = checkedPaths();
 		if (paths.length == 0) {
@@ -742,6 +772,30 @@ function Page() {
 		});
 	}
 
+	function put(path, file, success, error) {
+		var fd = new FormData();
+		fd.append("key", page.key);
+		fd.append("method", "put");
+		fd.append("path", path);
+		fd.append("file", file);
+		$.ajax("/_upspin", {
+			method: "POST",
+			data: fd,
+			contentType: false,
+			processData: false,
+			cache: false,
+			dataType: "json",
+			success: function(data) {
+				if (data.Error) {
+					error(data.Error);
+					return;
+				}
+				success();
+			},
+			error: errorHandler(error)
+		});
+	}
+
 	function startup(data, success, error) {
 		$.ajax("/_upspin", {
 			method: "POST",
@@ -770,6 +824,7 @@ function Page() {
 			copy: copy,
 			list: list,
 			mkdir: mkdir,
+			put: put
 		}
 		browser1 = new Browser(parentEl, $.extend({
 			copyDestination: function() { return browser2.path },

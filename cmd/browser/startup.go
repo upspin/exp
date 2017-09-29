@@ -15,7 +15,6 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"reflect"
 	"sort"
@@ -27,6 +26,7 @@ import (
 	"upspin.io/config"
 	"upspin.io/errors"
 	"upspin.io/flags"
+	"upspin.io/key/keygen"
 	"upspin.io/key/usercache"
 	"upspin.io/serverutil/signup"
 	"upspin.io/upspin"
@@ -171,7 +171,7 @@ func (s *server) startup(req *http.Request) (resp *startupResponse, cfg upspin.C
 		}
 
 		// Generate keys.
-		secretSeed, keyDir, err = keygen(userName)
+		secretSeed, keyDir, err = genkey(userName)
 		if err != nil {
 			// Don't leave the config lying around.
 			os.Remove(flags.Config)
@@ -318,7 +318,7 @@ func (s *server) startup(req *http.Request) (resp *startupResponse, cfg upspin.C
 		}
 
 		// Generate key.
-		seed, keyDir, err := keygen(serverUser)
+		seed, keyDir, err := genkey(serverUser)
 		if err != nil {
 			return nil, nil, err
 		}
@@ -619,11 +619,10 @@ func (s *server) startup(req *http.Request) (resp *startupResponse, cfg upspin.C
 	return nil, cfg, nil
 }
 
-// keygen runs 'upspin keygen', placing keys in the default directory for the
-// given user. It returns the secret seed for the keys and the key directory.
-// If the default key directory already exists, keygen return an error.
-// TODO(adg): replace this with native Go code, instead of calling the upspin command.
-func keygen(user upspin.UserName) (seed, keyDir string, err error) {
+// genkey generates an upspin key pair, placing it in the default directory for
+// the given user. It returns the secret seed for the keys and the key
+// directory. If the key directory already exists, genkey return an error.
+func genkey(user upspin.UserName) (seed, keyDir string, err error) {
 	keyDir, err = config.DefaultSecretsDir(user)
 	if err != nil {
 		return "", "", err
@@ -634,22 +633,15 @@ func keygen(user upspin.UserName) (seed, keyDir string, err error) {
 	if err := os.MkdirAll(keyDir, 0700); err != nil {
 		return "", "", err
 	}
-	out, err := exec.Command("upspin", "keygen", keyDir).CombinedOutput()
+	pub, priv, seed, err := keygen.Generate("p256")
 	if err != nil {
-		return "", "", errors.Errorf("%v\n%s", err, out)
+		return "", "", err
 	}
-	const prefix = "-secretseed "
-	i := bytes.Index(out, []byte(prefix))
-	if i == -1 {
-		return "", "", errors.Errorf("unexpected keygen output:\n%s", out)
+	err = keygen.SaveKeys(keyDir, false, pub, priv, seed)
+	if err != nil {
+		return "", "", err
 	}
-	seed = string(out[i+len(prefix):])
-	i = strings.Index(seed, " ")
-	if i == -1 {
-		return "", "", errors.Errorf("unexpected keygen output:\n%s", out)
-	}
-	seed = seed[:i]
-	return
+	return seed, keyDir, nil
 }
 
 // writeConfig writes an Upspin config to the nominated file containing the

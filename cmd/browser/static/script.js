@@ -128,7 +128,7 @@ function Browser(parentEl, page) {
 	function navigate(path) {
 		browser.path = path;
 		drawPath();
-		drawLoading();
+		drawLoading("Loading directory...");
 		page.list(path, function(entries) {
 			drawEntries(entries);
 		}, function(error) {
@@ -140,10 +140,33 @@ function Browser(parentEl, page) {
 		navigate(browser.path);
 	}
 
-	function reportError(err) {
-		loadingEl.hide();
-		errorEl.show().text(err);
-	}
+	el.on("dragover", function(e) {
+		e.preventDefault();
+		el.addClass("drag");
+	});
+	el.on("dragleave", function(e) {
+		e.preventDefault();
+		el.removeClass("drag");
+	});
+	el.on("drop", function(e) {
+		e.preventDefault();
+		el.removeClass("drag");
+
+		if (!e.originalEvent.dataTransfer || e.originalEvent.dataTransfer.files.length == 0) {
+			return;
+		}
+
+		drawLoading("Uploading files...");
+
+		var files = e.originalEvent.dataTransfer.files;
+		page.put(browser.path, files, function() {
+			inputs.attr("disabled", false);
+			refresh();
+		}, function(err) {
+			inputs.attr("disabled", false);
+			reportError(err);
+		});
+	});
 
 	el.find(".up-delete").click(function() {
 		var paths = checkedPaths();
@@ -240,15 +263,24 @@ function Browser(parentEl, page) {
 
 	var loadingEl = el.find(".up-loading"),
 		errorEl = el.find(".up-error"),
-		entriesEl = el.find(".up-entries");
+		entriesEl = el.find(".up-entries"),
+		inputs = el.find("button, input");
 
-	function drawLoading() {
-		loadingEl.show();
+	function drawLoading(text) {
+		inputs.attr("disabled", true);
+		loadingEl.show().text(text);
 		errorEl.hide();
 		entriesEl.hide();
 	}
 
+	function reportError(err) {
+		inputs.attr("disabled", false);
+		loadingEl.hide();
+		errorEl.show().text(err);
+	}
+
 	function drawEntries(entries) {
+		inputs.attr("disabled", false);
 		loadingEl.hide();
 		errorEl.hide();
 		entriesEl.show();
@@ -690,6 +722,35 @@ function Page() {
 		});
 	}
 
+	function put(dir, files, success, error) {
+		// For the file upload to work, we need to pass the files in as
+		// a FormData object and turn off any of the pre-processing
+		// jQuery might do.
+		var fd = new FormData();
+		fd.append("key", page.key);
+		fd.append("method", "put");
+		fd.append("dir", dir);
+		for (var i = 0; i < files.length; i++) {
+			fd.append("file"+i, files[i]);
+		}
+		$.ajax("/_upspin", {
+			method: "POST",
+			data: fd,
+			contentType: false,
+			processData: false,
+			cache: false,
+			dataType: "json",
+			success: function(data) {
+				if (data.Error) {
+					error(data.Error);
+					return;
+				}
+				success();
+			},
+			error: errorHandler(error)
+		});
+	}
+
 	function startup(data, success, error) {
 		$.ajax("/_upspin", {
 			method: "POST",
@@ -717,6 +778,7 @@ function Page() {
 			copy: copy,
 			list: list,
 			mkdir: mkdir,
+			put: put
 		}
 		browser1 = new Browser(parentEl, $.extend({
 			copyDestination: function() { return browser2.path },

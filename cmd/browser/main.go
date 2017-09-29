@@ -250,6 +250,25 @@ func (s *server) serveAPI(w http.ResponseWriter, r *http.Request) {
 		resp = struct {
 			Error string
 		}{errString}
+	case "put":
+		const maxMultipartSize = 10 << 20
+		if err := r.ParseMultipartForm(maxMultipartSize); err != nil {
+			http.Error(w, "Parse error: "+err.Error(), http.StatusBadRequest)
+			return
+		}
+		fh, ok := r.MultipartForm.File["file"]
+		if !ok || len(fh) != 1 {
+			http.Error(w, "missing file", http.StatusBadRequest)
+			return
+		}
+		err := s.put(upspin.PathName(r.FormValue("dir")), fh[0])
+		var errString string
+		if err != nil {
+			errString = err.Error()
+		}
+		resp = struct {
+			Error string
+		}{errString}
 	}
 	b, err := json.Marshal(resp)
 	if err != nil {

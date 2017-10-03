@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ed01cce1_6778f231",
+        "filename": "cmd/browser/main.go",
+        "patchSetId": 4
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-10-03T04:27:16Z",
+      "side": 1,
+      "message": "not 10e9?\n\n10\u003c\u003c20 is fine, leave it if you want, but we have a language now that allows us to avoid that construct if the exact value is not important. (is it?)",
+      "revId": "4d32da1499429c17ef84c940c25f140e228a0a0f",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7c291e12_61aa2eed",
+        "filename": "cmd/browser/main.go",
+        "patchSetId": 4
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-10-03T04:27:16Z",
+      "side": 1,
+      "message": "isn\u0027t there an http.Errorf?",
+      "revId": "4d32da1499429c17ef84c940c25f140e228a0a0f",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6ba423b8_aed0cd7a",
+        "filename": "cmd/browser/put.go",
+        "patchSetId": 4
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-10-03T04:27:16Z",
+      "side": 1,
+      "message": "s/the given/a/\nno need for the formality. context is fine.\n\ns/writes/saves/ ?  /copies/?",
+      "revId": "4d32da1499429c17ef84c940c25f140e228a0a0f",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    }
+  ]
+}

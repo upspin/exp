@@ -179,6 +179,7 @@ func (s *gcpState) enableAPI(name string, svc *servicemanagement.APIService) err
 		return err
 	}
 	for !op.Done {
+		time.Sleep(250 * time.Millisecond)
 		op, err = svc.Operations.Get(op.Name).Do()
 		if err != nil {
 			return err

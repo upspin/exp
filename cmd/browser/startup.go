@@ -635,10 +635,13 @@ func genkey(user upspin.UserName) (seed, keyDir string, err error) {
 	}
 	pub, priv, seed, err := keygen.Generate("p256")
 	if err != nil {
+		os.Remove(keyDir)
 		return "", "", err
 	}
 	err = keygen.SaveKeys(keyDir, false, pub, priv, seed)
 	if err != nil {
+		// SaveKeys may have left files behind, so RemoveAll.
+		os.RemoveAll(keyDir)
 		return "", "", err
 	}
 	return seed, keyDir, nil

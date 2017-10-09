@@ -388,7 +388,7 @@ func (s dirServer) WhichAccess(name upspin.PathName) (*upspin.DirEntry, error) {
 	return s.accessEntry, nil
 }
 
-func (s dirServer) Watch(name upspin.PathName, order int64, done <-chan struct{}) (<-chan upspin.Event, error) {
+func (s dirServer) Watch(name upspin.PathName, seq int64, done <-chan struct{}) (<-chan upspin.Event, error) {
 	if !s.isReader(s.user) {
 		return nil, errors.E(name, errors.Private)
 	}
@@ -416,10 +416,10 @@ func (s dirServer) Watch(name upspin.PathName, order int64, done <-chan struct{}
 	case frameFileName:
 		sendFrame = true
 	}
-	switch order {
+	switch seq {
 	case upspin.WatchStart, upspin.WatchCurrent:
 		// OK to send everything.
-	default: // order >= 0 (includes upspin.WatchNew)
+	default: // seq >= 0 (includes upspin.WatchNew)
 		sendRoot = false
 		sendAccess = false
 	}
@@ -457,19 +457,18 @@ func (s dirServer) Watch(name upspin.PathName, order int64, done <-chan struct{}
 		}
 		for {
 			// Wait for a new frame to become available.
-			// (The frame's Sequence number is its order.)
 			s.mu.Lock()
-			for s.frameEntry.Sequence <= order {
+			for s.frameEntry.Sequence <= seq {
 				s.update.Wait()
 			}
 			de := s.frameEntry
 			s.mu.Unlock()
 
-			// Send the frame and update order.
+			// Send the frame and update seq.
 			if send(de) {
 				return
 			}
-			order = de.Sequence
+			seq = de.Sequence
 		}
 	}()
 	return ch, nil

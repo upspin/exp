@@ -117,7 +117,7 @@ func newServer(ep upspin.Endpoint, cfg upspin.Config) (*server, error) {
 	s.open = sync.NewCond(&s.mu)
 
 	var err error
-	s.accessEntry, s.accessBytes, err = s.pack(access.AccessFile, []byte(accessFile))
+	s.accessEntry, s.accessBytes, err = s.pack(access.AccessFile, 0, []byte(accessFile))
 	if err != nil {
 		return nil, err
 	}
@@ -127,7 +127,7 @@ func newServer(ep upspin.Endpoint, cfg upspin.Config) (*server, error) {
 
 const packing = upspin.EEIntegrityPack
 
-func (s *server) pack(filePath string, data []byte) (*upspin.DirEntry, []byte, error) {
+func (s *server) pack(filePath string, seq int64, data []byte) (*upspin.DirEntry, []byte, error) {
 	name := upspin.PathName(s.cfg.UserName()) + "/" + upspin.PathName(filePath)
 	de := &upspin.DirEntry{
 		Writer:     s.cfg.UserName(),
@@ -135,7 +135,7 @@ func (s *server) pack(filePath string, data []byte) (*upspin.DirEntry, []byte, e
 		SignedName: name,
 		Packing:    packing,
 		Time:       upspin.Now(),
-		Sequence:   1,
+		Sequence:   seq,
 	}
 
 	bp, err := pack.Lookup(packing).Pack(s.cfg, de)
@@ -175,11 +175,15 @@ func (s *dirServer) Lookup(name upspin.PathName) (*upspin.DirEntry, error) {
 	fp := p.FilePath()
 	switch fp {
 	case "": // Root directory.
+		s.mu.Lock()
+		total := len(s.boxes)
+		s.mu.Unlock()
 		return &upspin.DirEntry{
 			Name:       p.Path(),
 			SignedName: p.Path(),
 			Attr:       upspin.AttrDirectory,
 			Time:       upspin.Now(),
+			Sequence:   int64(total * 2),
 		}, nil
 	case access.AccessFile:
 		return s.accessEntry, nil
@@ -200,7 +204,7 @@ func (s *dirServer) Lookup(name upspin.PathName) (*upspin.DirEntry, error) {
 
 	if n == total {
 		// A new box is opened!
-		de, data, err := s.pack(fp, randomState())
+		de, data, err := s.pack(fp, int64(total*2+1), randomState())
 		if err != nil {
 			return nil, errors.E(name, err)
 		}
@@ -227,7 +231,9 @@ func (s *dirServer) listDir(name upspin.PathName) ([]*upspin.DirEntry, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	var des []*upspin.DirEntry
+	des := []*upspin.DirEntry{
+		s.accessEntry,
+	}
 
 	// List all the opened boxes in numerical order.
 	for n := range s.boxes {
@@ -250,10 +256,11 @@ func (s *dirServer) closedBox(n int) *upspin.DirEntry {
 		Attr:       upspin.AttrIncomplete,
 		Time:       upspin.Now(),
 		Writer:     s.cfg.UserName(),
+		Sequence:   int64(n * 2),
 	}
 }
 
-func (s *dirServer) Watch(name upspin.PathName, order int64, done <-chan struct{}) (<-chan upspin.Event, error) {
+func (s *dirServer) Watch(name upspin.PathName, seq int64, done <-chan struct{}) (<-chan upspin.Event, error) {
 	p, err := path.Parse(name)
 	if err != nil {
 		return nil, err
@@ -268,7 +275,7 @@ func (s *dirServer) Watch(name upspin.PathName, order int64, done <-chan struct{
 
 	}
 
-	n := int(order)
+	n := int(seq)
 	if n < 0 {
 		n = 0
 	}
@@ -295,7 +302,6 @@ func (s *dirServer) Watch(name upspin.PathName, order int64, done <-chan struct{
 					if de := s.closedBox(n); match(de) {
 						events <- upspin.Event{
 							Entry: s.closedBox(n),
-							Order: int64(n),
 						}
 					}
 				}(n)
@@ -314,7 +320,6 @@ func (s *dirServer) Watch(name upspin.PathName, order int64, done <-chan struct{
 			if match(de) {
 				events <- upspin.Event{
 					Entry: de,
-					Order: int64(n),
 				}
 			}
 			n++

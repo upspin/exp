@@ -157,8 +157,7 @@ func (s *server) startup(req *http.Request) (resp *startupResponse, cfg upspin.C
 		}
 
 		// Check whether userName already exists on the KeyServer.
-		userCfg := config.SetUserName(config.New(), userName)
-		if ok, err := isRegistered(userCfg); err != nil {
+		if ok, err := isRegistered(userName); err != nil {
 			return nil, nil, err
 		} else if ok {
 			return nil, nil, errors.Errorf("%q is already registered.", userName)
@@ -489,7 +488,7 @@ func (s *server) startup(req *http.Request) (resp *startupResponse, cfg upspin.C
 		if st.Server.Configured {
 			response = ""
 		}
-	} else if ok, err := isRegistered(cfg); err != nil {
+	} else if ok, err := isRegistered(cfg.UserName()); err != nil {
 		return nil, nil, err
 	} else if !ok {
 		// TODO: Read seed from secret.upspinkey
@@ -669,15 +668,22 @@ func writeConfig(file string, user upspin.UserName, dir, store upspin.Endpoint, 
 	return ioutil.WriteFile(file, []byte(cfg), 0644)
 }
 
-// isRegistered reports whether the user in the given config is present on the
-// default KeyServer.
-func isRegistered(cfg upspin.Config) (bool, error) {
+// isRegistered reports whether the given user is present on the KeyServer.
+func isRegistered(user upspin.UserName) (bool, error) {
+	// Do the lookup request as the user "nobody@upspin.io" instead of the
+	// user we're looking for, so that bind doesn't cache the dialed
+	// KeyServer for the actual user with a nil factotum. Otherwise this
+	// will come to bite us later if/when we eventually try to perform a
+	// Put of a server user. In any case, it doesn't matter who the calling
+	// user is because the KeyServer.Lookup requests are not authenticated.
+	cfg := config.SetUserName(config.New(), "nobody@upspin.io")
+
 	key, err := bind.KeyServer(cfg, cfg.KeyEndpoint())
 	if err != nil {
 		return false, err
 	}
 	usercache.ResetGlobal() // Avoid hitting the local user cache.
-	_, err = key.Lookup(cfg.UserName())
+	_, err = key.Lookup(user)
 	if errors.Match(errors.E(errors.NotExist), err) {
 		return false, nil
 	}

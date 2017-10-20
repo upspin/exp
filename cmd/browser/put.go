@@ -8,7 +8,6 @@ import (
 	"io"
 	"mime/multipart"
 
-	"upspin.io/errors"
 	"upspin.io/path"
 	"upspin.io/upspin"
 )
@@ -24,12 +23,9 @@ func (s *server) put(dir upspin.PathName, fh *multipart.FileHeader) error {
 	if err != nil {
 		return err
 	}
-	n, err := io.Copy(dst, src)
+	_, err = io.Copy(dst, src)
 	if err != nil {
 		return err
-	}
-	if n != fh.Size {
-		return errors.Errorf("put: copied %d bytes, source is %d bytes", n, fh.Size)
 	}
 	err = dst.Close()
 	src.Close()

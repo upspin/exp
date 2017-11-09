@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ecee2a62_c96b0abb",
+        "filename": "cmd/camserver/main.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-11-09T22:53:27Z",
+      "side": 1,
+      "message": "this walks the underlying array in an expensive way, but i think the append below will reallocate and fix it.",
+      "revId": "032beff28a96e0dded9fbe0d31628603f8cacb35",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    }
+  ]
+}

@@ -19,7 +19,6 @@ import (
 
 	"upspin.io/access"
 	"upspin.io/bind"
-	"upspin.io/cache"
 	"upspin.io/client"
 	"upspin.io/cloud/https"
 	"upspin.io/config"
@@ -89,12 +88,13 @@ type server struct {
 
 // state contains mutable state shared by all users of the server.
 type state struct {
-	frameData *cache.LRU // map[upspin.Reference][]byte
-	sequence  int64      // read/written only by capture method
+	sequence int64 // read/written only by capture method
 
 	mu         sync.Mutex
 	update     *sync.Cond
-	frameEntry *upspin.DirEntry // The current frame.
+	frameEntry *upspin.DirEntry            // The current frame.
+	frames     map[upspin.Reference][]byte // Frame data.
+	frameSeq   []upspin.Reference          // Ordered list of frames (oldest first).
 }
 
 // dirServer is a shim around server that implements upspin.DirServer.
@@ -113,8 +113,8 @@ const (
 	accessFileName    = access.AccessFile
 	accessRef         = upspin.Reference(accessFileName)
 	frameFileName     = "frame.jpg"
-	numFrames         = 100 // The number of frames to keep in memory.
-	framesPerSecond   = 30
+	numFrames         = 500 // The number of frames to keep in memory.
+	framesPerSecond   = 5
 	watchEventTimeout = 5 * time.Second
 )
 
@@ -130,9 +130,7 @@ func newServer(cfg upspin.Config, ep upspin.Endpoint, readers string) (*server, 
 		cfg:          cfg,
 		ep:           ep,
 		framePacking: upspin.EEPack,
-		state: &state{
-			frameData: cache.NewLRU(numFrames),
-		},
+		state:        &state{frames: map[upspin.Reference][]byte{}},
 	}
 	s.update = sync.NewCond(&s.mu)
 
@@ -269,9 +267,15 @@ func (s *server) capture() error {
 			pack.Lookup(upspin.EEPack).Share(s.cfg, s.readerKeys, packdata)
 		}
 
-		// Update frameData and frameEntry.
-		s.frameData.Add(ref, cipher)
+		// Update frameSeq, frames, and frameEntry.
 		s.mu.Lock()
+		for len(s.frameSeq) >= numFrames {
+			// Delete the oldest frames.
+			delete(s.frames, s.frameSeq[0])
+			s.frameSeq = s.frameSeq[1:]
+		}
+		s.frames[ref] = cipher
+		s.frameSeq = append(s.frameSeq, ref)
 		s.frameEntry = de
 		s.mu.Unlock()
 
@@ -491,14 +495,17 @@ func (s storeServer) Get(ref upspin.Reference) ([]byte, *upspin.Refdata, []upspi
 	if ref == accessRef {
 		return s.accessBytes, &accessRefdata, nil, nil
 	}
-	if b, ok := s.frameData.Get(ref); ok {
-		return b.([]byte), &upspin.Refdata{
-			Reference: ref,
-			Volatile:  true,
-			Duration:  time.Second,
-		}, nil, nil
+	s.mu.Lock()
+	b, ok := s.frames[ref]
+	s.mu.Unlock()
+	if !ok {
+		return nil, nil, nil, errors.E(errors.NotExist)
 	}
-	return nil, nil, nil, errors.E(errors.NotExist)
+	return b, &upspin.Refdata{
+		Reference: ref,
+		Volatile:  true,
+		Duration:  time.Second,
+	}, nil, nil
 }
 
 func (s storeServer) Put([]byte) (*upspin.Refdata, error) {

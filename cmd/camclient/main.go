@@ -88,7 +88,7 @@ func newHandler(cfg upspin.Config, name upspin.PathName) (http.Handler, error) {
 			frame, err := clientutil.ReadAll(cfg, e.Entry)
 			if err != nil {
 				log.Println(err)
-				return
+				continue
 			}
 			// Share it with viewers.
 			h.mu.Lock()

@@ -14,6 +14,7 @@ import (
 	"net/textproto"
 	"os"
 	"sync"
+	"time"
 
 	"upspin.io/client"
 	"upspin.io/client/clientutil"
@@ -72,29 +73,63 @@ func newHandler(cfg upspin.Config, name upspin.PathName) (http.Handler, error) {
 	if err != nil {
 		return nil, err
 	}
-	done := make(chan struct{})
-	events, err := dir.Watch(name, 0, done)
-	if err != nil {
-		return nil, err
-	}
+	entries := make(chan *upspin.DirEntry)
 	go func() {
-		defer close(done)
-		for e := range events {
-			if e.Error != nil {
-				log.Println(e.Error)
-				return
-			}
+		for e := range entries {
 			// Read the latest frame.
-			frame, err := clientutil.ReadAll(cfg, e.Entry)
+			frame, err := clientutil.ReadAll(cfg, e)
 			if err != nil {
-				log.Println(err)
-				return
+				log.Error.Print(err)
+				continue
 			}
 			// Share it with viewers.
 			h.mu.Lock()
 			h.frame = frame
 			h.mu.Unlock()
 			h.update.Broadcast()
+		}
+	}()
+	go func() {
+		var (
+			fetched, skipped int
+			lastUpdate       = time.Now()
+			done             chan struct{}
+		)
+		for {
+			if done != nil {
+				close(done)
+			}
+			done = make(chan struct{})
+			events, err := dir.Watch(name, 0, done)
+			if err != nil {
+				log.Error.Print(err)
+				time.Sleep(5 * time.Second)
+				continue
+			}
+			for e := range events {
+				if e.Error != nil {
+					log.Error.Print(e.Error)
+					break
+				}
+				// Do a non-blocking send here so that we skip
+				// this frame if we're still fetching an old
+				// frame, to prevent us from failling behind.
+				select {
+				case entries <- e.Entry:
+					log.Debug.Printf("fetching frame %d", e.Entry.Sequence)
+					fetched++
+				default:
+					log.Debug.Printf("skipped frame %d", e.Entry.Sequence)
+					skipped++
+				}
+				if d := time.Since(lastUpdate); d > 10*time.Second {
+					sec := float64(d) / float64(time.Second)
+					fps := float64(fetched) / sec
+					sps := float64(skipped) / sec
+					log.Info.Printf("frames per second: %.3g fetched, %.3g skipped", fps, sps)
+					fetched, skipped, lastUpdate = 0, 0, time.Now()
+				}
+			}
 		}
 	}()
 

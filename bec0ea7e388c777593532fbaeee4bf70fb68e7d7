@@ -1,0 +1,157 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b844be4c_8028ce6c",
+        "filename": "cmd/accessor/main.go",
+        "patchSetId": 4
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-11-16T01:56:47Z",
+      "side": 1,
+      "message": "WatchCurrent?",
+      "revId": "bec0ea7e388c777593532fbaeee4bf70fb68e7d7",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "05076bd2_afb82b61",
+        "filename": "cmd/accessor/main.go",
+        "patchSetId": 4
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-11-16T01:56:47Z",
+      "side": 1,
+      "message": "this is a cute trick but deserves a line:\n\n// Pick one entry at random from the files map.",
+      "revId": "bec0ea7e388c777593532fbaeee4bf70fb68e7d7",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c6aa2d62_19c61138",
+        "filename": "cmd/accessor/main.go",
+        "patchSetId": 4
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-11-16T01:56:47Z",
+      "side": 1,
+      "message": "s/ok/active/ ?\ns/name/newName/",
+      "revId": "bec0ea7e388c777593532fbaeee4bf70fb68e7d7",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3c5d0e11_ac3870a5",
+        "filename": "cmd/accessor/main.go",
+        "patchSetId": 4
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-11-16T01:56:47Z",
+      "side": 1,
+      "message": "\"it file\"?",
+      "revId": "bec0ea7e388c777593532fbaeee4bf70fb68e7d7",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9488b1e8_f5b11618",
+        "filename": "cmd/accessor/main.go",
+        "patchSetId": 4
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-11-16T01:56:47Z",
+      "side": 1,
+      "message": "i would make the argument dir or dirName for clarity",
+      "revId": "bec0ea7e388c777593532fbaeee4bf70fb68e7d7",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9a1cd2ef_bd8364bd",
+        "filename": "cmd/accessor/main.go",
+        "patchSetId": 4
+      },
+      "lineNbr": 447,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-11-16T01:56:47Z",
+      "side": 1,
+      "message": "comment?",
+      "revId": "bec0ea7e388c777593532fbaeee4bf70fb68e7d7",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1ab02424_b07b9dd3",
+        "filename": "cmd/accessor/main.go",
+        "patchSetId": 4
+      },
+      "lineNbr": 466,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-11-16T01:56:47Z",
+      "side": 1,
+      "message": "this line deserves a comment. i had to think hard about it.",
+      "revId": "bec0ea7e388c777593532fbaeee4bf70fb68e7d7",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "64f7a8cb_5f437340",
+        "filename": "cmd/accessor/main.go",
+        "patchSetId": 4
+      },
+      "lineNbr": 475,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-11-16T01:56:47Z",
+      "side": 1,
+      "message": "if one user is has an empty public key, you return here, ignoring everyone.",
+      "revId": "bec0ea7e388c777593532fbaeee4bf70fb68e7d7",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "55fed6d7_def64f79",
+        "filename": "cmd/accessor/main.go",
+        "patchSetId": 4
+      },
+      "lineNbr": 481,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-11-16T01:56:47Z",
+      "side": 1,
+      "message": "more commentary",
+      "revId": "bec0ea7e388c777593532fbaeee4bf70fb68e7d7",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    }
+  ]
+}

@@ -56,6 +56,24 @@
     },
     {
       "key": {
+        "uuid": "743d53a6_54897b82",
+        "filename": "cmd/accessor/main.go",
+        "patchSetId": 4
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 5389
+      },
+      "writtenOn": "2017-11-16T03:47:58Z",
+      "side": 1,
+      "message": "Oops. I just switched it back and used the constant.",
+      "parentUuid": "6bc922c6_f72a6eea",
+      "revId": "bec0ea7e388c777593532fbaeee4bf70fb68e7d7",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "05076bd2_afb82b61",
         "filename": "cmd/accessor/main.go",
         "patchSetId": 4

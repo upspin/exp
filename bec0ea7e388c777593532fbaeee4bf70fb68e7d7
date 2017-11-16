@@ -38,6 +38,24 @@
     },
     {
       "key": {
+        "uuid": "6bc922c6_f72a6eea",
+        "filename": "cmd/accessor/main.go",
+        "patchSetId": 4
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-11-16T03:43:45Z",
+      "side": 1,
+      "message": "ha. i mean s/-1/upspin.WatchCurrent/ but maybe both?",
+      "parentUuid": "839fbce9_37e271f6",
+      "revId": "bec0ea7e388c777593532fbaeee4bf70fb68e7d7",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "05076bd2_afb82b61",
         "filename": "cmd/accessor/main.go",
         "patchSetId": 4

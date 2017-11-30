@@ -441,7 +441,7 @@ func (s *Sharer) removeAccess(name upspin.PathName) {
 // fixShare updates the packdata of the named file to contain wrapped keys for all the users.
 func (s *Sharer) fixShare(entry *upspin.DirEntry, users userList) error {
 	if entry.IsDir() {
-		return errors.E(entry.Name, errors.IsDir, errors.Str("cannot fix directory"))
+		return errors.E(entry.Name, errors.IsDir, "cannot fix directory")
 	}
 	packer := s.lookupPacker(entry) // Won't be nil.
 	if packer.Packing() != upspin.EEPack {
@@ -470,7 +470,7 @@ func (s *Sharer) fixShare(entry *upspin.DirEntry, users userList) error {
 	}
 	packer.Share(s.cfg, keys, []*[]byte{&entry.Packdata})
 	if entry.Packdata == nil {
-		return errors.E(entry.Name, errors.Str("packing skipped"))
+		return errors.E(entry.Name, "packing skipped")
 	}
 	_, err := s.dir.Put(entry)
 	return err
@@ -504,7 +504,7 @@ func (s *Sharer) lookupKey(user upspin.UserName) (upspin.PublicKey, error) {
 	key = u.PublicKey
 	if len(key) == 0 {
 		s.userKeys[user] = ""
-		return "", errors.E(user, errors.Str("empty public key"))
+		return "", errors.E(user, "empty public key")
 	}
 
 	s.userKeys[user] = key

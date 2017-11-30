@@ -353,7 +353,7 @@ func (s *storeServer) Get(ref upspin.Reference) ([]byte, *upspin.Refdata, []upsp
 
 // The DirServer and StoreServer methods below are not implemented.
 
-var errNotImplemented = errors.E(errors.Permission, errors.Str("method not implemented: demoserver is read-only"))
+var errNotImplemented = errors.E(errors.Permission, "method not implemented: demoserver is read-only")
 
 func (*dirServer) Put(entry *upspin.DirEntry) (*upspin.DirEntry, error) {
 	return nil, errNotImplemented

@@ -563,7 +563,7 @@ func (s storeServer) Get(ref upspin.Reference) ([]byte, *upspin.Refdata, []upspi
 
 // The DirServer and StoreServer methods below are not implemented.
 
-var errNotImplemented = errors.E(errors.Permission, errors.Str("method not implemented: demoserver is read-only"))
+var errNotImplemented = errors.E(errors.Permission, "method not implemented: demoserver is read-only")
 
 func (dirServer) Watch(name upspin.PathName, seq int64, done <-chan struct{}) (<-chan upspin.Event, error) {
 	return nil, upspin.ErrNotSupported

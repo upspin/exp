@@ -42,7 +42,7 @@ func (s *Server) verifyUserRoot(parsed path.Parsed) error {
 }
 
 func (s dirServer) Lookup(pathName upspin.PathName) (*upspin.DirEntry, error) {
-	const op = "dir/filesystem.Lookup"
+	const op errors.Op = "dir/filesystem.Lookup"
 
 	parsed, err := path.Parse(pathName)
 	if err != nil {
@@ -140,7 +140,7 @@ func (s *Server) upspinPathFromLocal(local string) upspin.PathName {
 }
 
 func (s dirServer) Glob(pattern string) ([]*upspin.DirEntry, error) {
-	const op = "exp/filesystem.Glob"
+	const op errors.Op = "exp/filesystem.Glob"
 
 	entries, err := serverutil.Glob(pattern, s.Lookup, s.listDir)
 	if err != nil && err != upspin.ErrFollowLink {
@@ -199,7 +199,7 @@ func (s dirServer) listDir(name upspin.PathName) ([]*upspin.DirEntry, error) {
 }
 
 func (s dirServer) WhichAccess(pathName upspin.PathName) (*upspin.DirEntry, error) {
-	const op = "dir/filesystem.WhichAccess"
+	const op errors.Op = "dir/filesystem.WhichAccess"
 
 	parsed, err := path.Parse(pathName)
 	if err != nil {
@@ -233,11 +233,11 @@ func (d dirServer) Watch(upspin.PathName, int64, <-chan struct{}) (<-chan upspin
 // Methods that are not implemented.
 
 func (s dirServer) Delete(pathName upspin.PathName) (*upspin.DirEntry, error) {
-	const op = "dir/filesystem.Delete"
+	const op errors.Op = "dir/filesystem.Delete"
 	return nil, errors.E(op, errReadOnly)
 }
 
 func (s dirServer) Put(entry *upspin.DirEntry) (*upspin.DirEntry, error) {
-	const op = "dir/filesystem.Put"
+	const op errors.Op = "dir/filesystem.Put"
 	return nil, errors.E(op, errReadOnly)
 }

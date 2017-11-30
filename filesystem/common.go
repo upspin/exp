@@ -42,18 +42,18 @@ type Server struct {
 // New creates a new filesystem Server instance serving the
 // given root with the provided server configuration.
 func New(cfg upspin.Config, root string) (*Server, error) {
-	const op = "exp/filesystem.New"
+	const op errors.Op = "exp/filesystem.New"
 
 	root = filepath.Clean(root)
 	if !filepath.IsAbs(root) {
-		return nil, errors.E(op, errors.Invalid, errors.Str("root must be an absolute path"))
+		return nil, errors.E(op, errors.Invalid, "root must be an absolute path")
 	}
 	if fi, err := os.Stat(root); os.IsNotExist(err) {
 		return nil, errors.E(op, errors.NotExist, err)
 	} else if err != nil {
 		return nil, errors.E(op, errors.IO, err)
 	} else if !fi.IsDir() {
-		return nil, errors.E(op, errors.Str("root must be a directory"))
+		return nil, errors.E(op, "root must be a directory")
 	}
 
 	defaultAccess, err := access.New(upspin.PathName(cfg.UserName()) + "/Access")
@@ -157,7 +157,7 @@ func (s *Server) readFile(name upspin.PathName) ([]byte, error) {
 	// to prevent accidental information leakage (e.g. $HOME/.ssh).
 	// TODO(r,adg): find a less conservative policy for this.
 	if info.Mode()&04 == 0 {
-		return nil, errors.E(errors.Permission, errors.Str("not world-readable"), name)
+		return nil, errors.E(errors.Permission, "not world-readable", name)
 	}
 
 	// TODO(r, adg): think about symbolic links.

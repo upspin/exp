@@ -28,10 +28,10 @@ func (s storeServer) Dial(cfg upspin.Config, e upspin.Endpoint) (upspin.Service,
 	return storeServer{&dialed}, nil
 }
 
-var errNotDialed = errors.E(errors.Internal, errors.Str("must Dial before making request"))
+var errNotDialed = errors.E(errors.Internal, "must Dial before making request")
 
 func (s storeServer) Get(ref upspin.Reference) ([]byte, *upspin.Refdata, []upspin.Location, error) {
-	const op = "store/filesystem.Get"
+	const op errors.Op = "store/filesystem.Get"
 
 	if s.user == nil {
 		return nil, nil, nil, errors.E(op, errNotDialed)
@@ -65,11 +65,11 @@ func (s storeServer) Get(ref upspin.Reference) ([]byte, *upspin.Refdata, []upspi
 // Methods that are not implemented.
 
 func (s storeServer) Put(ciphertext []byte) (*upspin.Refdata, error) {
-	const op = "store/filesystem.Put"
+	const op errors.Op = "store/filesystem.Put"
 	return nil, errors.E(op, errReadOnly)
 }
 
 func (s storeServer) Delete(ref upspin.Reference) error {
-	const op = "store/filesystem.Delete"
+	const op errors.Op = "store/filesystem.Delete"
 	return errors.E(op, errReadOnly)
 }

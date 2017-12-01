@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Command accessor watches the root for the user in the provided config,
+// Command upspin-sharebot watches the root for the user in the provided config,
 // detecting Access changes and re-wrapping any files whose reader set changed.
 package main
 

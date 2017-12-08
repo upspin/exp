@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "09e976b6_e13608cc",
+        "filename": "cmd/upspin-audit/main.go",
+        "patchSetId": 6
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-12-08T02:53:19Z",
+      "side": 1,
+      "message": "guess where i got this code from?",
+      "parentUuid": "a44006f3_18be64ed",
+      "range": {
+        "startLine": 34,
+        "startChar": 15,
+        "endLine": 34,
+        "endChar": 27
+      },
+      "revId": "8b6a5cd07311d26ccabc21fcf94ea7c8aa1860f9",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "50615dbe_b418a76c",
         "filename": "cmd/upspin-audit/main.go",
         "patchSetId": 6
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "25cdd38a_42a63a3c",
+        "filename": "cmd/upspin-audit/main.go",
+        "patchSetId": 6
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-12-08T02:53:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "50615dbe_b418a76c",
+      "range": {
+        "startLine": 37,
+        "startChar": 22,
+        "endLine": 37,
+        "endChar": 23
+      },
+      "revId": "8b6a5cd07311d26ccabc21fcf94ea7c8aa1860f9",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2c6b47b0_371bc3f1",
         "filename": "cmd/upspin-audit/scanstore.go",
         "patchSetId": 6
@@ -62,6 +110,24 @@
       "revId": "8b6a5cd07311d26ccabc21fcf94ea7c8aa1860f9",
       "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3ba4aae0_f4b4da61",
+        "filename": "cmd/upspin-audit/scanstore.go",
+        "patchSetId": 6
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-12-08T02:53:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2c6b47b0_371bc3f1",
+      "revId": "8b6a5cd07311d26ccabc21fcf94ea7c8aa1860f9",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": false
     },
     {
       "key": {

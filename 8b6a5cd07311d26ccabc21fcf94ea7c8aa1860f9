@@ -1,0 +1,101 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a44006f3_18be64ed",
+        "filename": "cmd/upspin-audit/main.go",
+        "patchSetId": 6
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 5389
+      },
+      "writtenOn": "2017-12-08T02:41:02Z",
+      "side": 1,
+      "message": "upspin-audit",
+      "range": {
+        "startLine": 34,
+        "startChar": 15,
+        "endLine": 34,
+        "endChar": 27
+      },
+      "revId": "8b6a5cd07311d26ccabc21fcf94ea7c8aa1860f9",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "50615dbe_b418a76c",
+        "filename": "cmd/upspin-audit/main.go",
+        "patchSetId": 6
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 5389
+      },
+      "writtenOn": "2017-12-08T02:41:02Z",
+      "side": 1,
+      "message": "- ?",
+      "range": {
+        "startLine": 37,
+        "startChar": 22,
+        "endLine": 37,
+        "endChar": 23
+      },
+      "revId": "8b6a5cd07311d26ccabc21fcf94ea7c8aa1860f9",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2c6b47b0_371bc3f1",
+        "filename": "cmd/upspin-audit/scanstore.go",
+        "patchSetId": 6
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 5389
+      },
+      "writtenOn": "2017-12-08T02:41:02Z",
+      "side": 1,
+      "message": "s.Exit ?",
+      "revId": "8b6a5cd07311d26ccabc21fcf94ea7c8aa1860f9",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "af6b5280_4adbcb82",
+        "filename": "cmd/upspin-audit/scanstore.go",
+        "patchSetId": 6
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 5389
+      },
+      "writtenOn": "2017-12-08T02:41:02Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "8b6a5cd07311d26ccabc21fcf94ea7c8aa1860f9",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b510bf0d_41a8cef7",
+        "filename": "cmd/upspin-audit/scanstore.go",
+        "patchSetId": 6
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 5389
+      },
+      "writtenOn": "2017-12-08T02:41:02Z",
+      "side": 1,
+      "message": "include the endpoint name in the output?",
+      "revId": "8b6a5cd07311d26ccabc21fcf94ea7c8aa1860f9",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    }
+  ]
+}

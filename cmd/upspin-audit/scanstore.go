@@ -20,7 +20,7 @@ import (
 
 func (s *State) scanStore(args []string) {
 	const help = `
-Store scanstore scans the storage server to identify all references.
+Audit scanstore scans the storage server to identify all references.
 For now it just prints the total storage they represent.`
 
 	fs := flag.NewFlagSet("scanstore", flag.ExitOnError)

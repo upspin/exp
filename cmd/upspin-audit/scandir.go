@@ -37,7 +37,7 @@ type dirScanner struct {
 
 func (s *State) scanDirectories(args []string) {
 	const help = `
-Store scandir scans the directory tree for the named user roots.
+Audit scandir scans the directory tree for the named user roots.
 For now it just prints the total storage consumed.`
 
 	fs := flag.NewFlagSet("scandir", flag.ExitOnError)

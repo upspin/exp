@@ -100,19 +100,27 @@ For now it just prints the total storage consumed.`
 	}()
 
 	// Receive the data.
-	size := make(map[upspin.Location]int64)
+	size := make(map[upspin.Endpoint]map[upspin.Reference]int64)
 	for de := range sc.done {
 		for _, block := range de.Blocks {
-			loc := block.Location
-			size[loc] = block.Size
+			ep := block.Location.Endpoint
+			refs := size[ep]
+			if refs == nil {
+				refs = make(map[upspin.Reference]int64)
+				size[ep] = refs
+			}
+			refs[block.Location.Reference] = block.Size
 		}
 	}
 
-	sum := int64(0)
-	for _, s := range size {
-		sum += s
+	// Print a summary.
+	for ep, refs := range size {
+		sum := int64(0)
+		for _, s := range refs {
+			sum += s
+		}
+		fmt.Printf("%s: %d bytes total (%s) (%d references)\n", ep, sum, ByteSize(sum), len(refs))
 	}
-	fmt.Printf("%d bytes total (%s)\n", sum, ByteSize(sum))
 }
 
 // do processes a DirEntry. If it's a file, we deliver it to the done channel.

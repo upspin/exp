@@ -100,19 +100,32 @@ For now it just prints the total storage consumed.`
 	}()
 
 	// Receive the data.
-	size := make(map[upspin.Location]int64)
+	size := make(map[upspin.Endpoint]map[upspin.Reference]int64)
 	for de := range sc.done {
 		for _, block := range de.Blocks {
-			loc := block.Location
-			size[loc] = block.Size
+			ep := block.Location.Endpoint
+			refs := size[ep]
+			if refs == nil {
+				refs = make(map[upspin.Reference]int64)
+				size[ep] = refs
+			}
+			refs[block.Location.Reference] = block.Size
 		}
 	}
 
-	sum := int64(0)
-	for _, s := range size {
-		sum += s
+	// Print a summary.
+	total := int64(0)
+	for ep, refs := range size {
+		sum := int64(0)
+		for _, s := range refs {
+			sum += s
+		}
+		total += sum
+		fmt.Printf("%s: %d bytes (%s) (%d references)\n", ep, sum, ByteSize(sum), len(refs))
 	}
-	fmt.Printf("%d bytes total (%s)\n", sum, ByteSize(sum))
+	if len(size) > 1 {
+		fmt.Printf("%d bytes total (%s)\n", total, ByteSize(total))
+	}
 }
 
 // do processes a DirEntry. If it's a file, we deliver it to the done channel.
@@ -164,7 +177,7 @@ func (sc *dirScanner) bufferLoop() {
 			keyBuf.Reset()
 			for i := range entry.Blocks {
 				b := &entry.Blocks[i]
-				fmt.Fprint(&keyBuf, "%q %q\n", b.Location.Endpoint, b.Location.Reference)
+				fmt.Fprintf(&keyBuf, "%q %q\n", b.Location.Endpoint, b.Location.Reference)
 			}
 			key := keyBuf.String()
 			if seen[key] {

@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cc998f04_ad0dc555",
+        "filename": "cmd/upspin-warden/log.go",
+        "patchSetId": 6
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-12-08T04:21:44Z",
+      "side": 1,
+      "message": "i expected a slice of strings or a slice of byte slices, one per line.\nor else a true ring buffer.",
+      "revId": "590e35e3b590ba7203f5a9b3915345c5e661f693",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f1103ceb_732b14d4",
+        "filename": "cmd/upspin-warden/main.go",
+        "patchSetId": 6
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-12-08T04:21:44Z",
+      "side": 1,
+      "message": "this argues even more that it should be a ring buffer of lines. there\u0027s a lot of allocation going on",
+      "revId": "590e35e3b590ba7203f5a9b3915345c5e661f693",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5536d799_3735671e",
+        "filename": "cmd/upspin-warden/main.go",
+        "patchSetId": 6
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-12-08T04:21:44Z",
+      "side": 1,
+      "message": "i\u0027d put this next to the type rather than the constants but it\u0027s not important",
+      "revId": "590e35e3b590ba7203f5a9b3915345c5e661f693",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6b909316_f2bc370f",
+        "filename": "cmd/upspin-warden/main.go",
+        "patchSetId": 6
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-12-08T04:21:44Z",
+      "side": 1,
+      "message": "then what is ProcessState? names are good, comment not",
+      "revId": "590e35e3b590ba7203f5a9b3915345c5e661f693",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "17849baf_f7c15168",
+        "filename": "cmd/upspin-warden/main.go",
+        "patchSetId": 6
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-12-08T04:21:44Z",
+      "side": 1,
+      "message": "s/;/,/",
+      "revId": "590e35e3b590ba7203f5a9b3915345c5e661f693",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c9b48237_a180eca1",
+        "filename": "cmd/upspin-warden/main.go",
+        "patchSetId": 6
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-12-08T04:21:44Z",
+      "side": 1,
+      "message": "process\u0027s\n\n\nthink how you pronounce it.",
+      "revId": "590e35e3b590ba7203f5a9b3915345c5e661f693",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    }
+  ]
+}

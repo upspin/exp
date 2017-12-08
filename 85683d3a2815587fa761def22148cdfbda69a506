@@ -33,6 +33,24 @@
       "revId": "85683d3a2815587fa761def22148cdfbda69a506",
       "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "914d3684_099d319d",
+        "filename": "cmd/upspin-store/scandir.go",
+        "patchSetId": 5
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-12-08T02:53:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "439b81a5_eb4386e9",
+      "revId": "85683d3a2815587fa761def22148cdfbda69a506",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": false
     }
   ]
 }

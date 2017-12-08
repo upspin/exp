@@ -72,7 +72,7 @@ func main() {
 func usage() {
 	fmt.Fprintln(os.Stderr, help)
 	fmt.Fprintln(os.Stderr, "Usage of upspin audit:")
-	fmt.Fprintln(os.Stderr, "\tupspin [globalflags] <command> [flags] ...")
+	fmt.Fprintln(os.Stderr, "\tupspin [globalflags] audit <command> [flags] ...")
 	fmt.Fprintln(os.Stderr, "\twhere <command> is one of scandir, scanstore")
 	flag.PrintDefaults()
 	os.Exit(2)

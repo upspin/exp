@@ -66,5 +66,5 @@ For now it just prints the total storage they represent.`
 			break
 		}
 	}
-	fmt.Printf("%d bytes total (%s) in %d references\n", sum, ByteSize(sum), numRefs)
+	fmt.Printf("%s: %d bytes total (%s) in %d references\n", endpoint, sum, ByteSize(sum), numRefs)
 }

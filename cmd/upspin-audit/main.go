@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 
 	"upspin.io/config"
 	"upspin.io/flags"
@@ -78,9 +79,17 @@ func usage() {
 	os.Exit(2)
 }
 
+// dataDirFlag returns a string pointer bound to a new flag that specifies the data directory.
+// Done here so the definition can be common among the commands.
+func dataDirFlag(fs *flag.FlagSet) *string {
+	var dataDir string
+	fs.StringVar(&dataDir, "data", filepath.Join(os.Getenv("HOME"), "upspin", "store"), "`directory` storing scan data")
+	return &dataDir
+}
+
 // ByteSize provides a way to make numbers format in nice compact form.
 // Convert a number to ByteSize and print it using its String method to see
-// 2392685154 pint as 2.23GB.
+// 2392685154 print as 2.23GB.
 type ByteSize float64
 
 const (

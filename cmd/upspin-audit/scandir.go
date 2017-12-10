@@ -41,10 +41,12 @@ Audit scandir scans the directory tree for the named user roots.
 For now it just prints the total storage consumed.`
 
 	fs := flag.NewFlagSet("scandir", flag.ExitOnError)
-	glob := flag.Bool("glob", true, "apply glob processing to the arguments")
+	glob := fs.Bool("glob", true, "apply glob processing to the arguments")
+	dataDir := dataDirFlag(fs)
+	_ = dataDir // TODO
 	s.ParseFlags(fs, args, help, "audit scandir root ...")
 
-	if fs.NArg() == 0 {
+	if fs.NArg() == 0 || fs.Arg(0) == "help" {
 		fs.Usage()
 		os.Exit(2)
 	}

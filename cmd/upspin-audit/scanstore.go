@@ -21,13 +21,16 @@ import (
 func (s *State) scanStore(args []string) {
 	const help = `
 Audit scanstore scans the storage server to identify all references.
+By default it scans the storage server mentioned in the config file.
 For now it just prints the total storage they represent.`
 
 	fs := flag.NewFlagSet("scanstore", flag.ExitOnError)
-	endpointFlag := flag.String("endpoint", string(s.Config.StoreEndpoint().NetAddr), "network `address` of storage server; default is from config")
+	endpointFlag := fs.String("endpoint", string(s.Config.StoreEndpoint().NetAddr), "network `address` of storage server; default is from config")
+	dataDir := dataDirFlag(fs)
+	_ = dataDir // TODO
 	s.ParseFlags(fs, args, help, "audit scanstore [-endpoint <storeserver address>]")
 
-	if fs.NArg() != 0 {
+	if fs.NArg() != 0 { // "audit scanstore help" is covered by this.
 		fs.Usage()
 		os.Exit(2)
 	}

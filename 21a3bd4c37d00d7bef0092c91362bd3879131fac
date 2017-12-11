@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "03a00c73_415174be",
+        "filename": "cmd/upspin-audit/main.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-12-11T03:53:19Z",
+      "side": 1,
+      "message": "a list _of_",
+      "revId": "21a3bd4c37d00d7bef0092c91362bd3879131fac",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "65ce8dc8_fd3a3f0b",
+        "filename": "cmd/upspin-audit/main.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-12-11T03:53:19Z",
+      "side": 1,
+      "message": "these should be s.Exit i think.",
+      "revId": "21a3bd4c37d00d7bef0092c91362bd3879131fac",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4ba9a2fb_8df385ca",
+        "filename": "cmd/upspin-audit/main.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-12-11T03:53:19Z",
+      "side": 1,
+      "message": "defer the close with error check, and use bufio too. this could be slow otherwise.",
+      "revId": "21a3bd4c37d00d7bef0092c91362bd3879131fac",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a08193c3_4a00979b",
+        "filename": "cmd/upspin-audit/main.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-12-11T03:53:19Z",
+      "side": 1,
+      "message": "s.Exit",
+      "revId": "21a3bd4c37d00d7bef0092c91362bd3879131fac",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "40fc124f_f36dfc4a",
+        "filename": "cmd/upspin-audit/scandir.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-12-11T03:53:19Z",
+      "side": 1,
+      "message": "this is a different structure now. if i have a long list of paths, the parallelism could be enormous.",
+      "revId": "21a3bd4c37d00d7bef0092c91362bd3879131fac",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a3d1c681_f132f392",
+        "filename": "cmd/upspin-audit/scandir.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-12-11T03:53:19Z",
+      "side": 1,
+      "message": "why is this here and not near the other prints? is it just the locality of the size map?",
+      "revId": "21a3bd4c37d00d7bef0092c91362bd3879131fac",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1e8dbde3_232008df",
+        "filename": "cmd/upspin-audit/scanstore.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-12-11T03:53:19Z",
+      "side": 1,
+      "message": "move before the writeItems",
+      "revId": "21a3bd4c37d00d7bef0092c91362bd3879131fac",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    }
+  ]
+}

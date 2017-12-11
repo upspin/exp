@@ -159,7 +159,7 @@ For now it just prints the total storage consumed.`
 			for ref, n := range refs {
 				items = append(items, upspin.ListRefsItem{Ref: ref, Size: n})
 			}
-			file := filepath.Join(*dataDir, fmt.Sprintf("dir.%s.%s.%d", ep.NetAddr, u, now.Unix()))
+			file := filepath.Join(*dataDir, fmt.Sprintf("%s%s_%s_%d", dirFilePrefix, ep.NetAddr, u, now.Unix()))
 			s.writeItems(file, items)
 		}
 	}

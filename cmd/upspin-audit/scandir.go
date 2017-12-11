@@ -9,7 +9,9 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"path/filepath"
 	"sync"
+	"time"
 
 	"upspin.io/path"
 	"upspin.io/upspin"
@@ -35,6 +37,17 @@ type dirScanner struct {
 	done     chan *upspin.DirEntry // Send entries here once it is completely done, including children.
 }
 
+type sizeMap map[upspin.Endpoint]map[upspin.Reference]int64
+
+func (m sizeMap) addRef(ep upspin.Endpoint, ref upspin.Reference, size int64) {
+	refs := m[ep]
+	if refs == nil {
+		refs = make(map[upspin.Reference]int64)
+		m[ep] = refs
+	}
+	refs[ref] = size
+}
+
 func (s *State) scanDirectories(args []string) {
 	const help = `
 Audit scandir scans the directory tree for the named user roots.
@@ -43,12 +56,15 @@ For now it just prints the total storage consumed.`
 	fs := flag.NewFlagSet("scandir", flag.ExitOnError)
 	glob := fs.Bool("glob", true, "apply glob processing to the arguments")
 	dataDir := dataDirFlag(fs)
-	_ = dataDir // TODO
 	s.ParseFlags(fs, args, help, "audit scandir root ...")
 
 	if fs.NArg() == 0 || fs.Arg(0) == "help" {
 		fs.Usage()
 		os.Exit(2)
+	}
+
+	if err := os.MkdirAll(*dataDir, 0600); err != nil {
+		s.Exit(err)
 	}
 
 	var paths []upspin.PathName
@@ -71,6 +87,8 @@ For now it just prints the total storage consumed.`
 		}
 	}
 
+	now := time.Now()
+
 	sc := dirScanner{
 		State:    s,
 		buffer:   make(chan *upspin.DirEntry),
@@ -85,11 +103,9 @@ For now it just prints the total storage consumed.`
 
 	// Prime the pump.
 	for _, p := range paths {
-		dir := sc.State.DirServer(p)
-		de, err := dir.Lookup(p)
+		de, err := s.DirServer(p).Lookup(p)
 		if err != nil {
-			sc.State.Fail(err)
-			continue
+			s.Exit(err)
 		}
 		sc.do(de)
 	}
@@ -101,17 +117,24 @@ For now it just prints the total storage consumed.`
 		close(sc.done)
 	}()
 
-	// Receive the data.
-	size := make(map[upspin.Endpoint]map[upspin.Reference]int64)
+	// Receive and collect the data.
+	size := make(sizeMap)
+	users := make(map[upspin.UserName]sizeMap)
 	for de := range sc.done {
+		p, err := path.Parse(de.Name)
+		if err != nil {
+			s.Fail(err)
+			continue
+		}
+		userSize := users[p.User()]
+		if userSize == nil {
+			userSize = make(sizeMap)
+			users[p.User()] = userSize
+		}
 		for _, block := range de.Blocks {
 			ep := block.Location.Endpoint
-			refs := size[ep]
-			if refs == nil {
-				refs = make(map[upspin.Reference]int64)
-				size[ep] = refs
-			}
-			refs[block.Location.Reference] = block.Size
+			size.addRef(ep, block.Location.Reference, block.Size)
+			userSize.addRef(ep, block.Location.Reference, block.Size)
 		}
 	}
 
@@ -123,10 +146,22 @@ For now it just prints the total storage consumed.`
 			sum += s
 		}
 		total += sum
-		fmt.Printf("%s: %d bytes (%s) (%d references)\n", ep, sum, ByteSize(sum), len(refs))
+		fmt.Printf("%s: %d bytes (%s) (%d references)\n", ep.NetAddr, sum, ByteSize(sum), len(refs))
 	}
 	if len(size) > 1 {
 		fmt.Printf("%d bytes total (%s)\n", total, ByteSize(total))
+	}
+
+	// Write the data to files, one per storage endpoint.
+	for u, size := range users {
+		for ep, refs := range size {
+			var items []upspin.ListRefsItem
+			for ref, n := range refs {
+				items = append(items, upspin.ListRefsItem{Ref: ref, Size: n})
+			}
+			file := filepath.Join(*dataDir, fmt.Sprintf("dir.%s.%s.%d", ep.NetAddr, u, now.Unix()))
+			s.writeItems(items, file)
+		}
 	}
 }
 

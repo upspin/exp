@@ -24,6 +24,12 @@ import (
 	"upspin.io/version"
 )
 
+const (
+	dirFilePrefix     = "dir_"
+	storeFilePrefix   = "store_"
+	garbageFilePrefix = "garbage_"
+)
+
 type State struct {
 	*subcmd.State
 }
@@ -66,6 +72,8 @@ func main() {
 		s.scanDirectories(flag.Args()[1:])
 	case "scanstore":
 		s.scanStore(flag.Args()[1:])
+	case "orphans":
+		s.orphans(flag.Args()[1:])
 	default:
 		usage()
 	}
@@ -151,4 +159,11 @@ func (s *State) writeItems(file string, items []upspin.ListRefsItem) {
 	if err := w.Flush(); err != nil {
 		s.Exit(err)
 	}
+}
+
+func itemMapToSlice(m map[upspin.Reference]int64) (items []upspin.ListRefsItem) {
+	for ref, size := range m {
+		items = append(items, upspin.ListRefsItem{Ref: ref, Size: size})
+	}
+	return
 }

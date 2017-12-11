@@ -155,12 +155,8 @@ For now it just prints the total storage consumed.`
 	// Write the data to files, one for each user/endpoint combo.
 	for u, size := range users {
 		for ep, refs := range size {
-			var items []upspin.ListRefsItem
-			for ref, n := range refs {
-				items = append(items, upspin.ListRefsItem{Ref: ref, Size: n})
-			}
-			file := filepath.Join(*dataDir, fmt.Sprintf("dir.%s.%s.%d", ep.NetAddr, u, now.Unix()))
-			s.writeItems(file, items)
+			file := filepath.Join(*dataDir, fmt.Sprintf("%s%s_%s_%d", dirFilePrefix, ep.NetAddr, u, now.Unix()))
+			s.writeItems(file, itemMapToSlice(refs))
 		}
 	}
 }

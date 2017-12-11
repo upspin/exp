@@ -9,6 +9,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"path/filepath"
 	"sync"
 
 	"upspin.io/path"
@@ -29,11 +30,14 @@ const scanParallelism = 10 // Empirically chosen: speedup significant, not too m
 
 type dirScanner struct {
 	State    *State
+	dir      upspin.DirServer
 	inFlight sync.WaitGroup        // Count of directories we have seen but not yet processed.
 	buffer   chan *upspin.DirEntry // Where to send directories for processing.
 	dirsToDo chan *upspin.DirEntry // Receive from here to find next directory to process.
 	done     chan *upspin.DirEntry // Send entries here once it is completely done, including children.
 }
+
+type sizeMap map[upspin.Endpoint]map[upspin.Reference]int64
 
 func (s *State) scanDirectories(args []string) {
 	const help = `
@@ -43,12 +47,15 @@ For now it just prints the total storage consumed.`
 	fs := flag.NewFlagSet("scandir", flag.ExitOnError)
 	glob := fs.Bool("glob", true, "apply glob processing to the arguments")
 	dataDir := dataDirFlag(fs)
-	_ = dataDir // TODO
 	s.ParseFlags(fs, args, help, "audit scandir root ...")
 
 	if fs.NArg() == 0 || fs.Arg(0) == "help" {
 		fs.Usage()
 		os.Exit(2)
+	}
+
+	if err := os.MkdirAll(*dataDir, 0600); err != nil {
+		s.Exit(err)
 	}
 
 	var paths []upspin.PathName
@@ -71,47 +78,37 @@ For now it just prints the total storage consumed.`
 		}
 	}
 
-	sc := dirScanner{
-		State:    s,
-		buffer:   make(chan *upspin.DirEntry),
-		dirsToDo: make(chan *upspin.DirEntry),
-		done:     make(chan *upspin.DirEntry),
-	}
-
-	for i := 0; i < scanParallelism; i++ {
-		go sc.dirWorker()
-	}
-	go sc.bufferLoop()
-
-	// Prime the pump.
+	// Scan the paths concurrently.
+	sizes := make(chan sizeMap, len(paths))
+	var wg sync.WaitGroup
 	for _, p := range paths {
-		dir := sc.State.DirServer(p)
-		de, err := dir.Lookup(p)
-		if err != nil {
-			sc.State.Fail(err)
-			continue
-		}
-		sc.do(de)
+		wg.Add(1)
+		go func(p upspin.PathName) {
+			sizes <- s.scanPath(*dataDir, p)
+			wg.Done()
+		}(p)
 	}
-
-	// Shut down the process tree once nothing is in flight.
 	go func() {
-		sc.inFlight.Wait()
-		close(sc.buffer)
-		close(sc.done)
+		wg.Wait()
+		close(sizes)
 	}()
 
-	// Receive the data.
-	size := make(map[upspin.Endpoint]map[upspin.Reference]int64)
-	for de := range sc.done {
-		for _, block := range de.Blocks {
-			ep := block.Location.Endpoint
-			refs := size[ep]
-			if refs == nil {
-				refs = make(map[upspin.Reference]int64)
-				size[ep] = refs
+	// Gather results.
+	size := make(sizeMap)
+	for pathSize := range sizes {
+		for ep, src := range pathSize {
+			dst := size[ep]
+			if dst == nil {
+				dst = make(map[upspin.Reference]int64)
+				size[ep] = dst
 			}
-			refs[block.Location.Reference] = block.Size
+			for ref, n := range src {
+				if orig, ok := dst[ref]; ok && n != orig {
+					s.Failf("found two sizes for reference %q: %d and %d", ref, orig, n)
+					continue
+				}
+				dst[ref] = n
+			}
 		}
 	}
 
@@ -123,11 +120,67 @@ For now it just prints the total storage consumed.`
 			sum += s
 		}
 		total += sum
-		fmt.Printf("%s: %d bytes (%s) (%d references)\n", ep, sum, ByteSize(sum), len(refs))
+		fmt.Printf("%s: %d bytes (%s) (%d references)\n", ep.NetAddr, sum, ByteSize(sum), len(refs))
 	}
 	if len(size) > 1 {
 		fmt.Printf("%d bytes total (%s)\n", total, ByteSize(total))
 	}
+}
+
+func (s *State) scanPath(dataDir string, p upspin.PathName) sizeMap {
+	dir := s.DirServer(p)
+	de, err := dir.Lookup(p)
+	if err != nil {
+		s.Fail(err)
+		return nil
+	}
+
+	sc := dirScanner{
+		State:    s,
+		dir:      dir,
+		buffer:   make(chan *upspin.DirEntry),
+		dirsToDo: make(chan *upspin.DirEntry),
+		done:     make(chan *upspin.DirEntry),
+	}
+
+	for i := 0; i < scanParallelism; i++ {
+		go sc.dirWorker()
+	}
+	go sc.bufferLoop()
+
+	sc.do(de)
+
+	// Shut down the process tree once nothing is in flight.
+	go func() {
+		sc.inFlight.Wait()
+		close(sc.buffer)
+		close(sc.done)
+	}()
+
+	// Receive and collect the data.
+	size := make(sizeMap)
+	for de := range sc.done {
+		for _, block := range de.Blocks {
+			ep := block.Location.Endpoint
+			refs := size[ep]
+			if refs == nil {
+				refs = make(map[upspin.Reference]int64)
+				size[ep] = refs
+			}
+			ref := block.Location.Reference
+			refs[ref] = block.Size
+		}
+	}
+
+	// Write the data to files, one per storage endpoint.
+	for ep, refs := range size {
+		var items []upspin.ListRefsItem
+		for ref, n := range refs {
+			items = append(items, upspin.ListRefsItem{Ref: ref, Size: n})
+		}
+		s.writeItems(items, filepath.Join(dataDir, fmt.Sprintf("dir.%s.%s", ep.NetAddr, p)))
+	}
+	return size
 }
 
 // do processes a DirEntry. If it's a file, we deliver it to the done channel.
@@ -197,7 +250,7 @@ func (sc *dirScanner) bufferLoop() {
 // the results to the buffer channel.
 func (sc *dirScanner) dirWorker() {
 	for dir := range sc.dirsToDo {
-		des, err := sc.State.DirServer(dir.Name).Glob(upspin.AllFilesGlob(dir.Name))
+		des, err := sc.dir.Glob(upspin.AllFilesGlob(dir.Name))
 		if err != nil {
 			sc.State.Fail(err)
 		} else {

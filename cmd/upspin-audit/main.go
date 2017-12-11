@@ -13,11 +13,13 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"sort"
 
 	"upspin.io/config"
 	"upspin.io/flags"
 	"upspin.io/subcmd"
 	"upspin.io/transports"
+	"upspin.io/upspin"
 	"upspin.io/version"
 )
 
@@ -124,4 +126,24 @@ func (b ByteSize) String() string {
 		return fmt.Sprintf("%.2fKB", b/KB)
 	}
 	return fmt.Sprintf("%.2fB", b)
+}
+
+// writeItems sorts and writes a list reference/size pairs to file.
+func (s *State) writeItems(items []upspin.ListRefsItem, file string) {
+	sort.Slice(items, func(i, j int) bool { return items[i].Ref < items[j].Ref })
+
+	f, err := os.Create(file)
+	if err != nil {
+		s.Fail(err)
+		return
+	}
+	for _, ri := range items {
+		if _, err := fmt.Fprintf(f, "%q %d\n", ri.Ref, ri.Size); err != nil {
+			s.Fail(err)
+			return
+		}
+	}
+	if err := f.Close(); err != nil {
+		s.Fail(err)
+	}
 }

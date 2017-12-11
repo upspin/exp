@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d8a52a1c_cafdd082",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 5309
+      },
+      "writtenOn": "2017-12-11T19:09:46Z",
+      "side": 1,
+      "message": "backend for",
+      "range": {
+        "startLine": 9,
+        "startChar": 31,
+        "endLine": 9,
+        "endChar": 38
+      },
+      "revId": "03c08766439725a3393ec5298328d692949c92c4",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "16656804_024441a0",
+        "filename": "cmd/upspin-warden/main.go",
+        "patchSetId": 8
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 5309
+      },
+      "writtenOn": "2017-12-11T19:09:46Z",
+      "side": 1,
+      "message": "Since they all go to the same log, should we be prefacing every log line with the name of the server or have a version of MultiWriter that does? I know that when I mix upspinfs and cacheserver logs, I sometimes have to work to tease them apart, especially when they are both doing things like rpc/remote.",
+      "range": {
+        "startLine": 50,
+        "startChar": 1,
+        "endLine": 50,
+        "endChar": 49
+      },
+      "revId": "03c08766439725a3393ec5298328d692949c92c4",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    }
+  ]
+}

@@ -272,6 +272,24 @@
     },
     {
       "key": {
+        "uuid": "086d40fe_3209766c",
+        "filename": "cmd/upspin-audit/scandir.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 5389
+      },
+      "writtenOn": "2017-12-11T10:05:50Z",
+      "side": 1,
+      "message": "Went back to the old layout; there was no need for the change.",
+      "parentUuid": "fd7a34a9_17479729",
+      "revId": "21a3bd4c37d00d7bef0092c91362bd3879131fac",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a3d1c681_f132f392",
         "filename": "cmd/upspin-audit/scandir.go",
         "patchSetId": 2

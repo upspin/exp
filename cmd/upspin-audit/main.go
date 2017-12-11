@@ -15,14 +15,34 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strconv"
+	"strings"
+	"time"
 
 	"upspin.io/config"
+	"upspin.io/errors"
 	"upspin.io/flags"
 	"upspin.io/subcmd"
 	"upspin.io/transports"
 	"upspin.io/upspin"
 	"upspin.io/version"
 )
+
+const (
+	timeFormat       = "2006-01-02 15:04:05"
+	dirFilePrefix    = "dir_"
+	storeFilePrefix  = "store_"
+	orphanFilePrefix = "orphans_"
+)
+
+// fileInfo holds a description of a reference list file written by scanstore
+// or scandir. It is derived from the name of the file, not its contents.
+type fileInfo struct {
+	Path string
+	Addr upspin.NetAddr
+	User upspin.UserName // empty for store
+	Time time.Time
+}
 
 type State struct {
 	*subcmd.State
@@ -66,6 +86,8 @@ func main() {
 		s.scanDirectories(flag.Args()[1:])
 	case "scanstore":
 		s.scanStore(flag.Args()[1:])
+	case "orphans":
+		s.orphans(flag.Args()[1:])
 	default:
 		usage()
 	}
@@ -90,45 +112,6 @@ func dataDirFlag(fs *flag.FlagSet) *string {
 	return &dataDir
 }
 
-// ByteSize provides a way to make numbers format in nice compact form.
-// Convert a number to ByteSize and print it using its String method to see
-// 2392685154 print as 2.23GB.
-type ByteSize float64
-
-const (
-	_           = iota // ignore first value by assigning to blank identifier
-	KB ByteSize = 1 << (10 * iota)
-	MB
-	GB
-	TB
-	PB
-	EB
-	ZB
-	YB
-)
-
-func (b ByteSize) String() string {
-	switch {
-	case b >= YB:
-		return fmt.Sprintf("%.2fYB", b/YB)
-	case b >= ZB:
-		return fmt.Sprintf("%.2fZB", b/ZB)
-	case b >= EB:
-		return fmt.Sprintf("%.2fEB", b/EB)
-	case b >= PB:
-		return fmt.Sprintf("%.2fPB", b/PB)
-	case b >= TB:
-		return fmt.Sprintf("%.2fTB", b/TB)
-	case b >= GB:
-		return fmt.Sprintf("%.2fGB", b/GB)
-	case b >= MB:
-		return fmt.Sprintf("%.2fMB", b/MB)
-	case b >= KB:
-		return fmt.Sprintf("%.2fKB", b/KB)
-	}
-	return fmt.Sprintf("%.2fB", b)
-}
-
 // writeItems sorts and writes a list of reference/size pairs to file.
 func (s *State) writeItems(file string, items []upspin.ListRefsItem) {
 	sort.Slice(items, func(i, j int) bool { return items[i].Ref < items[j].Ref })
@@ -151,4 +134,46 @@ func (s *State) writeItems(file string, items []upspin.ListRefsItem) {
 	if err := w.Flush(); err != nil {
 		s.Exit(err)
 	}
+}
+
+// readItems reads a list of reference/size pairs from the given file and
+// returns them as a map. The asymmetry with writeItems, which takes a slice,
+// is to fit the most common usage pattern.
+func (s *State) readItems(file string) (map[upspin.Reference]int64, error) {
+	f, err := os.Open(file)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+	sc := bufio.NewScanner(f)
+	items := make(map[upspin.Reference]int64)
+	for sc.Scan() {
+		line := sc.Text()
+		i := strings.LastIndex(line, " ")
+		if i < 0 {
+			return nil, errors.Errorf("malformed line in %q: %q", file, line)
+		}
+		quotedRef, sizeString := line[:i], line[i+1:]
+
+		ref, err := strconv.Unquote(quotedRef)
+		if err != nil {
+			return nil, errors.Errorf("malformed ref in %q: %v", file, err)
+		}
+		size, err := strconv.ParseInt(sizeString, 10, 64)
+		if err != nil {
+			return nil, errors.Errorf("malformed size in %q: %v", file, err)
+		}
+		items[upspin.Reference(ref)] = size
+	}
+	if err := sc.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+func itemMapToSlice(m map[upspin.Reference]int64) (items []upspin.ListRefsItem) {
+	for ref, size := range m {
+		items = append(items, upspin.ListRefsItem{Ref: ref, Size: size})
+	}
+	return
 }

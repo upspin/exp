@@ -218,6 +218,24 @@
     },
     {
       "key": {
+        "uuid": "fd7a34a9_17479729",
+        "filename": "cmd/upspin-audit/scandir.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-12-11T05:12:31Z",
+      "side": 1,
+      "message": "What was wrong with the old layout? A data structure can resolve the organizational question.",
+      "parentUuid": "3ba104e3_1273d197",
+      "revId": "21a3bd4c37d00d7bef0092c91362bd3879131fac",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a3d1c681_f132f392",
         "filename": "cmd/upspin-audit/scandir.go",
         "patchSetId": 2

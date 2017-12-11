@@ -79,6 +79,6 @@ For now it just prints the total storage they represent.`
 		}
 	}
 	fmt.Printf("%s: %d bytes total (%s) in %d references\n", endpoint.NetAddr, sum, ByteSize(sum), len(items))
-	file := filepath.Join(*dataDir, fmt.Sprintf("store.%s.%d", endpoint.NetAddr, now.Unix()))
+	file := filepath.Join(*dataDir, fmt.Sprintf("%s%s_%d", storeFilePrefix, endpoint.NetAddr, now.Unix()))
 	s.writeItems(file, items)
 }

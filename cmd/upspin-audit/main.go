@@ -24,6 +24,11 @@ import (
 	"upspin.io/version"
 )
 
+const (
+	dirFilePrefix   = "dir_"
+	storeFilePrefix = "store_"
+)
+
 type State struct {
 	*subcmd.State
 }
@@ -66,6 +71,8 @@ func main() {
 		s.scanDirectories(flag.Args()[1:])
 	case "scanstore":
 		s.scanStore(flag.Args()[1:])
+	case "orphans":
+		s.orphans(flag.Args()[1:])
 	default:
 		usage()
 	}

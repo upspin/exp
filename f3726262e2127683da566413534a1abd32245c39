@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "22a41013_df31d38e",
+        "filename": "cmd/upspin-audit/main.go",
+        "patchSetId": 7
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-12-11T20:22:59Z",
+      "side": 1,
+      "message": "the file should be first by analogy with Fprintf etc.",
+      "revId": "f3726262e2127683da566413534a1abd32245c39",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    }
+  ]
+}

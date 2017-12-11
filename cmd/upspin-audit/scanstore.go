@@ -9,6 +9,8 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"path/filepath"
+	"time"
 
 	"upspin.io/bind"
 	"upspin.io/upspin"
@@ -27,7 +29,6 @@ For now it just prints the total storage they represent.`
 	fs := flag.NewFlagSet("scanstore", flag.ExitOnError)
 	endpointFlag := fs.String("endpoint", string(s.Config.StoreEndpoint().NetAddr), "network `address` of storage server; default is from config")
 	dataDir := dataDirFlag(fs)
-	_ = dataDir // TODO
 	s.ParseFlags(fs, args, help, "audit scanstore [-endpoint <storeserver address>]")
 
 	if fs.NArg() != 0 { // "audit scanstore help" is covered by this.
@@ -35,19 +36,27 @@ For now it just prints the total storage they represent.`
 		os.Exit(2)
 	}
 
+	if err := os.MkdirAll(*dataDir, 0600); err != nil {
+		s.Exit(err)
+	}
+
 	endpoint, err := upspin.ParseEndpoint("remote," + *endpointFlag)
 	if err != nil {
 		s.Exit(err)
 	}
+
+	now := time.Now()
 
 	store, err := bind.StoreServer(s.Config, *endpoint)
 	if err != nil {
 		s.Fail(err)
 		return
 	}
-	token := ""
-	sum := int64(0)
-	numRefs := 0
+	var (
+		token string
+		sum   int64
+		items []upspin.ListRefsItem
+	)
 	for {
 		b, _, _, err := store.Get(upspin.ListRefsMetadata + upspin.Reference(token))
 		if err != nil {
@@ -60,14 +69,16 @@ For now it just prints the total storage they represent.`
 			s.Exit(err)
 			return
 		}
-		for _, r := range refs.Refs {
-			numRefs++
-			sum += r.Size
+		for _, ri := range refs.Refs {
+			sum += ri.Size
+			items = append(items, ri)
 		}
 		token = refs.Next
 		if token == "" {
 			break
 		}
 	}
-	fmt.Printf("%s: %d bytes total (%s) in %d references\n", endpoint, sum, ByteSize(sum), numRefs)
+	file := filepath.Join(*dataDir, fmt.Sprintf("store.%s.%d", endpoint.NetAddr, now.Unix()))
+	s.writeItems(items, file)
+	fmt.Printf("%s: %d bytes total (%s) in %d references\n", endpoint.NetAddr, sum, ByteSize(sum), len(items))
 }

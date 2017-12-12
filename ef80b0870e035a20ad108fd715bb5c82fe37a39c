@@ -1,0 +1,157 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "924c0557_733f944c",
+        "filename": "cmd/upspin-audit/orphans.go",
+        "patchSetId": 7
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-12-12T02:29:45Z",
+      "side": 1,
+      "message": "move to main.go? there will be more of these.",
+      "revId": "ef80b0870e035a20ad108fd715bb5c82fe37a39c",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f62514f2_da97ae31",
+        "filename": "cmd/upspin-audit/orphans.go",
+        "patchSetId": 7
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-12-12T02:29:45Z",
+      "side": 1,
+      "message": "the second clause will never execute.",
+      "revId": "ef80b0870e035a20ad108fd715bb5c82fe37a39c",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1a9f446a_31283241",
+        "filename": "cmd/upspin-audit/orphans.go",
+        "patchSetId": 7
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-12-12T02:29:45Z",
+      "side": 1,
+      "message": "move to main.go",
+      "revId": "ef80b0870e035a20ad108fd715bb5c82fe37a39c",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9154d3c1_5e41181e",
+        "filename": "cmd/upspin-audit/orphans.go",
+        "patchSetId": 7
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-12-12T02:29:45Z",
+      "side": 1,
+      "message": "worth a comment. will never be seen by users.",
+      "revId": "ef80b0870e035a20ad108fd715bb5c82fe37a39c",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4b33af57_070595d1",
+        "filename": "cmd/upspin-audit/orphans.go",
+        "patchSetId": 7
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-12-12T02:29:45Z",
+      "side": 1,
+      "message": "the fileNameToFileInfo function could be much smaller and simpler, I think, if you used https://github.com/ghemawat/re\n\nyes, it\u0027s regexps but this seems like a good match.\n\njust a suggestion. the custom parser you have here is fine too.",
+      "revId": "ef80b0870e035a20ad108fd715bb5c82fe37a39c",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "92cbd9a9_c5e68af2",
+        "filename": "cmd/upspin-audit/orphans.go",
+        "patchSetId": 7
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-12-12T02:29:45Z",
+      "side": 1,
+      "message": "comment? it\u0027s a lot of code to do ...?",
+      "revId": "ef80b0870e035a20ad108fd715bb5c82fe37a39c",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b8ae4154_db5409b5",
+        "filename": "cmd/upspin-audit/orphans.go",
+        "patchSetId": 7
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-12-12T02:29:45Z",
+      "side": 1,
+      "message": "switch {\ncase strings.HasPrefix(s, dirFilePrefix):\n  s \u003d strings.TrimPrefix(s, dirFilePrefix)\ncase \u003csame for store\u003e:\ndefault:\n  return fileInfo{}, errIgnoreFile\n}",
+      "revId": "ef80b0870e035a20ad108fd715bb5c82fe37a39c",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1386c447_decc6aa2",
+        "filename": "cmd/upspin-audit/orphans.go",
+        "patchSetId": 7
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-12-12T02:29:45Z",
+      "side": 1,
+      "message": "you can use strings.HasPrefix again here - the var isn\u0027t necessary",
+      "revId": "ef80b0870e035a20ad108fd715bb5c82fe37a39c",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "445418bb_dcd33c06",
+        "filename": "cmd/upspin-audit/scanstore.go",
+        "patchSetId": 7
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-12-12T02:29:45Z",
+      "side": 1,
+      "message": "oh yeah :)",
+      "revId": "ef80b0870e035a20ad108fd715bb5c82fe37a39c",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    }
+  ]
+}

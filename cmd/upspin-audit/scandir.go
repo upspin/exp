@@ -48,13 +48,13 @@ func (m sizeMap) addRef(ep upspin.Endpoint, ref upspin.Reference, size int64) {
 
 func (s *State) scanDirectories(args []string) {
 	const help = `
-Audit scandir scans the directory tree for the named user roots.
+Audit scan-dir scans the directory tree for the named user roots.
 For now it just prints the total storage consumed.`
 
-	fs := flag.NewFlagSet("scandir", flag.ExitOnError)
+	fs := flag.NewFlagSet("scan-dir", flag.ExitOnError)
 	glob := fs.Bool("glob", true, "apply glob processing to the arguments")
 	dataDir := dataDirFlag(fs)
-	s.ParseFlags(fs, args, help, "audit scandir root ...")
+	s.ParseFlags(fs, args, help, "audit scan-dir root ...")
 
 	if fs.NArg() == 0 || fs.Arg(0) == "help" {
 		fs.Usage()

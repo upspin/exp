@@ -25,8 +25,6 @@ import (
 // avoid scanning a directory we've already seen, which Watch doesn't do on
 // the server. Our code makes it practical to scan the snapshot tree.
 
-// TODO: For now we just print the total size.
-
 const scanParallelism = 10 // Empirically chosen: speedup significant, not too many resources.
 
 type dirScanner struct {

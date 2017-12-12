@@ -18,8 +18,6 @@ import (
 
 // This file implements the storage scan.
 
-// TODO: For now we just print the total size.
-
 func (s *State) scanStore(args []string) {
 	const help = `
 Audit scanstore scans the storage server to identify all references.

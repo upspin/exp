@@ -39,32 +39,7 @@ directory trees, and vice versa.
 
 	// Iterate through the files in dataDir and collect a set of the latest
 	// files for each dir endpoint/tree and store endpoint.
-	files, err := filepath.Glob(filepath.Join(*dataDir, "*"))
-	if err != nil {
-		s.Exit(err)
-	}
-	type latestKey struct {
-		Addr upspin.NetAddr
-		User upspin.UserName // empty for store
-	}
-	latest := make(map[latestKey]fileInfo)
-	for _, file := range files {
-		fi, err := filenameToFileInfo(file)
-		if err == errIgnoreFile {
-			continue
-		}
-		if err != nil {
-			s.Exit(err)
-		}
-		k := latestKey{
-			Addr: fi.Addr,
-			User: fi.User,
-		}
-		if cur, ok := latest[k]; ok && cur.Time.After(fi.Time) {
-			continue
-		}
-		latest[k] = fi
-	}
+	latest := s.latestFilesWithPrefix(*dataDir, storeFilePrefix, dirFilePrefix)
 
 	// Print a summary of the files we found.
 	nDirs, nStores := 0, 0
@@ -133,7 +108,7 @@ directory trees, and vice versa.
 				delete(dirsMissing, ref)
 			}
 			if len(storeMissing) > 0 {
-				fmt.Printf("Store %q missing %d references present in %q.", store.Addr, len(storeMissing), dir.User)
+				fmt.Printf("Store %q missing %d references present in %q.\n", store.Addr, len(storeMissing), dir.User)
 				// TODO(adg): write these to a file
 			}
 		}

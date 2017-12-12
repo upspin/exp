@@ -86,7 +86,7 @@ func usage() {
 // Done here so the definition can be common among the commands.
 func dataDirFlag(fs *flag.FlagSet) *string {
 	var dataDir string
-	fs.StringVar(&dataDir, "data", filepath.Join(os.Getenv("HOME"), "upspin", "store"), "`directory` storing scan data")
+	fs.StringVar(&dataDir, "data", filepath.Join(os.Getenv("HOME"), "upspin", "audit"), "`directory` storing scan data")
 	return &dataDir
 }
 

@@ -20,16 +20,20 @@ import (
 
 func (s *State) scanStore(args []string) {
 	const help = `
-Audit scanstore scans the storage server to identify all references.
+Audit scan-store scans the storage server to identify all references.
 By default it scans the storage server mentioned in the config file.
-For now it just prints the total storage they represent.`
+For now it just prints the total storage they represent.
 
-	fs := flag.NewFlagSet("scanstore", flag.ExitOnError)
+It must be run as the same Upspin user as the store server itself,
+as only that user has permission to list references.
+`
+
+	fs := flag.NewFlagSet("scan-store", flag.ExitOnError)
 	endpointFlag := fs.String("endpoint", string(s.Config.StoreEndpoint().NetAddr), "network `address` of storage server; default is from config")
 	dataDir := dataDirFlag(fs)
-	s.ParseFlags(fs, args, help, "audit scanstore [-endpoint <storeserver address>]")
+	s.ParseFlags(fs, args, help, "audit scan-store [-endpoint <storeserver address>]")
 
-	if fs.NArg() != 0 { // "audit scanstore help" is covered by this.
+	if fs.NArg() != 0 { // "audit scan-store help" is covered by this.
 		fs.Usage()
 		os.Exit(2)
 	}

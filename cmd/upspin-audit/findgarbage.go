@@ -14,19 +14,15 @@ import (
 	"upspin.io/upspin"
 )
 
-// TODO:
-// - add a flag to run in reverse (not garbage collection mode)
-// - add a -tidy flag to remove data from old scans (maybe tidy should be its own sub-command)
-
-func (s *State) orphans(args []string) {
+func (s *State) findGarbage(args []string) {
 	const help = `
-Audit orphans analyses previously collected scandir and scanstore runs and
-finds references that are present in the store but missing from the scanned
-directory trees, and vice versa.
+Audit find-garbage analyses the output of scan-dir and scan-store to finds
+references that are present in the store server but missing from the scanned
+directory trees.
 `
-	fs := flag.NewFlagSet("orphans", flag.ExitOnError)
+	fs := flag.NewFlagSet("find-garbage", flag.ExitOnError)
 	dataDir := dataDirFlag(fs)
-	s.ParseFlags(fs, args, help, "audit orphans")
+	s.ParseFlags(fs, args, help, "audit find-garbage")
 
 	if fs.NArg() != 0 {
 		fs.Usage()
@@ -39,36 +35,11 @@ directory trees, and vice versa.
 
 	// Iterate through the files in dataDir and collect a set of the latest
 	// files for each dir endpoint/tree and store endpoint.
-	files, err := filepath.Glob(filepath.Join(*dataDir, "*"))
-	if err != nil {
-		s.Exit(err)
-	}
-	type latestKey struct {
-		Addr upspin.NetAddr
-		User upspin.UserName // empty for store
-	}
-	latest := make(map[latestKey]fileInfo)
-	for _, file := range files {
-		fi, err := filenameToFileInfo(file)
-		if err == errIgnoreFile {
-			continue
-		}
-		if err != nil {
-			s.Exit(err)
-		}
-		k := latestKey{
-			Addr: fi.Addr,
-			User: fi.User,
-		}
-		if cur, ok := latest[k]; ok && cur.Time.After(fi.Time) {
-			continue
-		}
-		latest[k] = fi
-	}
+	latest := s.latestFilesWithPrefix(*dataDir, storeFilePrefix, dirFilePrefix)
 
 	// Print a summary of the files we found.
 	nDirs, nStores := 0, 0
-	fmt.Println("Found data for these store endpoints: (scanstore output)")
+	fmt.Println("Found data for these store endpoints: (scan-store output)")
 	for _, fi := range latest {
 		if fi.User == "" {
 			fmt.Printf("\t%s\t%s\n", fi.Time.Format(timeFormat), fi.Addr)
@@ -78,7 +49,7 @@ directory trees, and vice versa.
 	if nStores == 0 {
 		fmt.Println("\t(none)")
 	}
-	fmt.Println("Found data for these user trees and store endpoints: (scandir output)")
+	fmt.Println("Found data for these user trees and store endpoints: (scan-dir output)")
 	for _, fi := range latest {
 		if fi.User != "" {
 			fmt.Printf("\t%s\t%s\t%s\n", fi.Time.Format(timeFormat), fi.Addr, fi.User)
@@ -94,7 +65,7 @@ directory trees, and vice versa.
 		s.Exitf("nothing to do")
 	}
 
-	// Look for orphaned references and summarize them.
+	// Look for garbage references and summarize them.
 	for _, store := range latest {
 		if store.User != "" {
 			continue // Ignore dirs.
@@ -116,8 +87,8 @@ directory trees, and vice versa.
 				continue
 			}
 			if dir.Time.Before(store.Time) {
-				s.Exitf("scanstore must be performed before all scandir operations\n"+
-					"scandir output in\n\t%s\npredates scanstore output in\n\t%s",
+				s.Exitf("scan-store must be performed before all scan-dir operations\n"+
+					"scan-dir output in\n\t%s\npredates scan-store output in\n\t%s",
 					filepath.Base(dir.Path), filepath.Base(store.Path))
 			}
 			users = append(users, string(dir.User))
@@ -133,13 +104,12 @@ directory trees, and vice versa.
 				delete(dirsMissing, ref)
 			}
 			if len(storeMissing) > 0 {
-				fmt.Printf("Store %q missing %d references present in %q.", store.Addr, len(storeMissing), dir.User)
-				// TODO(adg): write these to a file
+				fmt.Printf("Store %q missing %d references present in %q.\n", store.Addr, len(storeMissing), dir.User)
 			}
 		}
 		if len(dirsMissing) > 0 {
 			fmt.Printf("Store %q contains %d references not present in these trees:\n\t%s\n", store.Addr, len(dirsMissing), strings.Join(users, "\n\t"))
-			file := filepath.Join(*dataDir, fmt.Sprintf("%s%s_%d", orphanFilePrefix, store.Addr, store.Time.Unix()))
+			file := filepath.Join(*dataDir, fmt.Sprintf("%s%s_%d", garbageFilePrefix, store.Addr, store.Time.Unix()))
 			s.writeItems(file, itemMapToSlice(dirsMissing))
 		}
 	}

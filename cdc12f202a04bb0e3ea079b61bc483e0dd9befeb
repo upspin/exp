@@ -34,6 +34,24 @@
       "revId": "cdc12f202a04bb0e3ea079b61bc483e0dd9befeb",
       "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b347fb0b_5dd3a7d2",
+        "filename": "cmd/upspin-audit/findgarbage.go",
+        "patchSetId": 6
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-12-13T02:46:40Z",
+      "side": 1,
+      "message": "make the message say that instead.",
+      "parentUuid": "42e42254_91b79dad",
+      "revId": "cdc12f202a04bb0e3ea079b61bc483e0dd9befeb",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
     }
   ]
 }

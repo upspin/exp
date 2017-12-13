@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5db8e2ce_45c7e0e3",
+        "filename": "cmd/upspin-audit/findgarbage.go",
+        "patchSetId": 6
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-12-13T02:44:53Z",
+      "side": 1,
+      "message": "should this be an error?\nlog and return?",
+      "revId": "cdc12f202a04bb0e3ea079b61bc483e0dd9befeb",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    }
+  ]
+}

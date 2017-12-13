@@ -16,6 +16,24 @@
       "revId": "cdc12f202a04bb0e3ea079b61bc483e0dd9befeb",
       "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "42e42254_91b79dad",
+        "filename": "cmd/upspin-audit/findgarbage.go",
+        "patchSetId": 6
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 5389
+      },
+      "writtenOn": "2017-12-13T02:45:41Z",
+      "side": 1,
+      "message": "I think it is an error, because you\u0027re running find-garbage without having run scan-store and scan-dir first.",
+      "parentUuid": "5db8e2ce_45c7e0e3",
+      "revId": "cdc12f202a04bb0e3ea079b61bc483e0dd9befeb",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
     }
   ]
 }

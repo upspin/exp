@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7604e92d_f2fc9ad0",
+        "filename": "cmd/upspin-audit/collect.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-12-13T01:13:43Z",
+      "side": 1,
+      "message": "s/orphaned/missing/ etc.",
+      "revId": "c70ee2cd4a85cf318e8121534d2c6027e346df9d",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0dbb96db_4b219695",
+        "filename": "cmd/upspin-audit/main.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-12-13T01:13:43Z",
+      "side": 1,
+      "message": "i don\u0027t understand this. what does \"most recently generated\" mean? what is the criterion? cutoff?",
+      "revId": "c70ee2cd4a85cf318e8121534d2c6027e346df9d",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f6c6a00f_da314b14",
+        "filename": "cmd/upspin-audit/orphans.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-12-13T01:13:43Z",
+      "side": 1,
+      "message": "let\u0027s call it missing. orphans is not as self-explanatory or easy to remember",
+      "revId": "c70ee2cd4a85cf318e8121534d2c6027e346df9d",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    }
+  ]
+}

@@ -52,27 +52,27 @@ The subcommands are:
 
 scan-dir
 scan-store
-	Scan the directory and store servers and report the storage consumed
-	by those servers.
+	Scan the directory and store servers, report the total storage used by
+	those servers, and record a list of references to those blocks.
 
 find-garbage
 	Use the results of scan-dir and scan-store operations to create a list
-	of references that are present in a store server but not referenced
+	of blocks that are present in a store server but not referenced
 	by the scanned directory servers.
 
 delete-garbage
-	Delete the references found by find-garbage from the store server.
+	Delete the blocks found by find-garbage from the store server.
 
 To delete the garbage references in a given store server:
 1. Run scan-store (as the store server user) to generate a list of references
-   in the store server.
+   to blocks in the store server.
 2. Run scan-dir for each Upspin tree that stores data in the store server (as
-   the Upspin users that own those trees) to generate lists of references
-   referred to by those trees.
+   the Upspin users that own those trees) to generate lists of block
+   references mentioned by those trees.
 3. Run find-garbage to compile a list of references that are in the scan-store
    output but not in the combined output of the scan-dir runs.
-4. Run delete-garbage (as the store server user) to delete the references in
-   the find-garbage output.
+4. Run delete-garbage (as the store server user) to delete the blocks in the
+   find-garbage output.
 `
 
 func main() {

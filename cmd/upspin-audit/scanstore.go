@@ -20,9 +20,9 @@ import (
 
 func (s *State) scanStore(args []string) {
 	const help = `
-Audit scan-store scans the storage server to identify all references.
-By default it scans the storage server mentioned in the config file.
-For now it just prints the total storage they represent.
+Audit scan-store produces a list of references to the blocks held
+by the given store server.
+By default it scans the store endpoint specified by the given config.
 
 It must be run as the same Upspin user as the store server itself,
 as only that user has permission to list references.

@@ -38,6 +38,24 @@
     },
     {
       "key": {
+        "uuid": "de761628_3297ff29",
+        "filename": "cmd/upspin-audit/collect.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 5309
+      },
+      "writtenOn": "2017-12-14T03:18:46Z",
+      "side": 1,
+      "message": "still odd wording.  references either pertains to the objects that re being deleted which certainly aren\u0027t missing, or to the pointers that refer to them which aren\u0027t there. I think orphaned was a much better description.",
+      "parentUuid": "255df8b1_a287eaaa",
+      "revId": "c70ee2cd4a85cf318e8121534d2c6027e346df9d",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0dbb96db_4b219695",
         "filename": "cmd/upspin-audit/main.go",
         "patchSetId": 2

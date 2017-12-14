@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "95b7df7b_7a055770",
+        "filename": "cmd/upspin-audit/main.go",
+        "patchSetId": 4
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2017-12-14T20:49:29Z",
+      "side": 1,
+      "message": "what blocks? no referent here.\n\n\tScan the directory and store servers, creating a list of blocks\n        each uses, and report the total storage held by those blocks.\n\nmentioning the lists here makes find-garbage easier to understand",
+      "revId": "0ec853b297369ea6700c72ec7bb692266d1b5078",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    }
+  ]
+}

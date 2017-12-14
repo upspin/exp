@@ -16,11 +16,11 @@ import (
 
 func (s *State) deleteGarbage(args []string) {
 	const help = `
-Audit delete-garbage deletes garbage references as listed by the most recent
+Audit delete-garbage deletes garbage objects as listed by the most recent
 run of find-garbage. It operates on the store endpoint of the current user.
 
 It must be run as the same Upspin user as the store server itself,
-as only that user has permission to delete references.
+as only that user has permission to delete objects.
 
 Misuse of this command may result in permanent data loss. Use with caution.
 `

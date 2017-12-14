@@ -48,8 +48,11 @@ func (m sizeMap) addRef(ep upspin.Endpoint, ref upspin.Reference, size int64) {
 
 func (s *State) scanDirectories(args []string) {
 	const help = `
-Audit scan-dir scans the directory tree for the named user roots.
-For now it just prints the total storage consumed.`
+Audit scan-dir scans the directory trees of the named user roots and produces a
+list of store object references mentioned in those trees.
+
+It should be run as a user that has full read access to the named roots.
+`
 
 	fs := flag.NewFlagSet("scan-dir", flag.ExitOnError)
 	glob := fs.Bool("glob", true, "apply glob processing to the arguments")

@@ -17,7 +17,7 @@ import (
 func (s *State) findGarbage(args []string) {
 	const help = `
 Audit find-garbage analyses the output of scan-dir and scan-store to finds
-references that are present in the store server but missing from the scanned
+blocks that are present in the store server but not referred to by the scanned
 directory trees.
 `
 	fs := flag.NewFlagSet("find-garbage", flag.ExitOnError)

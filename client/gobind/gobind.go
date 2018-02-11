@@ -16,7 +16,7 @@ package gobind // import "exp.upspin.io/client/gobind"
 // To regenerate the .aar archive for Android Java, run:
 //	go generate
 
-//go:generate gomobile bind -target android upspin.io/client/gobind
+//go:generate gomobile bind -target android exp.upspin.io/client/gobind
 
 import (
 	"upspin.io/client"

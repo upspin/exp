@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "194b4c39_6890be12",
+        "filename": "cmd/upsync/upsync.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 5307
+      },
+      "writtenOn": "2019-06-22T22:16:39Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "2056d0ca_9475f913",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 36,
+        "endChar": 1
+      },
+      "revId": "a9b6e39d98af03a3a552d8c5767837473a92269d",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f8f8daaf_08fcc76d",
         "filename": "cmd/upsync/upsync.go",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2019-06-11T03:15:14Z",
       "side": 1,
       "message": "wd",
+      "range": {
+        "startLine": 43,
+        "startChar": 1,
+        "endLine": 43,
+        "endChar": 6
+      },
+      "revId": "a9b6e39d98af03a3a552d8c5767837473a92269d",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9397b8f6_872a0451",
+        "filename": "cmd/upsync/upsync.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 5307
+      },
+      "writtenOn": "2019-06-22T22:16:39Z",
+      "side": 1,
+      "message": "I need both the unmodified getwd and the pruned wd.  See line 77 below.",
+      "parentUuid": "f8f8daaf_08fcc76d",
       "range": {
         "startLine": 43,
         "startChar": 1,
@@ -65,6 +113,24 @@
     },
     {
       "key": {
+        "uuid": "4a30bd64_89632239",
+        "filename": "cmd/upsync/upsync.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 5307
+      },
+      "writtenOn": "2019-06-22T22:16:39Z",
+      "side": 1,
+      "message": "Not sure I understand.  Maybe restate the comment on the new version?",
+      "parentUuid": "6f3ebb79_c07a1f67",
+      "revId": "a9b6e39d98af03a3a552d8c5767837473a92269d",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "eb6a75c6_48e0af7e",
         "filename": "cmd/upsync/upsync.go",
         "patchSetId": 1
@@ -76,6 +142,24 @@
       "writtenOn": "2019-06-11T03:15:14Z",
       "side": 1,
       "message": "delete",
+      "revId": "a9b6e39d98af03a3a552d8c5767837473a92269d",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5f128d95_1720c3f8",
+        "filename": "cmd/upsync/upsync.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 5307
+      },
+      "writtenOn": "2019-06-22T22:16:39Z",
+      "side": 1,
+      "message": "I actually do want a fresh copy here.",
+      "parentUuid": "eb6a75c6_48e0af7e",
       "revId": "a9b6e39d98af03a3a552d8c5767837473a92269d",
       "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
       "unresolved": true
@@ -105,6 +189,30 @@
     },
     {
       "key": {
+        "uuid": "b13a3d96_cf89d06b",
+        "filename": "cmd/upsync/upsync.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 5307
+      },
+      "writtenOn": "2019-06-22T22:16:39Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "c9a1a1d3_7015e568",
+      "range": {
+        "startLine": 62,
+        "startChar": 29,
+        "endLine": 62,
+        "endChar": 69
+      },
+      "revId": "a9b6e39d98af03a3a552d8c5767837473a92269d",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "184a3228_b8d62fed",
         "filename": "cmd/upsync/upsync.go",
         "patchSetId": 1
@@ -116,6 +224,24 @@
       "writtenOn": "2019-06-11T03:15:14Z",
       "side": 1,
       "message": "return an error from  upsync and check it here.",
+      "revId": "a9b6e39d98af03a3a552d8c5767837473a92269d",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0d58877b_26c8349b",
+        "filename": "cmd/upsync/upsync.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 5307
+      },
+      "writtenOn": "2019-06-22T22:16:39Z",
+      "side": 1,
+      "message": "At least for now, I want upsync to immediately halt if anything at all goes wrong.  There\u0027s too much risk of damage otherwise.  And since it is idempotent, not too much pain to the user to restart after fixing the cause of the error.\n\nWe can revisit this after experience builds more confidence.",
+      "parentUuid": "184a3228_b8d62fed",
       "revId": "a9b6e39d98af03a3a552d8c5767837473a92269d",
       "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
       "unresolved": true
@@ -139,6 +265,24 @@
     },
     {
       "key": {
+        "uuid": "05c94b48_65bbef3f",
+        "filename": "cmd/upsync/upsync.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 5307
+      },
+      "writtenOn": "2019-06-22T22:16:39Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "4d7a804e_5963fc7d",
+      "revId": "a9b6e39d98af03a3a552d8c5767837473a92269d",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5cf49009_22e58c1a",
         "filename": "cmd/upsync/upsync.go",
         "patchSetId": 1
@@ -153,6 +297,24 @@
       "revId": "a9b6e39d98af03a3a552d8c5767837473a92269d",
       "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "586c1ff0_3b18b063",
+        "filename": "cmd/upsync/upsync.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 5307
+      },
+      "writtenOn": "2019-06-22T22:16:39Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "5cf49009_22e58c1a",
+      "revId": "a9b6e39d98af03a3a552d8c5767837473a92269d",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": false
     },
     {
       "key": {
@@ -179,6 +341,30 @@
     },
     {
       "key": {
+        "uuid": "dc9b0d90_6ae7e58a",
+        "filename": "cmd/upsync/upsync.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 5307
+      },
+      "writtenOn": "2019-06-22T22:16:39Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "0799fc15_02c6dc27",
+      "range": {
+        "startLine": 88,
+        "startChar": 0,
+        "endLine": 89,
+        "endChar": 8
+      },
+      "revId": "a9b6e39d98af03a3a552d8c5767837473a92269d",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bb44f11d_f661ab07",
         "filename": "cmd/upsync/upsync.go",
         "patchSetId": 1
@@ -193,6 +379,24 @@
       "revId": "a9b6e39d98af03a3a552d8c5767837473a92269d",
       "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a4f111d2_fdae93f6",
+        "filename": "cmd/upsync/upsync.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 5307
+      },
+      "writtenOn": "2019-06-22T22:16:39Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "bb44f11d_f661ab07",
+      "revId": "a9b6e39d98af03a3a552d8c5767837473a92269d",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": false
     },
     {
       "key": {
@@ -213,6 +417,24 @@
     },
     {
       "key": {
+        "uuid": "06c4b204_1199eaed",
+        "filename": "cmd/upsync/upsync.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 5307
+      },
+      "writtenOn": "2019-06-22T22:16:39Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "f357f71d_8e30258b",
+      "revId": "a9b6e39d98af03a3a552d8c5767837473a92269d",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e9182039_006be65c",
         "filename": "cmd/upsync/upsync.go",
         "patchSetId": 1
@@ -224,6 +446,24 @@
       "writtenOn": "2019-06-11T03:15:14Z",
       "side": 1,
       "message": "add an error return, etc",
+      "revId": "a9b6e39d98af03a3a552d8c5767837473a92269d",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "06ff3676_1597d84c",
+        "filename": "cmd/upsync/upsync.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 5307
+      },
+      "writtenOn": "2019-06-22T22:16:39Z",
+      "side": 1,
+      "message": "As above, prefer to immediately halt.",
+      "parentUuid": "e9182039_006be65c",
       "revId": "a9b6e39d98af03a3a552d8c5767837473a92269d",
       "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
       "unresolved": true

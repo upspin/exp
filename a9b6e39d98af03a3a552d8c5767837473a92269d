@@ -131,6 +131,24 @@
     },
     {
       "key": {
+        "uuid": "759ffa99_46873e3a",
+        "filename": "cmd/upsync/upsync.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 5309
+      },
+      "writtenOn": "2019-08-25T22:23:32Z",
+      "side": 1,
+      "message": "He means change func main()above to func do() error which never panics but returns an error.  Then add a func main() that calls err :\u003d do() and does something with the error. Then your code is not filled with panics at a lower level.  You would have to be able to pass errors all teh way up.",
+      "parentUuid": "4a30bd64_89632239",
+      "revId": "a9b6e39d98af03a3a552d8c5767837473a92269d",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "eb6a75c6_48e0af7e",
         "filename": "cmd/upsync/upsync.go",
         "patchSetId": 1

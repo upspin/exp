@@ -125,7 +125,9 @@ func do() error {
 	} else { // normal case
 		lastUpsync = lastUpsyncFi.ModTime().Unix()
 	}
-	log.Printf("lastUpsync %v", lastUpsyncFi.ModTime())
+	if lastUpsyncFi != nil {
+		log.Printf("lastUpsync %v", lastUpsyncFi.ModTime())
+	}
 
 	// Find first component of current directory that looks like email address,
 	// then make wd == upspin working directory.

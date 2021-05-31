@@ -9,6 +9,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"os"
@@ -37,9 +38,10 @@ upsync to upload your changes to the Upspin master. To discard your local change
 just remove the edited local files and upsync. (Executing both local rm and
 upspin rm are required to remove content permanently.)
 
-Upsync prints which files it is uploading or downloading and declines to download
-files larger than 50MB. It promises never to write outside the starting directory
-and subdirectories and, as an initial way to enforce that, declines all symlinks.
+Upsync prints which files it is uploading or downloading. Except for temp files
+for the currently downloading file, it promises to never write outside the starting
+directory and subdirectories and, as an initial way to enforce that, declines all
+symlinks.
 
 There are no clever merge heuristics;  copying back and forth proceeds by a trivial
 "newest wins" rule.  This requires some discipline in remembering to upsync after
@@ -216,8 +218,6 @@ func upsync(upc upspin.Client, wd, subdir string) error {
 				if err != nil {
 					return err
 				}
-			case len(udir[uj].Blocks) > 50:
-				fmt.Println("skipping big", pathname)
 			default:
 				utime := int64(udir[uj].Time)
 				err = pull(upc, wd, pathname, utime)
@@ -286,14 +286,26 @@ func upsync(upc upspin.Client, wd, subdir string) error {
 // pull copies pathname from Upspin to local disk, copying the modification time.
 func pull(upc upspin.Client, wd, pathname string, utime int64) error {
 	fmt.Println("pull", pathname)
-	// TODO(ehg) If we ever decide to parallelize, or even if we decide to
-	// run on small memory machines, switch to io.Copy().
-	bytes, err := upc.Get(upspin.PathName(wd + "/" + pathname))
+	// Pull to a temporary file first, to reduce the chance of confusing an
+	// interrupted download for a completed one.
+	lf, err := os.CreateTemp("", "upsync-*")
 	if err != nil {
 		return err
 	}
-	err = ioutil.WriteFile(pathname, bytes, 0600)
+	defer lf.Close()
+	uf, err := upc.Open(upspin.PathName(wd + "/" + pathname))
 	if err != nil {
+		return err
+	}
+	defer uf.Close()
+	_, err = io.Copy(lf, uf)
+	if err != nil {
+		return err
+	}
+	lf.Close()
+	err = os.Rename(lf.Name(), pathname)
+	if err != nil {
+		os.Remove(lf.Name())
 		return err
 	}
 	mtime := time.Unix(utime, 0)

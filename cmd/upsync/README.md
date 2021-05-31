@@ -3,7 +3,7 @@
 
 To start, create a local directory whose path ends in a string that looks like an existing upspin directory, for example on BSD you can `mkdir ~/u/grosse@gmail.com/Public` then `cd` there and execute `upsync.`  Make local edits to the downloaded files or create new files, and then `upsync` to upload your changes to the Upspin master. To discard your local changes, just remove the edited local files and `upsync.`  (Executing both local `rm` and `upspin rm` are required to remove content permanently.)
 
-There are no command flags or config files or environment variables.  To minimize surprise, upsync prints which files it is uploading or downloading and declines to download files larger than 50MB.  It promises never to write outside the starting directory and subdirectories and, as an initial way to enforce that, declines all symlinks.
+There are no command flags or config files or environment variables.  To minimize surprise, upsync prints which files it is uploading or downloading.  Except for temp files for the currently downloading file, it promises never to write outside the starting directory and subdirectories and, as an initial way to enforce that, declines all symlinks.
 
 There are no clever merge heuristics;  copying back and forth proceeds by a trivial "newest wins" rule.  This requires some discipline in remembering to `upsync` after each editing session and is better suited to single person rather than joint editing.  Don't let your computer clocks drift.
 

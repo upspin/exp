@@ -16,6 +16,58 @@
       "message": "Hi Eric,\n\nI use upsync to backup my upspin data. When I first listed my files after pulling them I thought upsync resets their modtime to the current time. Obviously it doesn\u0027t, but I just happen to have had a bunch of directories in the top level.\n\nThis change matches the local directory timestamps to match the upspin ones, to save folks like me the initial surprise.",
       "revId": "6ad482436a1576438fd2338c76d3f9fbefdf125a",
       "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f7db708d_c4ff45da",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5307
+      },
+      "writtenOn": "2021-05-31T20:53:37Z",
+      "side": 1,
+      "message": "The existing behavior didn\u0027t seem entirely surprising to me because I frequently see it when untar\u0027ing packages from others. But you\u0027re right it would be nicer to have the local directory times match the central copy.",
+      "parentUuid": "d544cb0c_e55edce2",
+      "revId": "6ad482436a1576438fd2338c76d3f9fbefdf125a",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8661acd8_e5c4bccc",
+        "filename": "cmd/upsync/upsync.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 5307
+      },
+      "writtenOn": "2021-05-31T20:53:37Z",
+      "side": 1,
+      "message": "Is this the only case where we need the chtime? I need to think through all the possibilities of a new directory, adding new file to existing directory, and removing a file.",
+      "revId": "6ad482436a1576438fd2338c76d3f9fbefdf125a",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9a0c8150_01d9232a",
+        "filename": "cmd/upsync/upsync.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 5307
+      },
+      "writtenOn": "2021-05-31T20:53:37Z",
+      "side": 1,
+      "message": "I\u0027m unfamiliar with the .Go() construction here. Is it the same as time.Unix(udir[uj].Time, 0)?",
+      "revId": "6ad482436a1576438fd2338c76d3f9fbefdf125a",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03"
     }
   ]
 }

@@ -209,6 +209,11 @@ func upsync(upc upspin.Client, wd, subdir string) error {
 				if err != nil {
 					return err
 				}
+				mtime := udir[uj].Time.Go()
+				err = os.Chtimes(pathname, mtime, mtime)
+				if err != nil {
+					return err
+				}
 			case udir[uj].Attr&upspin.AttrIncomplete != 0:
 				fmt.Println("permission problem; creating placeholder ", pathname)
 				empty := make([]byte, 0)

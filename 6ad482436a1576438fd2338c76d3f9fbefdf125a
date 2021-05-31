@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d544cb0c_e55edce2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 6642
+      },
+      "writtenOn": "2021-05-31T18:15:12Z",
+      "side": 1,
+      "message": "Hi Eric,\n\nI use upsync to backup my upspin data. When I first listed my files after pulling them I thought upsync resets their modtime to the current time. Obviously it doesn\u0027t, but I just happen to have had a bunch of directories in the top level.\n\nThis change matches the local directory timestamps to match the upspin ones, to save folks like me the initial surprise.",
+      "revId": "6ad482436a1576438fd2338c76d3f9fbefdf125a",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03"
+    }
+  ]
+}

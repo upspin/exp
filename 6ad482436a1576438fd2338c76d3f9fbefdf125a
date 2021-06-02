@@ -104,6 +104,24 @@
       "parentUuid": "9a0c8150_01d9232a",
       "revId": "6ad482436a1576438fd2338c76d3f9fbefdf125a",
       "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d49badb4_0bfeabd7",
+        "filename": "cmd/upsync/upsync.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 5307
+      },
+      "writtenOn": "2021-06-02T18:38:02Z",
+      "side": 1,
+      "message": "Wow, how embarrassing! I\u0027ve clearly forgotten too much and need to page it all back in before trying to do a review.",
+      "parentUuid": "76ff1e4c_3b7ac029",
+      "revId": "6ad482436a1576438fd2338c76d3f9fbefdf125a",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03"
     }
   ]
 }

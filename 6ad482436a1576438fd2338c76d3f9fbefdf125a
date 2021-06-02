@@ -55,6 +55,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e79b08c2_d413d3b4",
+        "filename": "cmd/upsync/upsync.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 6642
+      },
+      "writtenOn": "2021-06-02T11:01:26Z",
+      "side": 1,
+      "message": "you\u0027re absolutely right. this will only work for the initial checkout.\n\na fix should only chtime on a directory if pull() or mkdir() was called on any of its direct children. my reasoning:\n\n1) if a child is newer on upspin:\n  pull()/mkdir() will update local directory modtime to \u0027now\u0027, we should chtime to reset it to correct upspin modtime.\n\n2) if there\u0027s no change: no need to chtime.\n\n3) if a child is newer locally:\n  push() will update time on upspin to \u0027now\u0027. the times will be different, but changing the local time to match upspin is also a little surprising. if i call upsync to only push some files i don\u0027t expect my local filesystem to change. e.g. this might be problematic if upsync has read-only access to a directory.\n\n(1) this takes precedence over (2) or (3).\n\ni guess this is not the trivial 2 line change i initially imagined! i\u0027ll have another go to see if i can do it cleanly.",
+      "parentUuid": "8661acd8_e5c4bccc",
+      "revId": "6ad482436a1576438fd2338c76d3f9fbefdf125a",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "9a0c8150_01d9232a",
         "filename": "cmd/upsync/upsync.go",
         "patchSetId": 2
@@ -66,6 +84,24 @@
       "writtenOn": "2021-05-31T20:53:37Z",
       "side": 1,
       "message": "I\u0027m unfamiliar with the .Go() construction here. Is it the same as time.Unix(udir[uj].Time, 0)?",
+      "revId": "6ad482436a1576438fd2338c76d3f9fbefdf125a",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "76ff1e4c_3b7ac029",
+        "filename": "cmd/upsync/upsync.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 6642
+      },
+      "writtenOn": "2021-06-02T11:01:26Z",
+      "side": 1,
+      "message": "pretty much :) https://upspin.googlesource.com/upspin/+/033a63d02f07/upspin/code.go#414",
+      "parentUuid": "9a0c8150_01d9232a",
       "revId": "6ad482436a1576438fd2338c76d3f9fbefdf125a",
       "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03"
     }

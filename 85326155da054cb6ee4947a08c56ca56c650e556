@@ -16,6 +16,80 @@
       "message": "Hello again.\n\nI made this change to sync a bunch of large files using upsync. Not sure if this is in scope for the tool, but pushing here anyway in case anyone else finds it useful!\n\nI\u0027m happy to reintroduce the limit as a command line option if needed.\n\nSalman",
       "revId": "85326155da054cb6ee4947a08c56ca56c650e556",
       "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "129d2739_ed6ddab4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5307
+      },
+      "writtenOn": "2021-06-03T04:36:15Z",
+      "side": 1,
+      "message": "We should to the io.Copy",
+      "revId": "85326155da054cb6ee4947a08c56ca56c650e556",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3bb5ab2e_b4df9c69",
+        "filename": "cmd/upsync/upsync.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 5307
+      },
+      "writtenOn": "2021-06-03T04:36:15Z",
+      "side": 1,
+      "message": "Exceptions make me uncomfortable. For example, what if the file contents are secret and the local directory is on an encrypted file-system but the temp space is not? (I don\u0027t think that particular concern applies to your code change, but better not to weaken the promise in the README.)",
+      "range": {
+        "startLine": 41,
+        "startChar": 58,
+        "endLine": 41,
+        "endChar": 64
+      },
+      "revId": "85326155da054cb6ee4947a08c56ca56c650e556",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d310ab35_c791f2dc",
+        "filename": "cmd/upsync/upsync.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 5307
+      },
+      "writtenOn": "2021-06-03T04:36:15Z",
+      "side": 1,
+      "message": "If you\u0027re observing interrupted copies, I conjecture this TODO would be the first thing to try before the os.Rename() trick.",
+      "revId": "85326155da054cb6ee4947a08c56ca56c650e556",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "03cb856e_887fcc10",
+        "filename": "cmd/upsync/upsync.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 5307
+      },
+      "writtenOn": "2021-06-03T04:36:15Z",
+      "side": 1,
+      "message": "Thank you for doing the io.Copy. I feel bad about not getting around to my old TODOs.",
+      "revId": "85326155da054cb6ee4947a08c56ca56c650e556",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03"
     }
   ]
 }

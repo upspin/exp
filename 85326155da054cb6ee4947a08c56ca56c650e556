@@ -35,6 +35,23 @@
       "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a32fe24a_6c74a34c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5307
+      },
+      "writtenOn": "2021-06-03T04:48:40Z",
+      "side": 1,
+      "message": "One of my comments seems to have been lost and stray text added instead. Retrying...\n\nI\u0027m worried that with the os.Rename trick, upsync-* partial files will be left in the local tree and copied up to the server at the next run of upsync. That can be cleaned up manually, but it is a mess especially if more than one client machine is using upsync.\n\nAnyway, I haven\u0027t observed the partial downloads that you\u0027re trying to fix with this trick. Maybe that is because I run cacheserver and you don\u0027t? Any other ideas why we see different behavior?",
+      "revId": "85326155da054cb6ee4947a08c56ca56c650e556",
+      "serverId": "0759ed4b-3fdc-34dc-866b-f2e708168c03"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3bb5ab2e_b4df9c69",
